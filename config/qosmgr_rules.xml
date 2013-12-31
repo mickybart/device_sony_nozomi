@@ -1,0 +1,46 @@
+<!--
+Copyright (c) 2012 QUALCOMM Incorporated.  All Rights Reserved.
+QUALCOMM Proprietary and Confidential.
+-->
+<qosrules>
+  <rule>
+    <booleanFilter>
+      <equality>
+	<attribute>
+	  <attributeId>/sys/power/wait_for_fb_status</attributeId>
+	  <attributeValue>
+	    <string>on</string>
+	  </attributeValue>
+	</attribute>
+      </equality>
+    </booleanFilter>
+    <assignment>
+      <attribute>
+	<attributeId>/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate</attributeId>
+	<attributeValue>
+	  <string>50000</string>
+	</attributeValue>
+      </attribute>
+    </assignment>
+  </rule>
+  <rule>
+    <booleanFilter>
+      <equality>
+	<attribute>
+	  <attributeId>/sys/power/wait_for_fb_status</attributeId>
+	  <attributeValue>
+	    <string>off</string>
+	  </attributeValue>
+	</attribute>
+      </equality>
+    </booleanFilter>
+    <assignment>
+      <attribute>
+	<attributeId>/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate</attributeId>
+	<attributeValue>
+	  <string>500000</string>
+	</attributeValue>
+      </attribute>
+    </assignment>
+  </rule>
+ </qosrules>
