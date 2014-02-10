@@ -48,16 +48,23 @@ private:
     // holds the copybit device
     struct copybit_device_t *mEngine;
     // Helper functions for copybit composition
-    int  drawLayerUsingCopybit(hwc_context_t *dev, hwc_layer_1_t *layer,
-                                       private_handle_t *renderBuffer, 
-                                       int renderTransform, int dpy);
+    bool drawLayersUsingCopybit(hwc_context_t *ctx, 
+                                        hwc_display_contents_1_t *list,
+                                        private_handle_t *renderBuffer, 
+                                        int renderTransform, int dpy);
+    int drawUsingCopybit(private_handle_t *dst, private_handle_t *src,
+                            hwc_rect_t *dst_rect, hwc_rect_t *src_rect,
+                            hwc_region_t *region, 
+                            int dst_transform, int src_transform,
+                            int plane_alpha, int blending);
     bool canUseCopybitForYUV (hwc_context_t *ctx);
     bool canUseCopybitForRGB (hwc_context_t *ctx,
                                      hwc_display_contents_1_t *list, int dpy);
     bool validateParams (hwc_context_t *ctx,
                                 const hwc_display_contents_1_t *list);
+    bool configure(hwc_context_t *ctx, hwc_display_contents_1_t *list, int dpy);
     //Flags if this feature is on.
-    bool mIsModeOn;
+    bool mCSCMode;
     // flag that indicates whether CopyBit composition is enabled for this cycle
     bool mCopyBitDraw;
 

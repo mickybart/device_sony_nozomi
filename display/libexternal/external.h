@@ -52,6 +52,7 @@ public:
     void setActionSafeDimension(int w, int h);
     void processUEventOnline(const char *str);
     void processUEventOffline(const char *str);
+    bool isExternalFbMode() { return mExtFbMode; };
 
 private:
     void readCEUnderscanInfo();
@@ -93,6 +94,7 @@ private:
     int mHdmiFbNum;
     int mWfdFbNum;
     int mExtDpyNum;
+    bool mExtFbMode;
 };
 
 }; //qhwc

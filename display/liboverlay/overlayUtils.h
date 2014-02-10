@@ -278,6 +278,7 @@ enum eMdpPipeType {
     OV_MDP_PIPE_RGB = 0,
     OV_MDP_PIPE_VG,
     OV_MDP_PIPE_DMA,
+    OV_MDP_PIPE_VIRTUAL,
     OV_MDP_PIPE_ANY, //Any
 };
 

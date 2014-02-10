@@ -71,7 +71,9 @@ public:
     /* Return the dump in the specified buffer */
     void getDump(char *buf, size_t len);
 
-    /* returns session id */
+    /* set pipe id */
+    void setPipeId(int id);
+    /* returns pipe id */
     int getPipeId() const;
     /* returns the fd associated to ctrl*/
     int getFd() const;
@@ -213,6 +215,10 @@ inline MdpCtrl::~MdpCtrl() {
 
 inline int MdpCtrl::getOrient() const {
     return getUserData();
+}
+
+inline void MdpCtrl::setPipeId(int id) {
+    mOVInfo.id = id;
 }
 
 inline int MdpCtrl::getPipeId() const {

@@ -108,8 +108,8 @@ C2D_STATUS (*LINK_c2dFillSurface) ( uint32 surface_id, uint32 fill_color,
 #define MAX_RGB_SURFACES 8        // Max. RGB layers currently supported per draw
 #define MAX_YUV_2_PLANE_SURFACES 4// Max. 2-plane YUV layers currently supported per draw
 #define MAX_YUV_3_PLANE_SURFACES 1// Max. 3-plane YUV layers currently supported per draw
-// +1 for the destination surface. We cannot have multiple destination surfaces.
-#define MAX_SURFACES (MAX_RGB_SURFACES + MAX_YUV_2_PLANE_SURFACES + MAX_YUV_3_PLANE_SURFACES + 1)
+// +2 for the destination surface. We cant have 2 destination surfaces.
+#define MAX_SURFACES (MAX_RGB_SURFACES + MAX_YUV_2_PLANE_SURFACES + MAX_YUV_3_PLANE_SURFACES + 2)
 #define NUM_SURFACE_TYPES 3      // RGB_SURFACE + YUV_SURFACE_2_PLANES + YUV_SURFACE_3_PLANES
 #define MAX_BLIT_OBJECT_COUNT 50 // Max. blit objects that can be passed per draw
 
@@ -241,6 +241,7 @@ static void* c2d_wait_loop(void* ptr) {
             ctx->blit_yuv_2_plane_count = 0;
             ctx->blit_yuv_3_plane_count = 0;
             ctx->blit_count = 0;
+            pthread_cond_signal(&ctx->wait_cleanup_cond);
         }
         pthread_mutex_unlock(&ctx->wait_cleanup_lock);
         if(ctx->stop_thread)
@@ -358,6 +359,10 @@ static uint32 c2d_get_gpuaddr(copybit_context_t* ctx, struct private_handle_t *h
         // We have mapped the GPU address inside copybit. We need to unmap this
         // address after the blit. Store this address
         for (int i = 0; i < MAX_SURFACES; i++) {
+            if (ctx->mapped_gpu_addr[i] == (uint32) gpuaddr) {
+                mapped_idx = -1;
+                break;
+            }
             if (ctx->mapped_gpu_addr[i] == 0) {
                 ctx->mapped_gpu_addr[i] = (uint32) gpuaddr;
                 mapped_idx = i;
@@ -653,6 +658,10 @@ static int finish_copybit(struct copybit_device_t *dev)
 
     int status = COPYBIT_SUCCESS;
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = finish_copybit_internal(dev);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return status;
@@ -665,6 +674,10 @@ static int flush_get_fence_copybit (struct copybit_device_t *dev, int* fd)
     if (!ctx)
         return COPYBIT_FAILURE;
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = msm_copybit(ctx, ctx->dst[ctx->dst_surface_type]);
 
     if(LINK_c2dFlush(ctx->dst[ctx->dst_surface_type], &ctx->time_stamp)) {
@@ -697,6 +710,10 @@ static int clear_copybit(struct copybit_device_t *dev,
     struct copybit_context_t* ctx = (struct copybit_context_t*)dev;
     C2D_RECT c2drect = {rect->l, rect->t, rect->r - rect->l, rect->b - rect->t};
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     ret = set_image(ctx, ctx->dst[RGB_SURFACE], buf,
                        (eC2DFlags)flags, mapped_dst_idx);
     if(ret) {
@@ -780,6 +797,10 @@ static int set_parameter_copybit(
     }
 
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     switch(name) {
         case COPYBIT_PLANE_ALPHA:
         {
@@ -1385,6 +1406,10 @@ static int stretch_copybit(
     int status = COPYBIT_SUCCESS;
     bool needsBlending = (ctx->src_global_alpha != 0);
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = stretch_copybit_internal(dev, dst, src, dst_rect, src_rect,
                                     region, needsBlending);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
@@ -1403,6 +1428,10 @@ static int blit_copybit(
     struct copybit_rect_t dr = { 0, 0, (int)dst->w, (int)dst->h };
     struct copybit_rect_t sr = { 0, 0, (int)src->w, (int)src->h };
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = stretch_copybit_internal(dev, dst, src, &dr, &sr, region, false);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return status;

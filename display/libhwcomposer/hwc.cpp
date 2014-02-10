@@ -151,8 +151,8 @@ static int hwc_prepare_primary(hwc_composer_device_1 *dev,
                 ctx->mFBUpdate[dpy]->prepare(ctx, list, 0);
 
             // Use Copybit, when MDP comp fails
-            if(ctx->mCopyBit[dpy])
-                ctx->mCopyBit[dpy]->prepare(ctx, list, dpy);
+            //if(ctx->mCopyBit[dpy])
+            //    ctx->mCopyBit[dpy]->prepare(ctx, list, dpy);
         }
     }
     return 0;

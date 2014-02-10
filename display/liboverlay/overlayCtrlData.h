@@ -71,9 +71,10 @@ public:
     bool commit();
 
     /* ctrl id */
-    int  getPipeId() const;
+    void setPipeId(int id);
+    int getPipeId() const;
     /* ctrl fd */
-    int  getFd() const;
+    int getFd() const;
     /* retrieve crop data */
     utils::Dim getCrop() const;
     utils::Dim getPosition() const;
@@ -194,6 +195,10 @@ inline bool Ctrl::commit() {
         return false;
     }
     return true;
+}
+
+inline void Ctrl::setPipeId(int id) {
+    mMdp.setPipeId(id);
 }
 
 inline int Ctrl::getPipeId() const {

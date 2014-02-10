@@ -33,16 +33,16 @@
 
 namespace overlay {
 
-GenericPipe::GenericPipe(int dpy) : mFbNum(dpy), mRot(0), mRotUsed(false),
+GenericPipe::GenericPipe(int dpy, int id) : mFbNum(dpy), mRot(0), mRotUsed(false),
         mRotDownscaleOpt(false), mPreRotated(false), pipeState(CLOSED) {
-    init();
+    init(id);
 }
 
 GenericPipe::~GenericPipe() {
     close();
 }
 
-bool GenericPipe::init()
+bool GenericPipe::init(int id)
 {
     ALOGE_IF(DEBUG_OVERLAY, "GenericPipe init");
     mRotUsed = false;
@@ -57,6 +57,7 @@ bool GenericPipe::init()
         ALOGE("GenericPipe failed to init ctrl");
         return false;
     }
+    mCtrlData.ctrl.setPipeId(id);
 
     if(!mCtrlData.data.init(mFbNum)) {
         ALOGE("GenericPipe failed to init data");

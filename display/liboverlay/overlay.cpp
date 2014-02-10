@@ -38,7 +38,7 @@ namespace overlay {
 using namespace utils;
 
 Overlay::Overlay() {
-    PipeBook::NUM_PIPES = qdutils::MDPVersion::getInstance().getTotalPipes();
+    PipeBook::NUM_PIPES = qdutils::MDPVersion::getInstance().getTotalPipes() + 1;
     for(int i = 0; i < PipeBook::NUM_PIPES; i++) {
         mPipeBook[i].init();
     }
@@ -86,7 +86,8 @@ eDest Overlay::nextPipe(eMdpPipeType type, int dpy) {
 
     for(int i = 0; i < PipeBook::NUM_PIPES; i++) {
         //Match requested pipe type
-        if(type == OV_MDP_PIPE_ANY || type == PipeBook::getPipeType((eDest)i)) {
+        if(((type == OV_MDP_PIPE_ANY) && (PipeBook::getPipeType((eDest)i) != OV_MDP_PIPE_VIRTUAL)) || 
+           (type == PipeBook::getPipeType((eDest)i))) {
             //If the pipe is not allocated to any display or used by the
             //requesting display already in previous round.
             if((mPipeBook[i].mDisplay == PipeBook::DPY_UNUSED ||
@@ -105,7 +106,10 @@ eDest Overlay::nextPipe(eMdpPipeType type, int dpy) {
         //requested again by the same display using it, then go ahead.
         mPipeBook[index].mDisplay = dpy;
         if(not mPipeBook[index].valid()) {
-            mPipeBook[index].mPipe = new GenericPipe(dpy);
+            if (PipeBook::getPipeType(dest) == OV_MDP_PIPE_VIRTUAL)
+                mPipeBook[index].mPipe = new GenericPipe(dpy, 8);
+            else
+                mPipeBook[index].mPipe = new GenericPipe(dpy);
             char str[32];
             snprintf(str, 32, "Set pipe=%s dpy=%d; ",
                      PipeBook::getDestStr(dest), dpy);
@@ -219,6 +223,7 @@ int Overlay::initOverlay() {
             qdutils::MDPVersion::getInstance().getVGPipes();
     numPipesXType[OV_MDP_PIPE_DMA] =
             qdutils::MDPVersion::getInstance().getDMAPipes();
+    numPipesXType[OV_MDP_PIPE_VIRTUAL] = 1;
 
     int index = 0;
     for(int X = 0; X < (int)OV_MDP_PIPE_ANY; X++) { //iterate over types
