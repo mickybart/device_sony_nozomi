@@ -186,8 +186,6 @@ on boot
     # bluetooth address programming
     setprop ro.bt.bdaddr_path data/etc/bluetooth_bdaddr
 
-    insmod /system/lib/modules/bcmdhd.ko nvram_path=/system/etc/wifi/calibration iface_name=wlan0
-
     write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
     write /sys/class/android_usb/android0/iProduct ${ro.product.model}
 
