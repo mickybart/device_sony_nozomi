@@ -126,6 +126,7 @@ static const char * const device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_IN_VOICE_REC_DMIC_BS] = "voice-rec-dmic-bs",
     [SND_DEVICE_IN_VOICE_REC_DMIC_EF_FLUENCE] = "voice-rec-dmic-ef-fluence",
     [SND_DEVICE_IN_VOICE_REC_DMIC_BS_FLUENCE] = "voice-rec-dmic-bs-fluence",
+    [SND_DEVICE_IN_FM_RADIO] = "fm-radio",
 };
 
 /* ACDB IDs (audio DSP path configuration IDs) for each sound device */
@@ -164,6 +165,7 @@ static const int acdb_device_table[SND_DEVICE_MAX] = {
     [SND_DEVICE_IN_VOICE_REC_DMIC_BS] = 5,
     [SND_DEVICE_IN_VOICE_REC_DMIC_EF_FLUENCE] = 6,
     [SND_DEVICE_IN_VOICE_REC_DMIC_BS_FLUENCE] = 5,
+    [SND_DEVICE_IN_FM_RADIO] = 255,
 };
 
 #define DEEP_BUFFER_PLATFORM_DELAY (29*1000LL)
@@ -272,6 +274,8 @@ void platform_add_backend_name(char *mixer_path, snd_device_t snd_device)
         strcat(mixer_path, " hdmi");
     else if (snd_device == SND_DEVICE_OUT_SPEAKER_AND_HDMI)
         strcat(mixer_path, " speaker-and-hdmi");
+    else if (snd_device == SND_DEVICE_IN_FM_RADIO)
+        strcat(mixer_path, " fm-radio");
 }
 
 int platform_get_pcm_device_id(audio_usecase_t usecase, int device_type)
@@ -614,6 +618,9 @@ snd_device_t platform_get_input_snd_device(void *platform, audio_devices_t out_d
                 }
             }
         }
+    } else if (source == AUDIO_SOURCE_FM_RADIO) {
+        in_device = AUDIO_DEVICE_IN_FM_RADIO;
+        snd_device = SND_DEVICE_IN_FM_RADIO;
     } else if (source == AUDIO_SOURCE_DEFAULT) {
         goto exit;
     }

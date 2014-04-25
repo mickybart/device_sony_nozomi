@@ -55,8 +55,10 @@
     <ctl name="compress-offload-playback hdmi" value="0" />
     <ctl name="audio-record" value="0" />
     <ctl name="audio-record bt-sco" value="0" />
+    <ctl name="audio-record fm-radio" value="0" />
     <ctl name="low-latency-record" value="0" />
     <ctl name="low-latency-record bt-sco" value="0" />
+    <ctl name="low-latency-record fm-radio" value="0" />
     <ctl name="voice-call" value="0" />
 
     <!-- These are audio route (FE to BE) specific mixer settings -->
@@ -123,12 +125,20 @@
         <ctl name="audio-record bt-sco" value="1" />
     </path>
 
+    <path name="audio-record fm-radio">
+        <ctl name="audio-record fm-radio" value="1" />
+    </path>
+
     <path name="low-latency-record">
         <ctl name="low-latency-record" value="1" />
     </path>
 
     <path name="low-latency-record bt-sco">
         <ctl name="low-latency-record bt-sco" value="1" />
+    </path>
+
+    <path name="low-latency-record fm-radio">
+        <ctl name="low-latency-record fm-radio" value="1" />
     </path>
 
     <path name="voice-call">
@@ -254,6 +264,10 @@
 
     <path name="voice-tty-headset-mic">
         <ctl name="tty_headset_mono_tx" value="1" />
+    </path>
+
+    <path name="fm-radio">
+        <ctl name="fmradio_stereo_tx" value="1" />
     </path>
 
 </mixer>

@@ -78,6 +78,10 @@ WIFI_DRIVER_FW_PATH_P2P     := "/system/vendor/firmware/fw_bcmdhd.bin"
 BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
+# fm radio
+BOARD_HAVE_FMRADIO := true
+BOARD_HAVE_FMRADIO_BCM := true
+
 # board
 TARGET_BOARD_PLATFORM := msm8660
 TARGET_BOOTLOADER_BOARD_NAME := fuji

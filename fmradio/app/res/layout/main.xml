@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fm_background">
+
+        <!-- The numbers and floating point for displayed frequency-->
+        <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+            <ImageSwitcher
+                    android:id="@+id/is_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dip"/>
+
+            <ImageSwitcher
+                    android:id="@+id/is_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dip"/>
+
+            <TextView
+                    android:id="@+id/FrequencyTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:textColor="@color/cyan_neon_lighter"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:text="@string/dashes"
+                    android:layout_gravity="center"/>
+
+            <ImageSwitcher
+                    android:id="@+id/is_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dip"/>
+
+            <ImageSwitcher
+                    android:id="@+id/is_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dip"/>
+
+            <ImageSwitcher
+                    android:id="@+id/is_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dip"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/tv_ps_text"
+                android:textColor="@color/cyan_neon_lighter"
+                android:textSize="12dip"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dip"
+                android:layout_marginLeft="6dip"/>
+
+        <TextView
+                android:id="@+id/tv_rds_text"
+                android:textColor="@color/cyan_neon"
+                android:textSize="12dip"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dip"
+                android:layout_marginRight="6dip"
+                android:layout_toRightOf="@id/tv_ps_text"/>
+
+        <ImageView
+                android:id="@+id/iv_playback_mode"
+                android:src="@drawable/fm_stereo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dip"
+                android:layout_marginLeft="13dip"/>
+
+        <ImageButton
+                android:id="@+id/btn_mute"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="12dip"
+                android:layout_marginRight="13dip"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                style="@style/HighlightButton"
+                android:src="@drawable/fm_volume"/>
+    </RelativeLayout>
+
+    <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:background="@color/cyan_neon_darker"
+            android:layout_width="fill_parent"
+            android:layout_height="3dip"/>
+
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+        <ImageButton
+                android:id="@+id/btn_seek_down"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/HighlightButton"
+                android:padding="@dimen/default_padding"
+                android:layout_margin="@dimen/default_padding"
+                android:src="@drawable/fm_autosearch_bwd"/>
+
+        <ImageButton
+                android:id="@+id/btn_fullscan"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/HighlightButton"
+                android:padding="@dimen/default_padding"
+                android:layout_margin="@dimen/default_padding"
+                android:src="@drawable/refresh"/>
+
+        <ProgressBar
+                android:id="@+id/scan_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/default_padding"
+                android:layout_marginLeft="@dimen/default_padding"/>
+
+        <ImageButton
+                android:id="@+id/btn_seek_up"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/HighlightButton"
+                android:padding="@dimen/default_padding"
+                android:layout_margin="@dimen/default_padding"
+                android:src="@drawable/fm_autosearch_fwd"/>
+
+    </LinearLayout>
+
+
+    <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:background="@color/cyan_neon_darker"
+            android:layout_width="fill_parent"
+            android:layout_height="3dip"/>
+
+    <Gallery android:id="@+id/gal_stations_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:gravity="center_vertical"
+            android:spacing="40dip"/>
+
+    <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:background="@color/cyan_neon_darker"
+                android:layout_width="fill_parent"
+                android:layout_height="3dip"/>
+</LinearLayout>
