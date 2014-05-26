@@ -1,28 +1,9 @@
-#
-# Input Device Calibration File for the Clearpad touch screen driver.
-#
-
-
-# Basic Parameters
+# Device Type
 touch.deviceType = touchScreen
-touch.orientationAware = 1
-
-
-# Size
-touch.size.calibration = diameter
-touch.size.scale = 10
-touch.size.bias = 0
-touch.size.isSummed = 0
-
 
 # Pressure
-# Driver reports signal strength as pressure.
-#
-# A normal thumb touch typically registers about 200 signal strength
-# units although we don't expect these values to be accurate.
-touch.pressure.calibration = amplitude
-touch.pressure.scale = 0.005
+touch.pressure.scale = 0.0074
 
-
-# Orientation
-touch.orientation.calibration = none
+# Size
+touch.size.scale = 6.91
+touch.size.bias = 67.65
