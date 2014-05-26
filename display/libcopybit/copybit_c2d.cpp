@@ -359,6 +359,10 @@ static uint32 c2d_get_gpuaddr(copybit_context_t* ctx, struct private_handle_t *h
         // We have mapped the GPU address inside copybit. We need to unmap this
         // address after the blit. Store this address
         for (int i = 0; i < MAX_SURFACES; i++) {
+            if (ctx->mapped_gpu_addr[i] == (uint32) gpuaddr) {
+                mapped_idx = -1;
+                break;
+            }
             if (ctx->mapped_gpu_addr[i] == 0) {
                 ctx->mapped_gpu_addr[i] = (uint32) gpuaddr;
                 mapped_idx = i;
