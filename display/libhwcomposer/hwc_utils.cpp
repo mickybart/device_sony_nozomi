@@ -850,6 +850,8 @@ bool setupBasePipe(hwc_context_t *ctx) {
     int fb_height = ctx->dpyAttr[dpy].yres;
     int fb_fd = ctx->dpyAttr[dpy].fd;
 
+    ctx->mBasePipeSetup = true;
+
     mdp_overlay ovInfo;
     msmfb_overlay_data ovData;
     memset(&ovInfo, 0, sizeof(mdp_overlay));
@@ -876,7 +878,7 @@ bool setupBasePipe(hwc_context_t *ctx) {
                 strerror(errno));
         return false;
     }
-    ctx->mBasePipeSetup = true;
+
     return true;
 }
 
