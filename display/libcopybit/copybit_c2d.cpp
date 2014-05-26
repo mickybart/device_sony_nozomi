@@ -241,6 +241,7 @@ static void* c2d_wait_loop(void* ptr) {
             ctx->blit_yuv_2_plane_count = 0;
             ctx->blit_yuv_3_plane_count = 0;
             ctx->blit_count = 0;
+            pthread_cond_signal(&ctx->wait_cleanup_cond);
         }
         pthread_mutex_unlock(&ctx->wait_cleanup_lock);
         if(ctx->stop_thread)
@@ -653,6 +654,10 @@ static int finish_copybit(struct copybit_device_t *dev)
 
     int status = COPYBIT_SUCCESS;
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = finish_copybit_internal(dev);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return status;
@@ -665,6 +670,10 @@ static int flush_get_fence_copybit (struct copybit_device_t *dev, int* fd)
     if (!ctx)
         return COPYBIT_FAILURE;
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = msm_copybit(ctx, ctx->dst[ctx->dst_surface_type]);
 
     if(LINK_c2dFlush(ctx->dst[ctx->dst_surface_type], &ctx->time_stamp)) {
@@ -697,6 +706,10 @@ static int clear_copybit(struct copybit_device_t *dev,
     struct copybit_context_t* ctx = (struct copybit_context_t*)dev;
     C2D_RECT c2drect = {rect->l, rect->t, rect->r - rect->l, rect->b - rect->t};
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     ret = set_image(ctx, ctx->dst[RGB_SURFACE], buf,
                        (eC2DFlags)flags, mapped_dst_idx);
     if(ret) {
@@ -780,6 +793,10 @@ static int set_parameter_copybit(
     }
 
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     switch(name) {
         case COPYBIT_PLANE_ALPHA:
         {
@@ -1385,6 +1402,10 @@ static int stretch_copybit(
     int status = COPYBIT_SUCCESS;
     bool needsBlending = (ctx->src_global_alpha != 0);
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = stretch_copybit_internal(dev, dst, src, dst_rect, src_rect,
                                     region, needsBlending);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
@@ -1403,6 +1424,10 @@ static int blit_copybit(
     struct copybit_rect_t dr = { 0, 0, (int)dst->w, (int)dst->h };
     struct copybit_rect_t sr = { 0, 0, (int)src->w, (int)src->h };
     pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
     status = stretch_copybit_internal(dev, dst, src, &dr, &sr, region, false);
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return status;
