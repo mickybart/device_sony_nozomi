@@ -32,7 +32,6 @@ debug.composition.type=dyn
 debug.mdpcomp.maxpermixer=3
 debug.mdpcomp.idletime=-1
 debug.hwc.dynThreshold=1.9
-debug.hwc.external.fbmode=1
 
 dev.pm.dyn_samplingrate=1
 

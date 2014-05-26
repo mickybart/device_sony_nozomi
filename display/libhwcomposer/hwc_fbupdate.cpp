@@ -21,7 +21,6 @@
 #define DEBUG_FBUPDATE 0
 #include <gralloc_priv.h>
 #include "hwc_fbupdate.h"
-#include "external.h"
 
 namespace qhwc {
 
@@ -68,16 +67,8 @@ bool FBUpdateLowRes::configure(hwc_context_t *ctx, hwc_display_contents_1 *list,
         ovutils::Whf info(getWidth(hnd), getHeight(hnd),
                           ovutils::getMdpFormat(hnd->format), hnd->size);
 
-        if ((mDpy == HWC_DISPLAY_EXTERNAL) && ctx->mExtDisplay->isExternalFbMode())
-            info.format = ovutils::getMdpFormat(HAL_PIXEL_FORMAT_RGB_565);
-
         //Request an RGB pipe
-        ovutils::eMdpPipeType type;
-        if (mDpy != HWC_DISPLAY_EXTERNAL)
-            type = ovutils::OV_MDP_PIPE_ANY;
-        else
-            type = ovutils::OV_MDP_PIPE_VIRTUAL;
-        ovutils::eDest dest = ov.nextPipe(type, mDpy);
+        ovutils::eDest dest = ov.nextPipe(ovutils::OV_MDP_PIPE_ANY, mDpy);
         if(dest == ovutils::OV_INVALID) { //None available
             ALOGE("%s: No pipes available to configure framebuffer",
                 __FUNCTION__);
@@ -110,8 +101,6 @@ bool FBUpdateLowRes::configure(hwc_context_t *ctx, hwc_display_contents_1 *list,
         ov.setCrop(dcrop, dest);
 
         int transform = layer->transform;
-        if ((mDpy == HWC_DISPLAY_EXTERNAL) && ctx->mExtDisplay->isExternalFbMode())
-            transform = 0;
         ovutils::eTransform orient =
             static_cast<ovutils::eTransform>(transform);
         ov.setTransform(orient, dest);

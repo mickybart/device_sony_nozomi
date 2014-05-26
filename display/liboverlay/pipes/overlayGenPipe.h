@@ -39,10 +39,10 @@ namespace overlay {
 class GenericPipe : utils::NoCopy {
 public:
     /* ctor */
-    explicit GenericPipe(int dpy, int id = -1);
+    explicit GenericPipe(int dpy);
     /* dtor */
     ~GenericPipe();
-    bool init(int id = -1);
+    bool init();
     bool close();
     /* Control APIs */
     /* set source using whf, orient and wait flag */

@@ -171,14 +171,6 @@ ExternalDisplay::ExternalDisplay(hwc_context_t* ctx):mFd(-1),
     mUnderscanSupported(false), mHwcContext(ctx), mHdmiFbNum(-1),
     mWfdFbNum(-1), mExtDpyNum(HWC_DISPLAY_EXTERNAL)
 {
-    char property[PROPERTY_VALUE_MAX];
-
-    mExtFbMode = false;
-    if(property_get("debug.hwc.external.fbmode", property, NULL) > 0) {
-        if(atoi(property) != 0)
-            mExtFbMode = true;
-    }
-
     memset(&mVInfo, 0, sizeof(mVInfo));
     //Determine the fb index for external display devices.
     updateExtDispDevFbIndex();
