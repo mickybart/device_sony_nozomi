@@ -120,7 +120,6 @@ static int set_light_backlight (struct light_device_t *dev, struct light_state_t
 	int brightness = rgb_to_brightness(state);
 	pthread_mutex_lock(&g_lock);
 	write_int (LCD_BACKLIGHT_FILE, brightness);
-	write_int (BUTTON_BACKLIGHT_FILE, brightness);
 	pthread_mutex_unlock(&g_lock);
 	return 0;
 }
