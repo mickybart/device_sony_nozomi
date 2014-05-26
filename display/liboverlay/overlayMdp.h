@@ -232,7 +232,7 @@ inline void MdpCtrl::setFlags(int f) {
 }
 
 inline void MdpCtrl::setZ(overlay::utils::eZorder z) {
-    mOVInfo.z_order = z;
+    mOVInfo.z_order = (int)z - 1;
 }
 
 inline void MdpCtrl::setIsFg(overlay::utils::eIsFg isFg) {

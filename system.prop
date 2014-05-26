@@ -29,7 +29,7 @@ telephony.lteOnCdmaDevice=0
 debug.sf.hw=1
 persist.hwc.mdpcomp.enable=1
 debug.composition.type=dyn
-debug.mdpcomp.maxpermixer=3
+debug.mdpcomp.maxpermixer=4
 debug.mdpcomp.idletime=-1
 debug.hwc.dynThreshold=1.9
 

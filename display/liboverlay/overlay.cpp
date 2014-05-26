@@ -253,14 +253,12 @@ int Overlay::initOverlay() {
                 ALOGD("ndx=%d num=%d z_order=%d", minfo->pndx, minfo->pnum,
                       minfo->z_order);
                 // clear any pipe connected to mixer including base pipe.
-                if (mdpVersion >= qdutils::MDP_V4_2 || minfo->z_order >= 0) {
-                    int index = minfo->pndx;
-                    ALOGD("Unset overlay with index: %d at mixer %d", index, i);
-                    if(ioctl(fd, MSMFB_OVERLAY_UNSET, &index) == -1) {
-                        ALOGE("ERROR: MSMFB_OVERLAY_UNSET failed");
-                        close(fd);
-                        return -1;
-                    }
+                int index = minfo->pndx;
+                ALOGD("Unset overlay with index: %d at mixer %d", index, i);
+                if(ioctl(fd, MSMFB_OVERLAY_UNSET, &index) == -1) {
+                    ALOGE("ERROR: MSMFB_OVERLAY_UNSET failed");
+                    close(fd);
+                    return -1;
                 }
                 minfo++;
             }
