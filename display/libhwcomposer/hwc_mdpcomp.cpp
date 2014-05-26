@@ -327,12 +327,6 @@ bool MDPComp::isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer) {
                     __FUNCTION__);
             return false;
         }
-    } else if(layer->transform/* & HWC_TRANSFORM_ROT_90*/) {
-        // MDP composition is not efficient if layer needs rotator.
-        // As MDP h/w supports flip operation, use MDP comp only for
-        // 180 transforms. Fail for any transform involving 90 (90, 270).
-        ALOGD_IF(isDebug(), "%s: orientation involved",__FUNCTION__);
-        return false;
     }
 
     if(!isValidDimension(ctx,layer)) {
@@ -438,10 +432,7 @@ bool MDPComp::fullMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
         return false;
     }
 
-    //MDP composition is not efficient if layer needs rotator.
     for(int i = 0; i < numAppLayers; ++i) {
-        // As MDP h/w supports flip operation, use MDP comp only for
-        // 180 transforms. Fail for any transform involving 90 (90, 270).
         hwc_layer_1_t* layer = &list->hwLayers[i];
         private_handle_t *hnd = (private_handle_t *)layer->handle;
         if(isYuvBuffer(hnd) ) {
@@ -449,9 +440,6 @@ bool MDPComp::fullMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
                 ALOGD_IF(isDebug(), "%s: MDP securing is active", __FUNCTION__);
                 return false;
             }
-        } else if(layer->transform/* & HWC_TRANSFORM_ROT_90*/) {
-            ALOGD_IF(isDebug(), "%s: orientation involved",__FUNCTION__);
-            return false;
         }
 
         if(!isValidDimension(ctx,layer)) {
