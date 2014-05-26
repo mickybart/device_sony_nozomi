@@ -26,6 +26,8 @@
 #include "gr.h"
 #include "hwc_fbupdate.h"
 
+//#define HWC_COPYBIT_ASYNC
+
 namespace qhwc {
 
 struct range {
@@ -299,9 +301,15 @@ bool CopyBit::draw(hwc_context_t *ctx, hwc_display_contents_1_t *list,
 
     if (copybitLayerCount) {
         copybit_device_t *copybit = getCopyBitDevice();
+#ifdef HWC_COPYBIT_ASYNC
         // Async mode
         if (copybit->flush_get_fence(copybit, fd) < 0)
             *fd = -1;
+#else
+        // Sync mode
+        copybit->finish(copybit);
+        *fd = -1;
+#endif
     }
     return true;
 }
