@@ -177,6 +177,7 @@ void MDPComp::FrameInfo::reset(const int& numLayers) {
     mdpCount = 0;
     needsRedraw = true;
     fbZ = 0;
+    mdpBasePipe = ovutils::OV_INVALID;
 }
 
 void MDPComp::FrameInfo::map() {
@@ -276,6 +277,20 @@ bool MDPComp::isValidDimension(hwc_context_t *ctx, hwc_layer_1_t *layer) {
         if(w_dscale > 8.0f || h_dscale > 8.0f)
             // MDP 4 supports 1/8 downscale
             return false;
+    }
+
+    return true;
+}
+
+bool MDPComp::isValidBaseLayer(hwc_context_t *ctx, hwc_layer_1_t *layer) {
+	if (ctx->mMDP.version == qdutils::MDP_V4_1) {
+		int hw_w = ctx->dpyAttr[mDpy].xres;
+    	int hw_h = ctx->dpyAttr[mDpy].yres;
+
+    	hwc_rect_t dst = layer->displayFrame;
+
+		if(dst.left != 0 || dst.top != 0 || dst.right != hw_w || dst.bottom != hw_h)
+			return false;
     }
 
     return true;
@@ -452,13 +467,15 @@ bool MDPComp::fullMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     mCurrentFrame.fbZ = -1;
     memset(&mCurrentFrame.isFBComposed, 0, sizeof(mCurrentFrame.isFBComposed));
 
-    int mdpCount = mCurrentFrame.mdpCount;
+	int baseNeeded = int(!isValidBaseLayer(ctx, &list->hwLayers[0]));
+
+    int mdpCount = mCurrentFrame.mdpCount + baseNeeded;
     if(mdpCount > sMaxPipesPerMixer) {
         ALOGD_IF(isDebug(), "%s: Exceeds MAX_PIPES_PER_MIXER",__FUNCTION__);
         return false;
     }
 
-    int numPipesNeeded = pipesNeeded(ctx, list);
+    int numPipesNeeded = pipesNeeded(ctx, list) + baseNeeded;
     int availPipes = getAvailablePipes(ctx);
 
     if(numPipesNeeded > availPipes) {
@@ -482,7 +499,9 @@ bool MDPComp::partialMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list)
     updateNotSupported(ctx, list, &batchStart, &batchCount);
     batchLayers(batchStart, batchCount); //sets up fbZ also
 
-    int mdpCount = mCurrentFrame.mdpCount;
+	int baseNeeded = int(!mCurrentFrame.isFBComposed[0] && !isValidBaseLayer(ctx, &list->hwLayers[0]));
+
+    int mdpCount = mCurrentFrame.mdpCount + baseNeeded;
     if(!mdpCount) {
         ALOGD_IF(isDebug(), "%s: no MDP pipe used",__FUNCTION__);
         return false;
@@ -492,7 +511,7 @@ bool MDPComp::partialMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list)
         return false;
     }
 
-    int numPipesNeeded = pipesNeeded(ctx, list);
+    int numPipesNeeded = pipesNeeded(ctx, list) + baseNeeded;
     int availPipes = getAvailablePipes(ctx);
 
     if(numPipesNeeded > availPipes) {
@@ -688,7 +707,9 @@ void MDPComp::updateNotSupported(hwc_context_t* ctx,
     int max = -2;
 
     for (int i = 0; i < numAppLayers; i++) {
-        if (!isSupported(ctx, &list->hwLayers[i])) {
+        if (!isSupported(ctx, &list->hwLayers[i]) || 
+            ((i == 0) &&
+             !isValidBaseLayer(ctx, &list->hwLayers[0]))) {
             if(!mCurrentFrame.isFBComposed[i]) {
                 mCurrentFrame.isFBComposed[i] = true;
                 mCurrentFrame.fbCount++;
@@ -737,37 +758,8 @@ void MDPComp::updateYUV(hwc_context_t* ctx, hwc_display_contents_1_t* list) {
     int nYuvCount = ctx->listStats[mDpy].yuvCount;
     if (!nYuvCount)
         return;
-/*    
-    int area[MAX_NUM_LAYERS];
-    memset(area, 0, sizeof(area));
 
-    int nAvailPipes = getAvailablePipes(ctx);
-    int left = nAvailPipes;
-    int right = mCurrentFrame.layerCount - nAvailPipes;
-
-    for (int index = 0; index < nYuvCount; index++) {
-        int nYuvIndex = ctx->listStats[mDpy].yuvIndices[index];
-        hwc_layer_1_t* layer = &list->hwLayers[nYuvIndex];
-        if (isYUVDoable(ctx, layer)) {
-            if (nYuvIndex < left) {
-                
-            (nYuvIndex < nAvailPipes || 
-            nYuvIndex >= mCurrentFrame.layerCount - numAvailable)) {
-    
-        
-    int availPipes = getAvailablePipes(ctx);
-*/
-    int numDMAPipes = qdutils::MDPVersion::getInstance().getDMAPipes();
-    overlay::Overlay& ov = *ctx->mOverlay;
-
-    int numAvailable = ov.availablePipes(mDpy);
-
-    //Reserve DMA for rotator
-    if(ctx->mNeedsRotator)
-        numAvailable -= numDMAPipes;
-
-    //Reserve pipe(s)for FB
-    numAvailable -= pipesForFB();
+    int numAvailable = getAvailablePipes(ctx);
 
     for(int index = 0;index < nYuvCount; index++){
         int nYuvIndex = ctx->listStats[mDpy].yuvIndices[index];
@@ -800,10 +792,19 @@ bool MDPComp::programMDP(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
         ALOGD_IF(isDebug(), "%s: Unable to allocate MDP pipes", __FUNCTION__);
         return false;
     }
+    
+    int mdpNextZOrder = 0;
+    if (mCurrentFrame.mdpBasePipe != ovutils::OV_INVALID) {
+    	if(configureBaseLayer(ctx, mCurrentFrame.mdpBasePipe)) {
+    		ALOGD_IF(isDebug(), "%s: Failed to configure overlay for \
+                         base layer",__FUNCTION__);
+            return false;
+    	}
+    	mdpNextZOrder = 1;
+    }
 
     bool fbBatch = false;
-    for (int index = 0, mdpNextZOrder = 0; index < mCurrentFrame.layerCount;
-            index++) {
+    for (int index = 0; index < mCurrentFrame.layerCount; index++) {
         if(!mCurrentFrame.isFBComposed[index]) {
             int mdpIndex = mCurrentFrame.layerToMDP[index];
             hwc_layer_1_t* layer = &list->hwLayers[index];
@@ -941,7 +942,38 @@ int MDPComp::prepare(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     return 0;
 }
 
-//=============MDPCompLowRes===================================================
+int MDPComp::configureBaseLayer(hwc_context_t *ctx, ovutils::eDest dest) {
+	overlay::Overlay& ov = *(ctx->mOverlay);
+
+	ovutils::Whf info(
+			ctx->dpyAttr[mDpy].xres, ctx->dpyAttr[mDpy].yres,
+			MDP_RGB_888, 
+			ctx->dpyAttr[mDpy].stride * ctx->dpyAttr[mDpy].yres);
+	ovutils::PipeArgs parg(
+			ovutils::OV_MDP_BLEND_FG_PREMULT,
+            info,
+            ovutils::ZORDER_0,
+            ovutils::IS_FG_SET,
+            ovutils::ROT_FLAGS_NONE,
+            ovutils::DEFAULT_PLANE_ALPHA,
+            ovutils::OVERLAY_BLENDING_OPAQUE);
+	ov.setSource(parg, dest);
+
+	ovutils::Dim rect(0, 0,
+    	ctx->dpyAttr[mDpy].xres,
+        ctx->dpyAttr[mDpy].yres);
+	ov.setCrop(rect, dest);
+    ov.setPosition(rect, dest);
+
+	ov.setTransform(ovutils::OVERLAY_TRANSFORM_0, dest);
+
+	if (!ov.commit(dest)) {
+		ALOGE("%s: commit fails", __FUNCTION__);
+        return -1;
+	}
+	
+	return 0;
+}
 
 /*
  * Configures pipe(s) for MDP composition
@@ -968,6 +1000,16 @@ int MDPComp::pipesNeeded(hwc_context_t *ctx,
 
 bool MDPComp::allocLayerPipes(hwc_context_t *ctx,
                                     hwc_display_contents_1_t* list) {
+    if (!mCurrentFrame.isFBComposed[0] && 
+    	!isValidBaseLayer(ctx, &list->hwLayers[0])) {
+    	mCurrentFrame.mdpBasePipe = getMdpPipe(ctx, MDPCOMP_OV_ANY);
+		if (mCurrentFrame.mdpBasePipe == ovutils::OV_INVALID) {
+			ALOGD_IF(isDebug(), "%s: Unable to get pipe for base pipe",
+                         __FUNCTION__);
+            return false;
+        }
+    }
+
     if(isYuvPresent(ctx, mDpy)) {
         int nYuvCount = ctx->listStats[mDpy].yuvCount;
 
@@ -1044,6 +1086,13 @@ bool MDPComp::draw(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
 
     overlay::Overlay& ov = *ctx->mOverlay;
     LayerProp *layerProp = ctx->layerProp[mDpy];
+    
+    if (mCurrentFrame.mdpBasePipe != ovutils::OV_INVALID) {
+    	if (!ov.queueBuffer(-1, 0, mCurrentFrame.mdpBasePipe)) {
+            ALOGE("%s: queueBuffer failed for external", __FUNCTION__);
+            return false;
+        }
+    }
 
     int numHwLayers = ctx->listStats[mDpy].numAppLayers;
     for(int i = 0; i < numHwLayers && mCurrentFrame.mdpCount; i++ )

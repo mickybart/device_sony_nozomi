@@ -49,6 +49,7 @@ bool FBUpdateLowRes::prepare(hwc_context_t *ctx, hwc_display_contents_1 *list,
                  __FUNCTION__);
         return false;
     }
+    mZorder = fbZorder;
     mModeOn = configure(ctx, list, fbZorder);
     return mModeOn;
 }
@@ -90,7 +91,10 @@ bool FBUpdateLowRes::configure(hwc_context_t *ctx, hwc_display_contents_1 *list,
         ov.setSource(parg, dest);
 
         hwc_rect_t sourceCrop;
-        getNonWormholeRegion(list, sourceCrop);
+		if (fbZorder == 0)
+			sourceCrop = layer->sourceCrop;
+		else
+        	getNonWormholeRegion(list, sourceCrop);
         // x,y,w,h
         ovutils::Dim dcrop(sourceCrop.left, sourceCrop.top,
                            sourceCrop.right - sourceCrop.left,

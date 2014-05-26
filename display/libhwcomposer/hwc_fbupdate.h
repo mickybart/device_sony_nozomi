@@ -44,9 +44,11 @@ public:
     static IFBUpdate *getObject(const int& width, const int& dpy);
 
     bool isUsed() { return mModeOn; };
+    int getZorder() { return mZorder; };
 protected:
     const int mDpy; // display to update
     bool mModeOn; // if prepare happened
+    int mZorder;
 };
 
 //Low resolution (<= 2048) panel handler.

@@ -81,12 +81,19 @@ bool CopyBit::canUseCopybitForRGB(hwc_context_t *ctx,
                                     getInstance().getCompositionType();
 
     if (compositionType & qdutils::COMPOSITION_TYPE_DYN) {
+        int fbWidth =  ctx->dpyAttr[dpy].xres;
+        int fbHeight =  ctx->dpyAttr[dpy].yres;
+        if (ctx->mFBUpdate[dpy]->getZorder() == 0) {
+        	hwc_rect_t region;
+    		getNonWormholeRegion(list, region);
+        	if ((region.left != 0) || (region.right != fbWidth) ||
+                (region.top != 0) || (region.bottom != fbHeight))
+                return true;
+        }
         // DYN Composition:
         // use copybit, if (TotalRGBRenderArea < threashold * FB Area)
         // this is done based on perf inputs in ICS
         // TODO: Above condition needs to be re-evaluated in JB
-        int fbWidth =  ctx->dpyAttr[dpy].xres;
-        int fbHeight =  ctx->dpyAttr[dpy].yres;
         unsigned int fbArea = (fbWidth * fbHeight);
         unsigned int renderArea = getRGBRenderingArea(list);
             ALOGD_IF (DEBUG_COPYBIT, "%s:renderArea %u, fbArea %u",
@@ -255,7 +262,10 @@ bool CopyBit::draw(hwc_context_t *ctx, hwc_display_contents_1_t *list,
     //Clear the visible region on the render buffer
     //XXX: Do this only when needed.
     hwc_rect_t clearRegion;
-    getNonWormholeRegion(list, clearRegion);
+    if (ctx->mFBUpdate[dpy]->getZorder() == 0)
+        clearRegion = list->hwLayers[list->numHwLayers - 1].sourceCrop;
+    else	
+    	getNonWormholeRegion(list, clearRegion);
     clear(renderBuffer, clearRegion);
 
     int renderTransform = list->hwLayers[list->numHwLayers - 1].transform;

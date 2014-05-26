@@ -87,6 +87,7 @@ protected:
         /* maps mdp list to layer list */
         int mdpCount;
         struct PipeLayerPair mdpToLayer[MAX_PIPES_PER_MIXER];
+        ovutils::eDest mdpBasePipe;
 
         /* layer composing on FB? */
         int fbCount;
@@ -166,6 +167,8 @@ protected:
     bool isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer);
     void updateNotSupported(hwc_context_t* ctx, hwc_display_contents_1_t* list,
                             int* batchStart, int* batchCount);
+    bool isValidBaseLayer(hwc_context_t *ctx, hwc_layer_1_t *layer);
+    int configureBaseLayer(hwc_context_t *ctx, ovutils::eDest dest);
 
     int mDpy;
     static bool sEnabled;
