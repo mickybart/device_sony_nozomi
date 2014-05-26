@@ -64,22 +64,6 @@ private:
     ovutils::eDest mDest; //pipe to draw on
 };
 
-//High resolution (> 2048) panel handler.
-class FBUpdateHighRes : public IFBUpdate {
-public:
-    explicit FBUpdateHighRes(const int& dpy);
-    virtual ~FBUpdateHighRes() {};
-    bool prepare(hwc_context_t *ctx, hwc_display_contents_1 *list,
-                                                             int fbZorder);
-    bool draw(hwc_context_t *ctx, private_handle_t *hnd);
-    void reset();
-private:
-    bool configure(hwc_context_t *ctx, hwc_display_contents_1 *list,
-                                                            int fbZorder);
-    ovutils::eDest mDestLeft; //left pipe to draw on
-    ovutils::eDest mDestRight; //right pipe to draw on
-};
-
 }; //namespace qhwc
 
 #endif //HWC_FBUPDATE_H

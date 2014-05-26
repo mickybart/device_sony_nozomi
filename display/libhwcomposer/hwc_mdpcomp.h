@@ -42,7 +42,7 @@ public:
     /*sets up mdp comp for the current frame */
     int prepare(hwc_context_t *ctx, hwc_display_contents_1_t* list);
     /* draw */
-    virtual bool draw(hwc_context_t *ctx, hwc_display_contents_1_t *list) = 0;
+    bool draw(hwc_context_t *ctx, hwc_display_contents_1_t *list);
     /* dumpsys */
     void dump(android::String8& buf);
 
@@ -68,7 +68,7 @@ protected:
     /* mdp pipe data */
     struct MdpPipeInfo {
         int zOrder;
-        virtual ~MdpPipeInfo(){};
+        ovutils::eDest index;
     };
 
     /* per layer data */
@@ -119,16 +119,13 @@ protected:
     };
 
     /* No of pipes needed for Framebuffer */
-    virtual int pipesForFB() = 0;
+    int pipesForFB() { return 1; };
     /* calculates pipes needed for the panel */
-    virtual int pipesNeeded(hwc_context_t *ctx,
-                            hwc_display_contents_1_t* list) = 0;
+    int pipesNeeded(hwc_context_t *ctx, hwc_display_contents_1_t* list);
     /* allocates pipe from pipe book */
-    virtual bool allocLayerPipes(hwc_context_t *ctx,
-                                 hwc_display_contents_1_t* list) = 0;
+    bool allocLayerPipes(hwc_context_t *ctx, hwc_display_contents_1_t* list);
     /* configures MPD pipes */
-    virtual int configure(hwc_context_t *ctx, hwc_layer_1_t *layer,
-                          PipeLayerPair& pipeLayerPair) = 0;
+    int configure(hwc_context_t *ctx, hwc_layer_1_t *layer, PipeLayerPair& pipeLayerPair);
 
     /* set/reset flags for MDPComp */
     void setMDPCompLayerFlags(hwc_context_t *ctx,
@@ -181,55 +178,5 @@ protected:
     buffer_handle_t fbHandle;
 };
 
-class MDPCompLowRes : public MDPComp {
-public:
-    explicit MDPCompLowRes(int dpy):MDPComp(dpy){};
-    virtual ~MDPCompLowRes(){};
-    virtual bool draw(hwc_context_t *ctx, hwc_display_contents_1_t *list);
-
-private:
-    struct MdpPipeInfoLowRes : public MdpPipeInfo {
-        ovutils::eDest index;
-        virtual ~MdpPipeInfoLowRes() {};
-    };
-
-    virtual int pipesForFB() { return 1; };
-    /* configure's overlay pipes for the frame */
-    virtual int configure(hwc_context_t *ctx, hwc_layer_1_t *layer,
-                          PipeLayerPair& pipeLayerPair);
-
-    /* allocates pipes to selected candidates */
-    virtual bool allocLayerPipes(hwc_context_t *ctx,
-                                 hwc_display_contents_1_t* list);
-
-    virtual int pipesNeeded(hwc_context_t *ctx, hwc_display_contents_1_t* list);
-};
-
-class MDPCompHighRes : public MDPComp {
-public:
-    explicit MDPCompHighRes(int dpy):MDPComp(dpy){};
-    virtual ~MDPCompHighRes(){};
-    virtual bool draw(hwc_context_t *ctx, hwc_display_contents_1_t *list);
-private:
-    struct MdpPipeInfoHighRes : public MdpPipeInfo {
-        ovutils::eDest lIndex;
-        ovutils::eDest rIndex;
-        virtual ~MdpPipeInfoHighRes() {};
-    };
-
-    bool acquireMDPPipes(hwc_context_t *ctx, hwc_layer_1_t* layer,
-                         MdpPipeInfoHighRes& pipe_info, ePipeType type);
-
-    virtual int pipesForFB() { return 2; };
-    /* configure's overlay pipes for the frame */
-    virtual int configure(hwc_context_t *ctx, hwc_layer_1_t *layer,
-                          PipeLayerPair& pipeLayerPair);
-
-    /* allocates pipes to selected candidates */
-    virtual bool allocLayerPipes(hwc_context_t *ctx,
-                                 hwc_display_contents_1_t* list);
-
-    virtual int pipesNeeded(hwc_context_t *ctx, hwc_display_contents_1_t* list);
-};
 }; //namespace
 #endif
