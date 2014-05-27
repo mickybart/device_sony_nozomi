@@ -821,6 +821,14 @@ bool MDPComp::programYUV(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     }
     //If we are in this block, it means we have yuv + rgb layers both
     int mdpIdx = 0;
+    if (mCurrentFrame.mdpBasePipe != ovutils::OV_INVALID) {
+        if(configureBaseLayer(ctx, mCurrentFrame.mdpBasePipe)) {
+            ALOGD_IF(isDebug(), "%s: Failed to configure overlay for \
+                    base layer",__FUNCTION__);
+            return false;
+        }
+        mdpIdx = 1;
+    }
     for (int index = 0; index < mCurrentFrame.layerCount; index++) {
         if(!mCurrentFrame.isFBComposed[index]) {
             hwc_layer_1_t* layer = &list->hwLayers[index];
@@ -1075,14 +1083,15 @@ bool MDPComp::draw(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     overlay::Overlay& ov = *ctx->mOverlay;
     LayerProp *layerProp = ctx->layerProp[mDpy];
     
+    int numHwLayers = ctx->listStats[mDpy].numAppLayers;
+    if (!numHwLayers)
+        return true;
     if (mCurrentFrame.mdpBasePipe != ovutils::OV_INVALID) {
     	if (!ov.queueBuffer(-1, 0, mCurrentFrame.mdpBasePipe)) {
             ALOGE("%s: queueBuffer failed for external", __FUNCTION__);
             return false;
         }
     }
-
-    int numHwLayers = ctx->listStats[mDpy].numAppLayers;
     for(int i = 0; i < numHwLayers && mCurrentFrame.mdpCount; i++ )
     {
         if(mCurrentFrame.isFBComposed[i]) continue;
