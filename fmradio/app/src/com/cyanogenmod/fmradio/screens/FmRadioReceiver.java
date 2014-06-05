@@ -528,7 +528,7 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
                         mPauseMutex = true;
                         mFmReceiver.resume();
                         mPlayer.start();
-                        mBtnMute.setImageResource(R.drawable.fm_volume_mute);
+                        mBtnMute.setImageResource(R.drawable.fm_volume);
                     } catch (Exception e) {
                         Utils.debugFunc("Unable to resume. E.: " + e.getMessage(), Log.ERROR);
                         showToast(R.string.unable_to_resume, Toast.LENGTH_LONG);
@@ -540,7 +540,7 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
                         mPauseMutex = true;
                         mPlayer.stop();
                         mFmReceiver.pause();
-                        mBtnMute.setImageResource(R.drawable.fm_volume);
+                        mBtnMute.setImageResource(R.drawable.fm_volume_mute);
                     } catch (Exception e) {
                         Utils.debugFunc("Unable to pause. E.: " + e.getMessage(), Log.ERROR);
                         showToast(R.string.unable_to_pause, Toast.LENGTH_LONG);
