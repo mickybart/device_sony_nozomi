@@ -96,6 +96,10 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1056964608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2147483648
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custombootimg.mk
+BOARD_CUSTOM_MKBOOTIMG := device/sony/nozomi/tools/mkelf.py
+BOARD_MKBOOTIMG_ARGS := \
+	out/target/product/nozomi/kernel@0x40208000 \
+	out/target/product/nozomi/ramdisk.img@0x41500000,ramdisk \
+	vendor/sony/nozomi/proprietary/boot/RPM.bin@0x20000,rpm
 
 -include vendor/sony/nozomi/BoardConfigVendor.mk

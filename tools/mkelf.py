@@ -152,6 +152,14 @@ def write_elf_phdr(elf, seg):
 def main(args):
     parser = OptionParser("usage: %prog options")
     parser.add_option("-o", dest="outputfile", help="path to the output file")
+    parser.add_option("--output", dest="outputfile", help="path to the output file")
+    parser.add_option("--kernel", dest="kernelfile", help="path to the kernel file")
+    parser.add_option("--ramdisk", dest="ramdiskfile", help="path to the ramdisk file")
+    parser.add_option("--second", dest="secondloader", help="path to the second bootloader file")
+    parser.add_option("--cmdline", dest="cmdline", help="kernel commandline")
+    parser.add_option("--board", dest="boardname", help="board name")
+    parser.add_option("--base", dest="baseaddress", help="base address")
+    parser.add_option("--pagesize", dest="pagesize", help="pagesize")
     (opts, args) = parser.parse_args()
 
     if not opts.outputfile:
