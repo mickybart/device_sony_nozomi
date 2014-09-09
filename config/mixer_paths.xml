@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mixer>
+    <!-- These are the initial mixer settings -->
+    <!-- NOTE: For all the mixer controls added under usecases or sound devices -->
+    <!--       we should have an initial mixer setting (default value) -->
+    <ctl name="handset_rx" value="0" />
+    <ctl name="handset_tx" value="0" />
+    <ctl name="speaker_stereo_rx" value="0" />
+    <ctl name="speaker_mono_rx" value="0" />
+    <ctl name="headset_mono_tx" value="0" />
+    <ctl name="speaker_mono_tx" value="0" />
+    <ctl name="headset_stereo_rx" value="0" />
+    <ctl name="tty_headset_mono_tx" value="0" />
+    <ctl name="tty_headset_mono_rx" value="0" />
+    <ctl name="headset_stereo_speaker_stereo_rx" value="0" />
+    <ctl name="headset_stereo_speaker_mono_rx" value="0" />
+    <ctl name="hs_stereo_lb" value="0" />
+    <ctl name="speaker_stereo_lb" value="0" />
+    <ctl name="linein_pri_tx" value="0" />
+    <ctl name="secondary_mic_tx" value="0" />
+    <ctl name="speaker_dual_mic_endfire_tx_real_stereo" value="0" />
+    <ctl name="handset_dual_mic_endfire_tx" value="0" />
+    <ctl name="speaker_dual_mic_endfire_tx" value="0" />
+    <ctl name="handset_spkr_hac_rx" value="0" />
+    <ctl name="xloud_speaker_stereo_rx" value="0" />
+    <ctl name="xloud_speaker_mono_rx" value="0" />
+    <ctl name="ringtone_speaker_stereo_rx" value="0" />
+    <ctl name="ringtone_speaker_mono_rx" value="0" />
+    <ctl name="ringtone_xloud_speaker_stereo_rx" value="0" />
+    <ctl name="ringtone_xloud_speaker_mono_rx" value="0" />
+    <ctl name="handset_asr_tx" value="0" />
+    <ctl name="camcorder_tx" value="0" />
+    <ctl name="handset_skt_rx" value="0" />
+    <ctl name="handset_vzw_rx" value="0" />
+    <ctl name="bt_sco_rx" value="0" />
+    <ctl name="bt_sco_tx" value="0" />
+    <ctl name="bt_carkit_rx" value="0" />
+    <ctl name="bt_carkit_tx" value="0" />
+    <ctl name="bt_dsp_sco_tx" value="0" />
+    <ctl name="fmradio_stereo_tx" value="0" />
+    <ctl name="fmradio_stereo_rx" value="0" />
+    <ctl name="uplink_rx" value="0" />
+    <ctl name="hdmi_stereo_rx" value="0" />
+    <ctl name="hdmi_pass_through" value="0" />
+    
+    <ctl name="deep-buffer-playback" value="0" />
+    <ctl name="deep-buffer-playback bt-sco" value="0" />
+    <ctl name="deep-buffer-playback hdmi" value="0" />
+    <ctl name="low-latency-playback" value="0" />
+    <ctl name="low-latency-playback bt-sco" value="0" />
+    <ctl name="low-latency-playback hdmi" value="0" />
+    <ctl name="multi-channel-playback hdmi" value="0" />
+    <ctl name="compress-offload-playback" value="0" />
+    <ctl name="compress-offload-playback bt-sco" value="0" />
+    <ctl name="compress-offload-playback hdmi" value="0" />
+    <ctl name="audio-record" value="0" />
+    <ctl name="audio-record bt-sco" value="0" />
+    <ctl name="audio-record fm-radio" value="0" />
+    <ctl name="low-latency-record" value="0" />
+    <ctl name="low-latency-record bt-sco" value="0" />
+    <ctl name="low-latency-record fm-radio" value="0" />
+    <ctl name="voice-call" value="0" />
+
+    <!-- These are audio route (FE to BE) specific mixer settings -->
+    <path name="deep-buffer-playback">
+        <ctl name="deep-buffer-playback" value="1" />
+    </path>
+
+    <path name="deep-buffer-playback bt-sco">
+        <ctl name="deep-buffer-playback bt-sco" value="1" />
+    </path>
+
+    <path name="deep-buffer-playback hdmi">
+        <ctl name="deep-buffer-playback hdmi" value="1" />
+    </path>
+
+    <path name="deep-buffer-playback speaker-and-hdmi">
+        <path name="deep-buffer-playback hdmi" />
+        <path name="deep-buffer-playback" />
+    </path>
+
+    <path name="low-latency-playback">
+        <ctl name="low-latency-playback" value="1" />
+    </path>
+
+    <path name="low-latency-playback bt-sco">
+        <ctl name="low-latency-playback bt-sco" value="1" />
+    </path>
+
+    <path name="low-latency-playback hdmi">
+        <ctl name="low-latency-playback hdmi" value="1" />
+    </path>
+
+    <path name="low-latency-playback speaker-and-hdmi">
+        <path name="low-latency-playback hdmi" />
+        <path name="low-latency-playback" />
+    </path>
+
+    <path name="multi-channel-playback hdmi">
+        <ctl name="multi-channel-playback hdmi" value="1" />
+    </path>
+
+    <path name="compress-offload-playback">
+        <ctl name="compress-offload-playback" value="1" />
+    </path>
+
+    <path name="compress-offload-playback bt-sco">
+        <ctl name="compress-offload-playback bt-sco" value="1" />
+    </path>
+
+    <path name="compress-offload-playback hdmi">
+        <ctl name="compress-offload-playback hdmi" value="1" />
+    </path>
+
+    <path name="compress-offload-playback speaker-and-hdmi">
+        <path name="compress-offload-playback hdmi" />
+        <path name="compress-offload-playback" />
+    </path>
+
+    <path name="audio-record">
+        <ctl name="audio-record" value="1" />
+    </path>
+
+    <path name="audio-record bt-sco">
+        <ctl name="audio-record bt-sco" value="1" />
+    </path>
+
+    <path name="audio-record fm-radio">
+        <ctl name="audio-record fm-radio" value="1" />
+    </path>
+
+    <path name="low-latency-record">
+        <ctl name="low-latency-record" value="1" />
+    </path>
+
+    <path name="low-latency-record bt-sco">
+        <ctl name="low-latency-record bt-sco" value="1" />
+    </path>
+
+    <path name="low-latency-record fm-radio">
+        <ctl name="low-latency-record fm-radio" value="1" />
+    </path>
+
+    <path name="voice-call">
+        <ctl name="voice-call" value="1" />
+    </path>
+
+    <path name="voice-call bt-sco">
+        <path name="voice-call" />
+    </path>
+
+    <!-- These are actual sound device specific mixer settings -->
+    <path name="speaker">
+        <ctl name="speaker_stereo_rx" value="1" />
+    </path>
+
+    <path name="speaker-reverse">
+        <!-- mono speaker, no channel swap here -->
+        <path name="speaker" />
+    </path>
+
+    <path name="speaker-mic">
+        <ctl name="speaker_mono_tx" value="1" />
+    </path>
+
+    <path name="handset">
+        <ctl name="handset_rx" value="1" />
+    </path>
+
+    <path name="handset-mic">
+        <ctl name="handset_tx" value="1" />
+    </path>
+
+    <path name="headset">
+        <ctl name="headset_stereo_rx" value="1" />
+    </path>
+
+    <path name="headset-mic">
+        <ctl name="headset_mono_tx" value="1" />
+    </path>
+
+    <path name="speaker-and-headset">
+        <ctl name="headset_stereo_speaker_stereo_rx" value="1" />
+    </path>
+
+    <path name="hdmi">
+        <ctl name="hdmi_stereo_rx" value="1" />
+    </path>
+
+    <path name="speaker-and-hdmi">
+        <path name="speaker" />
+        <path name="hdmi" />
+    </path>
+
+    <path name="voice-rec-mic">
+        <path name="speaker-mic" />
+    </path>
+
+    <path name="camcorder-mic">
+        <ctl name="camcorder_tx" value="1" />
+    </path>
+
+    <path name="hdmi-mic">
+        <path name="speaker-mic" />
+    </path>
+
+    <path name="bt-sco-headset">
+        <ctl name="bt_sco_rx" value="1" />
+    </path>
+
+    <path name="bt-sco-mic">
+        <ctl name="bt_sco_tx" value="1" />
+    </path>
+
+    <!-- Dual MIC devices -->
+    <path name="dmic-endfire">
+    </path>
+
+    <path name="dmic-broadside">
+    </path>
+
+    <path name="speaker-dmic-endfire">
+    </path>
+
+    <path name="speaker-dmic-broadside">
+    </path>
+
+    <path name="voice-dmic-ef">
+        <path name="dmic-endfire" />
+    </path>
+
+    <path name="voice-dmic-bs">
+        <path name="dmic-broadside" />
+    </path>
+
+    <path name="voice-speaker-dmic-ef">
+        <path name="speaker-dmic-endfire" />
+    </path>
+
+    <path name="voice-speaker-dmic-bs">
+        <path name="speaker-dmic-broadside" />
+    </path>
+
+    <path name="voice-rec-dmic-ef">
+        <path name="dmic-endfire" />
+    </path>
+
+    <path name="voice-rec-dmic-bs">
+        <path name="dmic-broadside" />
+    </path>
+
+    <path name="voice-rec-dmic-ef-fluence">
+        <path name="dmic-endfire" />
+    </path>
+
+    <path name="voice-rec-dmic-bs-fluence">
+        <path name="dmic-broadside" />
+    </path>
+
+    <!-- TTY devices -->
+    <path name="voice-tty-headset">
+        <ctl name="tty_headset_mono_rx" value="1" />
+    </path>
+
+    <path name="voice-tty-headset-mic">
+        <ctl name="tty_headset_mono_tx" value="1" />
+    </path>
+
+    <path name="fm-radio">
+        <ctl name="fmradio_stereo_tx" value="1" />
+    </path>
+
+</mixer>

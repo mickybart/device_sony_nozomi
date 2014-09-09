@@ -1,0 +1,149 @@
+
+#
+# system.prop for nozomi
+#
+
+# Notify the system that the RIL only signals once
+ro.telephony.call_ring.multiple=false
+
+rild.libpath=/system/lib/libril-qc-qmi-1.so
+rild.libargs=-d /dev/smd0
+persist.rild.nitz_plmn=
+persist.rild.nitz_long_ons_0=
+persist.rild.nitz_long_ons_1=
+persist.rild.nitz_long_ons_2=
+persist.rild.nitz_long_ons_3=
+persist.rild.nitz_short_ons_0=
+persist.rild.nitz_short_ons_1=
+persist.rild.nitz_short_ons_2=
+persist.rild.nitz_short_ons_3=
+ril.subscription.types=NV,RUIM
+DEVICE_PROVISIONED=1
+persist.actionsafe.maxwidth=20
+persist.actionsafe.maxheight=20
+keyguard.no_require_sim=1
+
+telephony.lteOnCdmaDevice=0
+
+
+debug.sf.hw=1
+persist.hwc.mdpcomp.enable=1
+debug.composition.type=dyn
+debug.mdpcomp.maxpermixer=4
+debug.mdpcomp.idletime=-1
+debug.hwc.dynThreshold=1.9
+
+dev.pm.dyn_samplingrate=1
+
+#
+# system prop for opengles version
+#
+# 131072 is decimal for 0x20000 to report version 2
+ro.opengles.version=131072
+
+# hardware/libhardwarey_legacy/wifi have fuji patch. Need them
+wifi.interface=wlan0
+wifi.supplicant_scan_interval=15
+
+# System props for SOLS
+ro.semc.sols.product-code=97
+ro.semc.sols.company-code=5
+
+ro.hdmi.enable=true
+lpa.decode=false
+
+# New added in msm8660_surf
+use.non-omx.mp3.decoder=true
+lpa.use-stagefright=true
+
+#system props for the MM modules
+media.stagefright.enable-player=true
+media.stagefright.enable-http=true
+media.stagefright.enable-fma2dp=false
+media.stagefright.enable-aac=true
+media.stagefright.enable-qcp=true
+media.stagefright.enable-scan=true
+encoder.video.profile=high
+# New added in msm8660_surf
+mmp.enable.3g2=true
+
+#
+# system props for the data modules
+#
+ro.use_data_netmgrd=true
+persist.data_netmgrd_nint=3
+
+#system props for time-services
+persist.timed.enable=true
+
+# System props for audio
+persist.audio.fluence.mode=endfire
+persist.audio.vr.enable=false
+persist.audio.hp=true
+
+# System prop to select audio resampler quality
+af.resampler.quality=3
+
+# NFC
+ro.nfc.on.default=false
+ro.nfc.se.sim.enable=true
+ro.nfc.se.smx.enable=true
+ro.nfc.icon.enable=true
+ro.nfc.vendor.name=nxp
+
+#
+# System prop for sending transmit power request to RIL during WiFi hotspot on/off
+#
+ro.ril.transmitpower=true
+
+# hwui
+ro.hwui.text_cache_width=2048
+
+# It is changed to true in msm8660_surf
+# Change it back to false according to blue
+#
+# Simulate sdcard on /data/media
+#
+persist.fuse_sdcard=false
+
+# Properties controlling Qcom performance patches
+net.webkit.setpri=1
+net.webkit.cache.mindeadsize=4194304
+net.webkit.cache.maxdeadsize=4194304
+net.webkit.cache.size=12582912
+net.dns.cache_size=512
+net.dns.cache_ttl=600
+net.early.sockets=0
+stathub.pp.prfth=30
+net.tcp.fin.aggregation=1
+net.dnshostprio.enable=1
+net.http.threads=10
+net.http.idle_cache.size=40
+net.http.idle_cache.shutdown=true
+net.nw.cache.prioadvstep=86400000
+net.nw.cache.weightadvstep=3600000
+net.nw.cache.orderby=weight
+stathub.enabled=0
+
+#
+# ADDITIONAL_BUILD_PROPERTIES
+#
+keyguard.no_require_sim=true
+ro.vendor.extension_library=/system/lib/libqc-opt.so
+dalvik.vm.dexopt-flags=m=y
+dalvik.vm.heapstartsize=8m
+dalvik.vm.heapgrowthlimit=64m
+dalvik.vm.heapsize=256m
+dalvik.vm.heaputilization=0.25
+dalvik.vm.heapidealfree=8388608
+dalvik.vm.heapconcurrentstart=2097152
+dalvik.vm.stack-trace-file=/data/anr/traces.txt
+ro.sf.lcd_density=320
+ro.com.google.clientidbase=android-sonyericsson
+ro.com.google.clientidbase.ms=android-sonymobile
+ro.ril.hsxpa=1
+ro.ril.gprsclass=10
+ro.usb.pid_suffix=169
+net.bt.name=Android
+ro.service.swiqi.supported=true
+persist.service.swiqi.enable=1

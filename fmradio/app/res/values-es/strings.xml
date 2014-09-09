@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012-2013 The CyanogenMod Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Radio FM</string>
+    <string name="band_select">Seleccionar banda</string>
+    <string name="band_select_title">Por favor, indica la región para la banda de FM:\n(Podrás cambiar este valor más tarde en Ajustes)</string>
+    <string name="proceed">Proceder</string>
+    <string name="band_us">Estadounidense</string>
+    <string name="band_eu">Europea</string>
+    <string name="band_ja">Japonesa</string>
+    <string name="band_ch">China</string>
+    <string name="fmradio">RADIO FM</string>
+    <string name="dashes">- - - -</string>
+    <string name="no_stations">No hay emisoras disponibles</string>
+    <string name="scanning_for_stations">Buscando emisoras</string>
+    <string name="unable_to_restart">Imposible reiniciar la aplicación</string>
+    <string name="unable_to_set_frequency">Imposible establecer la frecuencia</string>
+    <string name="unable_to_scan">Imposible iniciar la búsqueda</string>
+    <string name="unable_to_pause">Imposible pausar la emisión</string>
+    <string name="unable_to_resume">Imposible reanudar la emisión</string>
+    <string name="unable_to_start_radio">Imposible iniciar el receptor de radio</string>
+    <string name="unable_to_mediaplayer">Imposible iniciar el reproductor multimedia de Android</string>
+    <string name="mediaplayer_busy">Reproductor multimedia ocupado. Por favor, inténtalo dentro de unos segundos</string>
+    <string name="earplugs_not_connected">Conecta tus auriculares para usar esta aplicación.</string>
+    <string name="preferences">Ajustes</string>
+    <string name="pref_notification_bar_title">Usar notificaciones</string>
+    <string name="pref_print_debug_info_title">Habilitar depuración</string>
+    <string name="about">Acerca de</string>
+</resources>
