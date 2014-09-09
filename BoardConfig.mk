@@ -24,9 +24,11 @@
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
-TARGET_CPU_VARIANT := krait
+TARGET_CPU_VARIANT := cortex-a8
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_ARCH_VARIANT_CPU := cortex-a8
+ARCH_ARM_HAVE_TLS_REGISTER := true
 
 # compile flag
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
@@ -85,10 +87,18 @@ BOARD_HAVE_FMRADIO_BCM := true
 # board
 TARGET_BOARD_PLATFORM := msm8660
 TARGET_BOOTLOADER_BOARD_NAME := fuji
-
+TARGET_VENDOR_PLATFORM := fuji
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RECOVERY := true
+TARGET_NO_RADIOIMAGE := true
 TARGET_BOOTLOADER_TYPE := fastboot
+BOARD_HAS_NO_MISC_PARTITION := true
+
+# kernel
+BOARD_KERNEL_ADDR	:= 0x40208000
+BOARD_RAMDISK_ADDR	:= 0x41500000
+BOARD_RPM_ADDR		:= 0x20000
 
 # image
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -99,3 +109,5 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custombootimg.mk
 
 -include vendor/sony/nozomi/BoardConfigVendor.mk
+
+
