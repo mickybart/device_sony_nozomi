@@ -123,7 +123,6 @@ struct platform_data {
 #endif
     
     int voice_session_id;
-    int voice_session_mute;
 };
 
 static const int pcm_device_table[AUDIO_USECASE_MAX][2] = {
@@ -331,7 +330,6 @@ void *platform_init(struct audio_device *adev)
     }
     
     my_data->voice_session_id = 0;
-    my_data->voice_session_mute = 0;
     
     //init msm
     if(my_data->msm_mixer_open == NULL || my_data->msm_mixer_open("/dev/snd/controlC0", 0) < 0)
@@ -516,7 +514,7 @@ int platform_start_voice_call(void *platform)
 	  if (ret < 0) {
 	    ALOGE("%s: msm_start_voice_ext error %d", __func__, ret);
 	  }
-	  my_data->msm_set_voice_tx_mute_ext(my_data->voice_session_mute,my_data->voice_session_id);
+	  my_data->msm_set_voice_tx_mute_ext(my_data->adev->mic_mute,my_data->voice_session_id);
         }
 #endif
     }
@@ -548,7 +546,6 @@ int platform_stop_voice_call(void *platform)
                 ALOGE("%s: msm_end_voice_ext error %d\n", __func__, ret);
             }
 	    my_data->voice_session_id = 0;
-	    my_data->voice_session_mute = 0;
         }
 #endif
     }
@@ -606,7 +603,6 @@ int platform_set_mic_mute(void *platform, bool state)
                 ALOGE("%s: dlsym error for msm_set_voice_tx_mute", __func__);
             } else {
                 my_data->msm_set_voice_tx_mute(state);
-		my_data->voice_session_mute = state;
             }
 #else
 	    if (my_data->msm_set_voice_tx_mute_ext == NULL) {
@@ -615,9 +611,7 @@ int platform_set_mic_mute(void *platform, bool state)
                 ret = my_data->msm_set_voice_tx_mute_ext(state,my_data->voice_session_id);
                 if (ret < 0) {
 		  ALOGE("%s: msm_set_voice_tx_mute error %d", __func__, ret);
-                }else{
-		  my_data->voice_session_mute = state;
-		}
+                }
             }
 #endif
         } else {
