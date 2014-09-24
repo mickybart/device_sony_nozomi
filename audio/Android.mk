@@ -24,7 +24,6 @@ LOCAL_SHARED_LIBRARIES := \
 	libaudioroute \
 	libdl
 
-
 LOCAL_C_INCLUDES += \
 	external/tinyalsa/include \
 	external/tinycompress/include \

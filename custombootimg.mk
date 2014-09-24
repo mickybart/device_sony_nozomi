@@ -44,8 +44,17 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(INSTALLED_RECOVERYIMAGE_T
 
 	$(hide) python $(MKELF) -o $@ $(PRODUCT_OUT)/kernel@$(BOARD_KERNEL_ADDR) $(PRODUCT_OUT)/combinedroot.img@$(BOARD_RAMDISK_ADDR),ramdisk $(RPMBIN)@$(BOARD_RPM_ADDR),rpm
 
-$(INSTALLED_RECOVERYIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(INSTALLED_RAMDISK_TARGET)
-	$(call pretty,"Recovery image: $@")
+$(INSTALLED_RECOVERYIMAGE_TARGET): $(INSTALLED_RAMDISK_TARGET) \
+		$(recovery_kernel) \
+		$(recovery_fstab)
+	$(call pretty,"Fake recovery image: $@")
+	$(hide) rm -rf $(TARGET_RECOVERY_OUT)
+	$(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)
+	$(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/etc
+	$(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/res
+	$(hide) touch $(TARGET_RECOVERY_ROOT_OUT)/res/use_fotakernel
+	$(hide) $(foreach item,$(recovery_fstab), \
+	  cp -f $(item) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.fstab)	
 	$(hide) python $(MKELF) -o $@ $(PRODUCT_OUT)/kernel@$(BOARD_KERNEL_ADDR) $(PRODUCT_OUT)/ramdisk.img@$(BOARD_RAMDISK_ADDR),ramdisk $(RPMBIN)@$(BOARD_RPM_ADDR),rpm
 	$(hide) $(call assert-max-image-size,$@,$(BOARD_RECOVERYIMAGE_PARTITION_SIZE),raw)
 
