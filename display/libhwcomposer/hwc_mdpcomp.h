@@ -162,7 +162,6 @@ protected:
     /* updates cache map with YUV info */
     void updateYUV(hwc_context_t* ctx, hwc_display_contents_1_t* list);
     bool programMDP(hwc_context_t *ctx, hwc_display_contents_1_t* list);
-    bool programYUV(hwc_context_t *ctx, hwc_display_contents_1_t* list);
     void reset(const int& numAppLayers, hwc_display_contents_1_t* list);
     bool isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer);
     void updateNotSupported(hwc_context_t* ctx, hwc_display_contents_1_t* list,

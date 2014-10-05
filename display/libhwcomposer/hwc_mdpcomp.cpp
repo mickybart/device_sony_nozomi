@@ -514,25 +514,32 @@ bool MDPComp::partialMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list)
 bool MDPComp::isOnlyVideoDoable(hwc_context_t *ctx,
         hwc_display_contents_1_t* list){
     int numAppLayers = ctx->listStats[mDpy].numAppLayers;
-    mCurrentFrame.reset(numAppLayers);
-    updateYUV(ctx, list);
-    int mdpCount = mCurrentFrame.mdpCount;
-    int fbNeeded = int(mCurrentFrame.fbCount != 0);
+    int batchStart, batchCount;
 
     if(!isYuvPresent(ctx, mDpy)) {
         return false;
     }
 
-    if(!mdpCount)
-        return false;
+    mCurrentFrame.reset(numAppLayers);
+    updateYUV(ctx, list);
+    updateNotSupported(ctx, list, &batchStart, &batchCount);
+    batchLayers(batchStart, batchCount); //sets up fbZ also
 
-    if(mdpCount > (sMaxPipesPerMixer - fbNeeded)) {
+	int baseNeeded = int(!mCurrentFrame.isFBComposed[0] && !isValidBaseLayer(ctx, &list->hwLayers[0]));
+
+    int mdpCount = mCurrentFrame.mdpCount + baseNeeded;
+    if(!mdpCount) {
+        ALOGD_IF(isDebug(), "%s: no MDP pipe used",__FUNCTION__);
+        return false;
+    }
+    if(mdpCount > (sMaxPipesPerMixer - 1)) { // -1 since FB is used
         ALOGD_IF(isDebug(), "%s: Exceeds MAX_PIPES_PER_MIXER",__FUNCTION__);
         return false;
     }
 
-    int numPipesNeeded = pipesNeeded(ctx, list);
+    int numPipesNeeded = pipesNeeded(ctx, list) + baseNeeded;
     int availPipes = getAvailablePipes(ctx);
+
     if(numPipesNeeded > availPipes) {
         ALOGD_IF(isDebug(), "%s: Insufficient MDP pipes, needed %d, avail %d",
                 __FUNCTION__, numPipesNeeded, availPipes);
@@ -806,45 +813,11 @@ bool MDPComp::programMDP(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
                 return false;
             }
         } else if(fbBatch == false) {
-                mdpNextZOrder++;
-                fbBatch = true;
+            mdpNextZOrder++;
+            fbBatch = true;
         }
     }
 
-    return true;
-}
-
-bool MDPComp::programYUV(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
-    if(!allocLayerPipes(ctx, list)) {
-        ALOGD_IF(isDebug(), "%s: Unable to allocate MDP pipes", __FUNCTION__);
-        return false;
-    }
-    //If we are in this block, it means we have yuv + rgb layers both
-    int mdpIdx = 0;
-    if (mCurrentFrame.mdpBasePipe != ovutils::OV_INVALID) {
-        if(configureBaseLayer(ctx, mCurrentFrame.mdpBasePipe)) {
-            ALOGD_IF(isDebug(), "%s: Failed to configure overlay for \
-                    base layer",__FUNCTION__);
-            return false;
-        }
-        mdpIdx = 1;
-    }
-    for (int index = 0; index < mCurrentFrame.layerCount; index++) {
-        if(!mCurrentFrame.isFBComposed[index]) {
-            hwc_layer_1_t* layer = &list->hwLayers[index];
-            int mdpIndex = mCurrentFrame.layerToMDP[index];
-            MdpPipeInfo* cur_pipe =
-                    mCurrentFrame.mdpToLayer[mdpIndex].pipeInfo;
-            cur_pipe->zOrder = mdpIdx++;
-
-            if(configure(ctx, layer,
-                        mCurrentFrame.mdpToLayer[mdpIndex]) != 0 ){
-                ALOGD_IF(isDebug(), "%s: Failed to configure overlay for \
-                        layer %d",__FUNCTION__, index);
-                return false;
-            }
-        }
-    }
     return true;
 }
 
@@ -900,10 +873,6 @@ int MDPComp::prepare(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
         //Try to compose atleast YUV layers through MDP comp and let
         //all the RGB layers compose in FB
         //Destination over
-        mCurrentFrame.fbZ = -1;
-        if(mCurrentFrame.fbCount)
-            mCurrentFrame.fbZ = mCurrentFrame.mdpCount;
-
         mCurrentFrame.map();
 
         //Configure framebuffer first if applicable
@@ -914,7 +883,7 @@ int MDPComp::prepare(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
                 return -1;
             }
         }
-        if(!programYUV(ctx, list)) {
+        if(!programMDP(ctx, list)) {
             reset(numLayers, list);
             return -1;
         }
