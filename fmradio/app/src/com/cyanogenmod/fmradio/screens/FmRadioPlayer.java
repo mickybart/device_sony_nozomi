@@ -30,7 +30,7 @@ public class FmRadioPlayer implements Runnable, AudioManager.OnAudioFocusChangeL
 
     private AudioManager mAudioManager;
     private int mBufSize;
-    private short[] mAudioData;
+    private byte[] mAudioData;
     private Thread mThread;
 
     public FmRadioPlayer(Context ctx) {
@@ -43,7 +43,7 @@ public class FmRadioPlayer implements Runnable, AudioManager.OnAudioFocusChangeL
            		AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT));
         mBufSize = Math.max(mBufSize, SAMPLERATE / 10 * 4);
 
-        mAudioData = new short[mBufSize / 2];
+        mAudioData = new byte[mBufSize];
     }
     
     public void start() {
@@ -129,7 +129,9 @@ public class FmRadioPlayer implements Runnable, AudioManager.OnAudioFocusChangeL
     		}
     		
     		recorder.stop();
+    		recorder.release();
     		player.stop();
+    		player.release();
     	} catch (Throwable t) {
     		t.printStackTrace();
     	}
