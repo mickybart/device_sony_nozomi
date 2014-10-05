@@ -74,6 +74,7 @@
 /dev/msm_vidc_enc         0660   system     audio
 /dev/msm_rotator          0664   system     system
 /dev/hw_random            0660   system     system
+/dev/graphics/*           0664   root       graphics
 
 #permissions for audio
 /dev/msm_acdb             0660   system     audio
