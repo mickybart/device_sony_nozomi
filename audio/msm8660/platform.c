@@ -369,8 +369,8 @@ int platform_switch_voice_call_device_post(void *platform,
             return -EINVAL;
         }
 
-        ALOGV("%s: sending voice calibration for snd_device(%d) acdb_id(%d)",
-              __func__, snd_device, acdb_dev_id);
+        ALOGV("%s: sending voice calibration for out_snd_device(%d) acdb_id(%d) and in_snd_device(%d) acdb_id(%d)",
+              __func__, out_snd_device, rx_id, in_snd_device, tx_id);
         my_data->acdb_send_voice_cal(rx_id, tx_id);
     }
 
@@ -401,7 +401,7 @@ int platform_set_voice_volume(void *platform, int volume)
         return -EINVAL;
     }
     value[0] = 1;
-    value[1] = volume;
+    value[1] = (volume + 10) / 20;
     value[2] = 0xFFF0;
     return mixer_ctl_set_array(ctl, value, sizeof(value)/sizeof(value[0]));
 }
