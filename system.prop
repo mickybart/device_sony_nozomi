@@ -35,6 +35,9 @@ debug.hwc.dynThreshold=1.9
 
 dev.pm.dyn_samplingrate=1
 
+hw.hdmi.limit_to_720p=1
+hw.hdmi.resolution=-1
+
 #
 # system prop for opengles version
 #
