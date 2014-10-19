@@ -249,8 +249,15 @@ bool MDPComp::isValidDimension(hwc_context_t *ctx, hwc_layer_1_t *layer) {
        qhwc::calculate_crop_rects(crop, dst, scissor, layer->transform);
     }
 
-    int crop_w = crop.right - crop.left;
-    int crop_h = crop.bottom - crop.top;
+    int crop_w;
+    int crop_h;
+    if (layer->transform & HWC_TRANSFORM_ROT_90) {
+        crop_w = crop.bottom - crop.top;
+        crop_h = crop.right - crop.left;
+    } else {
+        crop_w = crop.right - crop.left;
+        crop_h = crop.bottom - crop.top;
+    }
     int dst_w = dst.right - dst.left;
     int dst_h = dst.bottom - dst.top;
     float w_dscale = ceilf((float)crop_w / (float)dst_w);
@@ -325,6 +332,11 @@ bool MDPComp::isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer) {
             ALOGD_IF(isDebug(), "%s: Cannot handle YUV layer with plane alpha\
                     when sandwiched",
                     __FUNCTION__);
+            return false;
+        }
+    } else {
+        if(layer->transform & HWC_TRANSFORM_ROT_90) {
+            ALOGD_IF(isDebug(), "%s: orientation involved",__FUNCTION__);
             return false;
         }
     }

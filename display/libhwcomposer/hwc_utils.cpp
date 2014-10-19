@@ -364,8 +364,13 @@ bool needsScaling(hwc_layer_1_t const* layer) {
     dst_w = displayFrame.right - displayFrame.left;
     dst_h = displayFrame.bottom - displayFrame.top;
 
-    src_w = sourceCrop.right - sourceCrop.left;
-    src_h = sourceCrop.bottom - sourceCrop.top;
+    if (layer->transform & HWC_TRANSFORM_ROT_90) {
+        src_w = sourceCrop.bottom - sourceCrop.top;
+        src_h = sourceCrop.right - sourceCrop.left;
+    } else {
+        src_w = sourceCrop.right - sourceCrop.left;
+        src_h = sourceCrop.bottom - sourceCrop.top;
+    }
 
     if(((src_w != dst_w) || (src_h != dst_h)))
         return true;
