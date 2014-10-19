@@ -196,10 +196,17 @@ bool MdpRot::remap(uint32_t numbufs) {
     }
 
     ALOGE_IF(DEBUG_OVERLAY, "%s: size changed - remapping", __FUNCTION__);
-    OVASSERT(!mMem.prev().valid(), "Prev should not be valid");
 
     // ++mMem will make curr to be prev, and prev will be curr
     ++mMem;
+
+    if(mMem.curr().valid()) {
+        if(!mMem.curr().close()) {
+            ALOGE("%s error in closing prev rot mem", __FUNCTION__);
+            return false;
+        }
+    }
+
     if(!open_i(numbufs, opBufSize)) {
         ALOGE("%s Error could not open", __FUNCTION__);
         return false;
@@ -238,17 +245,6 @@ bool MdpRot::queueBuffer(int fd, uint32_t offset) {
             ALOGE("MdpRot failed rotate");
             dump();
             return false;
-        }
-
-        // if the prev mem is valid, we need to close
-        if(mMem.prev().valid()) {
-            // FIXME if no wait for vsync the above
-            // play will return immediatly and might cause
-            // tearing when prev.close is called.
-            if(!mMem.prev().close()) {
-                ALOGE("%s error in closing prev rot mem", __FUNCTION__);
-                return false;
-            }
         }
     }
     return true;
