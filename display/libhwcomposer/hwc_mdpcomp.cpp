@@ -508,6 +508,9 @@ bool MDPComp::partialMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list)
         return false;
     }
 
+    if(baseNeeded && mCurrentFrame.fbCount)
+        mCurrentFrame.fbZ++;
+
     return true;
 }
 
@@ -545,6 +548,9 @@ bool MDPComp::isOnlyVideoDoable(hwc_context_t *ctx,
                 __FUNCTION__, numPipesNeeded, availPipes);
         return false;
     }
+
+    if(baseNeeded && mCurrentFrame.fbCount)
+        mCurrentFrame.fbZ++;
 
     return true;
 }
