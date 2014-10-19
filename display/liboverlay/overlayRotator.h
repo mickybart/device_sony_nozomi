@@ -53,7 +53,7 @@ struct RotMem {
         Mem();
         ~Mem();
         bool valid() { return m.valid(); }
-        bool close() { return m.close(); }
+        bool close();
         uint32_t size() const { return m.bufSz(); }
         void setReleaseFd(const int& fence);
         // Max rotator buffers
