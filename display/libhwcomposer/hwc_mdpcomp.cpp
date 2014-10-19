@@ -303,7 +303,9 @@ bool MDPComp::isValidBaseLayer(hwc_context_t *ctx, hwc_layer_1_t *layer) {
     return true;
 }
 
-bool MDPComp::isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer) {
+bool MDPComp::isSupported(hwc_context_t *ctx, hwc_display_contents_1_t* list, int i) {
+	hwc_layer_1_t *layer = &list->hwLayers[i];
+
     if(isSkipLayer(layer)) {
         ALOGD_IF(isDebug(), "%s: skipped layer", __FUNCTION__);
         return false;
@@ -344,6 +346,24 @@ bool MDPComp::isSupported(hwc_context_t *ctx, hwc_layer_1_t* layer) {
     if(!isValidDimension(ctx,layer)) {
         ALOGD_IF(isDebug(), "%s: Buffer is of invalid width", __FUNCTION__);
         return false;
+    }
+
+    if(isYuvBuffer(hnd) ) {
+        int numAppLayers = ctx->listStats[mDpy].numAppLayers;
+        for (i++; i < numAppLayers; i++) {
+            if(!isAlphaPresent(&list->hwLayers[i]))
+            	continue;
+            if(list->hwLayers[i].displayFrame.left >= layer->displayFrame.right ||
+               list->hwLayers[i].displayFrame.right <= layer->displayFrame.left ||
+               list->hwLayers[i].displayFrame.top >= layer->displayFrame.bottom ||
+               list->hwLayers[i].displayFrame.bottom <= layer->displayFrame.top)
+                continue;
+            if(list->hwLayers[i].displayFrame.left < layer->displayFrame.left ||
+               list->hwLayers[i].displayFrame.right > layer->displayFrame.right ||
+               list->hwLayers[i].displayFrame.top < layer->displayFrame.top ||
+               list->hwLayers[i].displayFrame.bottom > layer->displayFrame.bottom)
+                return false;
+        }
     }
 
     return true;
@@ -445,20 +465,8 @@ bool MDPComp::fullMDPComp(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     }
 
     for(int i = 0; i < numAppLayers; ++i) {
-        hwc_layer_1_t* layer = &list->hwLayers[i];
-        private_handle_t *hnd = (private_handle_t *)layer->handle;
-        if(isYuvBuffer(hnd) ) {
-            if(isSecuring(ctx, layer)) {
-                ALOGD_IF(isDebug(), "%s: MDP securing is active", __FUNCTION__);
-                return false;
-            }
-        }
-
-        if(!isValidDimension(ctx,layer)) {
-            ALOGD_IF(isDebug(), "%s: Buffer is of invalid width",
-                __FUNCTION__);
+        if(!isSupported(ctx, list, i))
             return false;
-        }
     }
 
     //Setup mCurrentFrame
@@ -720,9 +728,7 @@ void MDPComp::updateNotSupported(hwc_context_t* ctx,
     int max = -2;
 
     for (int i = 0; i < numAppLayers; i++) {
-        if (!isSupported(ctx, &list->hwLayers[i]) || 
-            ((i == 0) &&
-             !isValidBaseLayer(ctx, &list->hwLayers[0]))) {
+        if (!isSupported(ctx, list, i)) {
             if(!mCurrentFrame.isFBComposed[i]) {
                 mCurrentFrame.isFBComposed[i] = true;
                 mCurrentFrame.fbCount++;
