@@ -44,14 +44,14 @@ PRODUCT_PACKAGES += \
     memtrack.msm8660 \
     copybit.msm8660
 
-# Media
-PRODUCT_PACKAGES += \
-    libdivxdrmdecrypt \
-    libOmxVdec \
-    libOmxVenc \
-    libOmxCore \
-    libstagefrighthw \
-    libc2dcolorconvert
+## Media
+#PRODUCT_PACKAGES += \
+#    libdivxdrmdecrypt \
+#    libOmxVdec \
+#    libOmxVenc \
+#    libOmxCore \
+#    libstagefrighthw \
+#    libc2dcolorconvert
 
 # Audio
 PRODUCT_PACKAGES += \
