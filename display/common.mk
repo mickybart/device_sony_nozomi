@@ -14,7 +14,7 @@ common_libs := liblog libutils libcutils libhardware
 
 #Common C flags
 common_flags := -DDEBUG_CALC_FPS -Wno-missing-field-initializers
-common_flags += -Werror
+common_flags += -Werror -Wno-unused-parameter
 
 ifeq ($(ARCH_ARM_HAVE_NEON),true)
     common_flags += -D__ARM_HAVE_NEON
@@ -26,7 +26,7 @@ ifneq ($(filter msm8974 msm8x74 msm8226 msm8x26,$(TARGET_BOARD_PLATFORM)),)
 endif
 
 common_deps  :=
-kernel_includes :=
+kernel_includes := 
 
 # Executed only on QCOM BSPs
 ifeq ($(call is-vendor-board-platform,QCOM),true)

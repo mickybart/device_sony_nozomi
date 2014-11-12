@@ -25,6 +25,7 @@
 #include "comptype.h"
 #include "gr.h"
 #include "hwc_fbupdate.h"
+#include "sync/sync.h"
 
 //#define HWC_COPYBIT_ASYNC
 
