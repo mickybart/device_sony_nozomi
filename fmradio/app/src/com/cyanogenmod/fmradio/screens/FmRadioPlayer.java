@@ -110,7 +110,7 @@ public class FmRadioPlayer implements Runnable, AudioManager.OnAudioFocusChangeL
     public void run() {
     	try {
     		AudioRecord recorder = new AudioRecord(
-    			MediaRecorder.AudioSource.FM_RADIO, SAMPLERATE,
+    			MediaRecorder.AudioSource.FM_TUNER, SAMPLERATE,
     			AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT, 
     			mBufSize * 4);
 

@@ -30,11 +30,13 @@
 
 #include <hardware/bluetooth.h>
 #include <hardware/bt_hf.h>
+#include <hardware/bt_hf_client.h>
 #include <hardware/bt_av.h>
 #include <hardware/bt_sock.h>
 #include <hardware/bt_hh.h>
 #include <hardware/bt_hl.h>
 #include <hardware/bt_pan.h>
+#include <hardware/bt_mce.h>
 #include <hardware/bt_gatt.h>
 #include <hardware/bt_rc.h>
 
@@ -64,6 +66,9 @@
 
 bt_callbacks_t *bt_hal_cbacks = NULL;
 
+/** Operating System specific callouts for resource management */
+bt_os_callouts_t *bt_os_callouts = NULL;
+
 #ifdef BOARD_HAVE_FMRADIO_BCM
 fm_callbacks_t *fm_hal_cbacks = NULL;
 #endif
@@ -80,8 +85,11 @@ fm_callbacks_t *fm_hal_cbacks = NULL;
 
 /* handsfree profile */
 extern bthf_interface_t *btif_hf_get_interface();
+/* handsfree profile - client */
+extern bthf_client_interface_t *btif_hf_client_get_interface();
 /* advanced audio profile */
-extern btav_interface_t *btif_av_get_interface();
+extern btav_interface_t *btif_av_get_src_interface();
+extern btav_interface_t *btif_av_get_sink_interface();
 /*rfc l2cap*/
 extern btsock_interface_t *btif_sock_get_interface();
 /* hid host profile */
@@ -90,10 +98,16 @@ extern bthh_interface_t *btif_hh_get_interface();
 extern bthl_interface_t *btif_hl_get_interface();
 /*pan*/
 extern btpan_interface_t *btif_pan_get_interface();
+/*map client*/
+extern btmce_interface_t *btif_mce_get_interface();
+#if BLE_INCLUDED == TRUE
 /* gatt */
 extern btgatt_interface_t *btif_gatt_get_interface();
-/* avrc */
+#endif
+/* avrc target */
 extern btrc_interface_t *btif_rc_get_interface();
+/* avrc controller */
+extern btrc_interface_t *btif_rc_ctrl_get_interface();
 
 /************************************************************************************
 **  Functions
@@ -259,13 +273,13 @@ static int cancel_discovery(void)
     return btif_dm_cancel_discovery();
 }
 
-static int create_bond(const bt_bdaddr_t *bd_addr)
+static int create_bond(const bt_bdaddr_t *bd_addr, int transport)
 {
     /* sanity check */
     if (interface_ready() == FALSE)
         return BT_STATUS_NOT_READY;
 
-    return btif_dm_create_bond(bd_addr);
+    return btif_dm_create_bond(bd_addr, transport);
 }
 
 static int cancel_bond(const bt_bdaddr_t *bd_addr)
@@ -284,6 +298,15 @@ static int remove_bond(const bt_bdaddr_t *bd_addr)
         return BT_STATUS_NOT_READY;
 
     return btif_dm_remove_bond(bd_addr);
+}
+
+static int get_connection_state(const bt_bdaddr_t *bd_addr)
+{
+    /* sanity check */
+    if (interface_ready() == FALSE)
+        return 0;
+
+    return btif_dm_get_connection_state(bd_addr);
 }
 
 static int pin_reply(const bt_bdaddr_t *bd_addr, uint8_t accept,
@@ -306,6 +329,14 @@ static int ssp_reply(const bt_bdaddr_t *bd_addr, bt_ssp_variant_t variant,
     return btif_dm_ssp_reply(bd_addr, variant, accept, passkey);
 }
 
+static int read_energy_info()
+{
+    if (interface_ready() == FALSE)
+        return BT_STATUS_NOT_READY;
+    btif_dm_read_energy_info();
+    return BT_STATUS_SUCCESS;
+}
+
 static const void* get_profile_interface (const char *profile_id)
 {
     ALOGI("get_profile_interface %s", profile_id);
@@ -318,6 +349,9 @@ static const void* get_profile_interface (const char *profile_id)
     if (is_profile(profile_id, BT_PROFILE_HANDSFREE_ID))
         return btif_hf_get_interface();
 
+    if (is_profile(profile_id, BT_PROFILE_HANDSFREE_CLIENT_ID))
+        return btif_hf_client_get_interface();
+
     if (is_profile(profile_id, BT_PROFILE_SOCKETS_ID))
         return btif_sock_get_interface();
 
@@ -325,7 +359,10 @@ static const void* get_profile_interface (const char *profile_id)
         return btif_pan_get_interface();
 
     if (is_profile(profile_id, BT_PROFILE_ADVANCED_AUDIO_ID))
-        return btif_av_get_interface();
+        return btif_av_get_src_interface();
+
+    if (is_profile(profile_id, BT_PROFILE_ADVANCED_AUDIO_SINK_ID))
+        return btif_av_get_sink_interface();
 
     if (is_profile(profile_id, BT_PROFILE_HIDHOST_ID))
         return btif_hh_get_interface();
@@ -333,13 +370,19 @@ static const void* get_profile_interface (const char *profile_id)
     if (is_profile(profile_id, BT_PROFILE_HEALTH_ID))
         return btif_hl_get_interface();
 
-#if BTA_GATT_INCLUDED == TRUE
+    if (is_profile(profile_id, BT_PROFILE_MAP_CLIENT_ID))
+        return btif_mce_get_interface();
+
+#if ( BTA_GATT_INCLUDED == TRUE && BLE_INCLUDED == TRUE)
     if (is_profile(profile_id, BT_PROFILE_GATT_ID))
         return btif_gatt_get_interface();
 #endif
 
     if (is_profile(profile_id, BT_PROFILE_AV_RC_ID))
         return btif_rc_get_interface();
+
+    if (is_profile(profile_id, BT_PROFILE_AV_RC_CTRL_ID))
+        return btif_rc_ctrl_get_interface();
 
     return NULL;
 }
@@ -390,6 +433,11 @@ int config_hci_snoop_log(uint8_t enable)
     return btif_config_hci_snoop_log(enable);
 }
 
+static int set_os_callouts(bt_os_callouts_t *callouts) {
+    bt_os_callouts = callouts;
+    return BT_STATUS_SUCCESS;
+}
+
 static const bt_interface_t bluetoothInterface = {
     sizeof(bluetoothInterface),
     init,
@@ -409,6 +457,7 @@ static const bt_interface_t bluetoothInterface = {
     create_bond,
     remove_bond,
     cancel_bond,
+    get_connection_state,
     pin_reply,
     ssp_reply,
     get_profile_interface,
@@ -419,7 +468,9 @@ static const bt_interface_t bluetoothInterface = {
 #else
     NULL,
 #endif
-    config_hci_snoop_log
+    config_hci_snoop_log,
+    set_os_callouts,
+    read_energy_info,
 };
 
 const bt_interface_t* bluetooth__get_bluetooth_interface ()
@@ -431,6 +482,7 @@ const bt_interface_t* bluetooth__get_bluetooth_interface ()
 
 static int close_bluetooth_stack(struct hw_device_t* device)
 {
+    UNUSED(device);
     cleanup();
     return 0;
 }
@@ -470,8 +522,6 @@ static int fm_disable(void)
 
 int fm_vendor_command(uint16_t opcode, uint8_t* buf, uint8_t len)
 {
-    ALOGI("vendor_command");
-
     /* sanity check */
     if (fm_hal_cbacks == NULL)
         return FM_STATUS_NOT_READY;

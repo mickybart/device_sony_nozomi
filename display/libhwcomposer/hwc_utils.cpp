@@ -424,7 +424,6 @@ static void configurePPD(hwc_context_t *ctx, int yuvCount) {
 
 void setListStats(hwc_context_t *ctx,
         const hwc_display_contents_1_t *list, int dpy) {
-
     ctx->listStats[dpy].numAppLayers = list->numHwLayers - 1;
     ctx->listStats[dpy].fbLayerIndex = list->numHwLayers - 1;
     ctx->listStats[dpy].skipCount = 0;
@@ -460,6 +459,7 @@ void setListStats(hwc_context_t *ctx,
         if(!ctx->listStats[dpy].needsAlphaScale)
             ctx->listStats[dpy].needsAlphaScale = isAlphaScaled(layer);
     }
+
     if (dpy == HWC_DISPLAY_PRIMARY)
         configurePPD(ctx, ctx->listStats[dpy].yuvCount);
 }

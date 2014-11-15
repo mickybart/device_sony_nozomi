@@ -17,26 +17,22 @@
         android:description="@string/permdesc_bluetoothWhitelist"
         android:protectionLevel="signature" />
 
-    <!--  Allows receiving handover status broadcasts from Bluetooth -->,
-    <permission android:name="com.android.permission.HANDOVER_STATUS"
-        android:label="@string/permlab_handoverStatus"
-        android:description="@string/permdesc_handoverStatus"
-        android:protectionLevel="signature" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_BLUETOOTH_SHARE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.BLUETOOTH_MAP" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="com.android.permission.HANDOVER_STATUS" />
+    <uses-permission android:name="android.permission.NFC_HANDOVER_STATUS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
     <uses-permission android:name="android.permission.NET_ADMIN" />
     <uses-permission android:name="android.permission.CALL_PRIVILEGED" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -59,6 +55,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
     <!-- For PBAP Owner Vcard Info -->
     <uses-permission android:name="android.permission.READ_PROFILE"/>
@@ -109,12 +106,12 @@
                 <action android:name="android.btopp.intent.action.STOP_HANDOVER_TRANSFER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.btopp.intent.action.HANDOVER_SEND" />
+                <action android:name="android.nfc.handover.intent.action.HANDOVER_SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.btopp.intent.action.HANDOVER_SEND_MULTIPLE" />
+                <action android:name="android.nfc.handover.intent.action.HANDOVER_SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
             </intent-filter>
@@ -133,6 +130,7 @@
                 <data android:mimeType="text/x-vcard" />
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="text/html" />
+                <data android:mimeType="text/xml" />
                 <data android:mimeType="application/zip" />
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/msword" />
@@ -227,6 +225,7 @@
             <intent-filter>
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
                 <action android:name="android.bluetooth.device.action.CONNECTION_ACCESS_REPLY" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -236,8 +235,17 @@
             android:enabled="@bool/profile_supported_map" >
             <intent-filter>
                 <action android:name="android.bluetooth.IBluetoothMap" />
+                <action android:name="android.btmap.intent.action.SHOW_MAPS_EMAIL_SETTINGS" />
+                <action android:name="com.android.bluetooth.map.USER_CONFIRM_TIMEOUT"/>
             </intent-filter>
         </service>
+         <activity android:name=".map.BluetoothMapEmailSettings"
+                  android:process="@string/process"
+                  android:label="@string/bluetooth_map_email_settings_title"
+                  android:excludeFromRecents="true"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:enabled="@bool/profile_supported_map">
+        </activity>
         <service
             android:process="@string/process"
             android:name = ".gatt.GattService"
@@ -264,6 +272,22 @@
         </service>
         <service
             android:process="@string/process"
+            android:name = ".a2dp.A2dpSinkService"
+            android:enabled="@bool/profile_supported_a2dp_sink">
+            <intent-filter>
+                <action android:name="android.bluetooth.IBluetoothA2dpSink" />
+            </intent-filter>
+        </service>
+        <service
+            android:process="@string/process"
+            android:name = ".avrcp.AvrcpControllerService"
+            android:enabled="@bool/profile_supported_avrcp_controller">
+            <intent-filter>
+                <action android:name="android.bluetooth.IBluetoothAvrcpController" />
+            </intent-filter>
+        </service>
+        <service
+            android:process="@string/process"
             android:name = ".hid.HidService"
             android:enabled="@bool/profile_supported_hid">
             <intent-filter>
@@ -284,6 +308,14 @@
             android:enabled="@bool/profile_supported_pan">
             <intent-filter>
                 <action android:name="android.bluetooth.IBluetoothPan" />
+            </intent-filter>
+        </service>
+    <service
+            android:process="@string/process"
+            android:name = ".hfpclient.HeadsetClientService"
+            android:enabled="@bool/profile_supported_hfpclient">
+            <intent-filter>
+                <action android:name="android.bluetooth.IBluetoothHeadsetClient" />
             </intent-filter>
         </service>
         <service

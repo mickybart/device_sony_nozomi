@@ -261,10 +261,11 @@ const char *platform_get_snd_device_name(snd_device_t snd_device)
     if (snd_device >= SND_DEVICE_MIN && snd_device < SND_DEVICE_MAX)
         return device_table[snd_device];
     else
-        return "";
+        return "none";
 }
 
-void platform_add_backend_name(char *mixer_path, snd_device_t snd_device)
+void platform_add_backend_name(void *platform __unused, char *mixer_path,
+                               snd_device_t snd_device)
 {
     if (snd_device == SND_DEVICE_IN_BT_SCO_MIC)
         strcat(mixer_path, " bt-sco");
@@ -286,6 +287,17 @@ int platform_get_pcm_device_id(audio_usecase_t usecase, int device_type)
     else
         device_id = pcm_device_table[usecase][1];
     return device_id;
+}
+
+int platform_get_snd_device_index(char *snd_device_index_name __unused)
+{
+    return -ENODEV;
+}
+
+int platform_set_snd_device_acdb_id(snd_device_t snd_device __unused,
+                                    unsigned int acdb_id __unused)
+{
+    return -ENODEV;
 }
 
 static int send_audio_calibration(void *platform, snd_device_t snd_device)
@@ -377,12 +389,12 @@ int platform_switch_voice_call_device_post(void *platform,
     return 0;
 }
 
-int platform_start_voice_call(void *platform)
+int platform_start_voice_call(void *platform, uint32_t vsid __unused)
 {
     return 0;
 }
 
-int platform_stop_voice_call(void *platform)
+int platform_stop_voice_call(void *platform, uint32_t vsid __unused)
 {
     return 0;
 }
@@ -430,6 +442,12 @@ int platform_set_mic_mute(void *platform, bool state)
     return 0;
 }
 
+int platform_set_device_mute(void *platform __unused, bool state __unused, char *dir __unused)
+{
+    ALOGE("%s: Not implemented", __func__);
+    return -ENOSYS;
+}
+
 snd_device_t platform_get_output_snd_device(void *platform, audio_devices_t devices)
 {
     struct platform_data *my_data = (struct platform_data *)platform;
@@ -447,11 +465,11 @@ snd_device_t platform_get_output_snd_device(void *platform, audio_devices_t devi
     if (mode == AUDIO_MODE_IN_CALL) {
         if (devices & AUDIO_DEVICE_OUT_WIRED_HEADPHONE ||
             devices & AUDIO_DEVICE_OUT_WIRED_HEADSET) {
-            if (adev->tty_mode == TTY_MODE_FULL)
+            if (adev->voice.tty_mode == TTY_MODE_FULL)
                 snd_device = SND_DEVICE_OUT_VOICE_TTY_FULL_HEADSET;
-            else if (adev->tty_mode == TTY_MODE_VCO)
+            else if (adev->voice.tty_mode == TTY_MODE_VCO)
                 snd_device = SND_DEVICE_OUT_VOICE_TTY_VCO_HEADSET;
-            else if (adev->tty_mode == TTY_MODE_HCO)
+            else if (adev->voice.tty_mode == TTY_MODE_HCO)
                 snd_device = SND_DEVICE_OUT_VOICE_TTY_HCO_HANDSET;
             else
                 snd_device = SND_DEVICE_OUT_HEADSET;
@@ -530,15 +548,11 @@ snd_device_t platform_get_input_snd_device(void *platform, audio_devices_t out_d
 
     ALOGV("%s: enter: out_device(%#x) in_device(%#x)",
           __func__, out_device, in_device);
-    if (mode == AUDIO_MODE_IN_CALL) {
-        if (out_device == AUDIO_DEVICE_NONE) {
-            ALOGE("%s: No output device set for voice call", __func__);
-            goto exit;
-        }
-        if (adev->tty_mode != TTY_MODE_OFF) {
+    if ((out_device != AUDIO_DEVICE_NONE) && voice_is_in_call(adev)) {
+        if (adev->voice.tty_mode != TTY_MODE_OFF) {
             if (out_device & AUDIO_DEVICE_OUT_WIRED_HEADPHONE ||
                 out_device & AUDIO_DEVICE_OUT_WIRED_HEADSET) {
-                switch (adev->tty_mode) {
+                switch (adev->voice.tty_mode) {
                 case TTY_MODE_FULL:
                     snd_device = SND_DEVICE_IN_VOICE_TTY_FULL_HEADSET_MIC;
                     break;
@@ -549,7 +563,7 @@ snd_device_t platform_get_input_snd_device(void *platform, audio_devices_t out_d
                     snd_device = SND_DEVICE_IN_VOICE_TTY_HCO_HEADSET_MIC;
                     break;
                 default:
-                    ALOGE("%s: Invalid TTY mode (%#x)", __func__, adev->tty_mode);
+                    ALOGE("%s: Invalid TTY mode (%#x)", __func__, adev->voice.tty_mode);
                 }
                 goto exit;
             }
@@ -618,8 +632,8 @@ snd_device_t platform_get_input_snd_device(void *platform, audio_devices_t out_d
                 }
             }
         }
-    } else if (source == AUDIO_SOURCE_FM_RADIO) {
-        in_device = AUDIO_DEVICE_IN_FM_RADIO;
+    } else if (source == AUDIO_SOURCE_FM_TUNER) {
+        in_device = AUDIO_DEVICE_IN_FM_TUNER;
         snd_device = SND_DEVICE_IN_FM_RADIO;
     } else if (source == AUDIO_SOURCE_DEFAULT) {
         goto exit;
@@ -706,7 +720,7 @@ int platform_set_hdmi_channels(void *platform,  int channel_count)
     return 0;
 }
 
-int platform_edid_get_max_channels(void *platform)
+int platform_edid_get_max_channels(void *platform __unused)
 {
     FILE *file;
     struct audio_block_header header;
@@ -752,6 +766,31 @@ int platform_edid_get_max_channels(void *platform)
     return max_channels;
 }
 
+int platform_set_incall_recording_session_id(void *platform __unused,
+                                             uint32_t session_id __unused, int rec_mode __unused)
+{
+    ALOGE("%s: Not implemented", __func__);
+    return -ENOSYS;
+}
+
+int platform_stop_incall_recording_usecase(void *platform __unused)
+{
+    ALOGE("%s: Not implemented", __func__);
+    return -ENOSYS;
+}
+
+int platform_start_incall_music_usecase(void *platform __unused)
+{
+    ALOGE("%s: Not implemented", __func__);
+    return -ENOSYS;
+}
+
+int platform_stop_incall_music_usecase(void *platform __unused)
+{
+    ALOGE("%s: Not implemented", __func__);
+    return -ENOSYS;
+}
+
 /* Delay in Us */
 int64_t platform_render_latency(audio_usecase_t usecase)
 {
@@ -763,4 +802,45 @@ int64_t platform_render_latency(audio_usecase_t usecase)
         default:
             return 0;
     }
+}
+
+int platform_switch_voice_call_enable_device_config(void *platform __unused,
+                                                    snd_device_t out_snd_device __unused,
+                                                    snd_device_t in_snd_device __unused)
+{
+    return 0;
+}
+
+int platform_switch_voice_call_usecase_route_post(void *platform __unused,
+                                                  snd_device_t out_snd_device __unused,
+                                                  snd_device_t in_snd_device __unused)
+{
+    return 0;
+}
+
+int platform_get_sample_rate(void *platform __unused, uint32_t *rate __unused)
+{
+    return -ENOSYS;
+}
+
+int platform_get_usecase_index(const char * usecase __unused)
+{
+    return -ENOSYS;
+}
+
+int platform_set_usecase_pcm_id(audio_usecase_t usecase __unused, int32_t type __unused,
+                                int32_t pcm_id __unused)
+{
+    return -ENOSYS;
+}
+
+int platform_set_snd_device_backend(snd_device_t device __unused,
+                                    const char *backend __unused)
+{
+    return -ENOSYS;
+}
+
+void platform_set_echo_reference(struct audio_device *adev, bool enable, audio_devices_t out_device)
+{
+    return;
 }

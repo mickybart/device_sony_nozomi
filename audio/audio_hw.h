@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2013-2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #ifndef QCOM_AUDIO_HW_H
 #define QCOM_AUDIO_HW_H
 
+#include <cutils/str_parms.h>
 #include <cutils/list.h>
 #include <hardware/audio.h>
 
@@ -24,8 +25,10 @@
 #include <tinycompress/tinycompress.h>
 
 #include <audio_route/audio_route.h>
+#include "voice.h"
 
 #define VISUALIZER_LIBRARY_PATH "/system/lib/soundfx/libqcomvisualizer.so"
+#define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/system/lib/soundfx/libqcompostprocbundle.so"
 
 /* Flags used to initialize acdb_settings variable that goes to ACDB library */
 #define DMIC_FLAG       0x00000002
@@ -47,7 +50,7 @@ typedef int snd_device_t;
  * Each usecase is mapped to a specific PCM device.
  * Refer to pcm_device_table[].
  */
-typedef enum {
+enum {
     USECASE_INVALID = -1,
     /* Playback usecases */
     USECASE_AUDIO_PLAYBACK_DEEP_BUFFER = 0,
@@ -55,13 +58,32 @@ typedef enum {
     USECASE_AUDIO_PLAYBACK_MULTI_CH,
     USECASE_AUDIO_PLAYBACK_OFFLOAD,
 
+    /* HFP Use case*/
+    USECASE_AUDIO_HFP_SCO,
+    USECASE_AUDIO_HFP_SCO_WB,
+
     /* Capture usecases */
     USECASE_AUDIO_RECORD,
     USECASE_AUDIO_RECORD_LOW_LATENCY,
 
     USECASE_VOICE_CALL,
+
+    /* Voice extension usecases */
+    USECASE_VOICE2_CALL,
+    USECASE_VOLTE_CALL,
+    USECASE_QCHAT_CALL,
+    USECASE_VOWLAN_CALL,
+    USECASE_INCALL_REC_UPLINK,
+    USECASE_INCALL_REC_DOWNLINK,
+    USECASE_INCALL_REC_UPLINK_AND_DOWNLINK,
+
+    USECASE_AUDIO_PLAYBACK_AFE_PROXY,
+    USECASE_AUDIO_RECORD_AFE_PROXY,
+
     AUDIO_USECASE_MAX
-} audio_usecase_t;
+};
+
+const char * const use_case_table[AUDIO_USECASE_MAX];
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
@@ -139,10 +161,11 @@ struct stream_in {
     int standby;
     int source;
     int pcm_device_id;
-    int device;
+    audio_devices_t device;
     audio_channel_mask_t channel_mask;
     audio_usecase_t usecase;
     bool enable_aec;
+    bool enable_ns;
 
     struct audio_device *dev;
 };
@@ -150,7 +173,8 @@ struct stream_in {
 typedef enum {
     PCM_PLAYBACK,
     PCM_CAPTURE,
-    VOICE_CALL
+    VOICE_CALL,
+    PCM_HFP_CALL
 } usecase_type_t;
 
 union stream_ptr {
@@ -173,30 +197,67 @@ struct audio_device {
     pthread_mutex_t lock; /* see note below on mutex acquisition order */
     struct mixer *mixer;
     audio_mode_t mode;
-    audio_devices_t out_device;
     struct stream_in *active_input;
     struct stream_out *primary_output;
-    int in_call;
-    float voice_volume;
-    bool mic_mute;
-    int tty_mode;
+    struct stream_out *voice_tx_output;
+    struct stream_out *current_call_output;
     bool bluetooth_nrec;
     bool screen_off;
-    struct pcm *voice_call_rx;
-    struct pcm *voice_call_tx;
     int *snd_dev_ref_cnt;
     struct listnode usecase_list;
     struct audio_route *audio_route;
     int acdb_settings;
     bool speaker_lr_swap;
+    struct voice voice;
     unsigned int cur_hdmi_channels;
+    bool bt_wb_speech_enabled;
+    bool mic_muted;
+    bool enable_voicerx;
 
+    int snd_card;
     void *platform;
+    void *extspk;
 
     void *visualizer_lib;
-    int (*visualizer_start_output)(audio_io_handle_t);
-    int (*visualizer_stop_output)(audio_io_handle_t);
+    int (*visualizer_start_output)(audio_io_handle_t, int);
+    int (*visualizer_stop_output)(audio_io_handle_t, int);
+
+    /* The pcm_params use_case_table is loaded by adev_verify_devices() upon
+     * calling adev_open().
+     *
+     * If an entry is not NULL, it can be used to determine if extended precision
+     * or other capabilities are present for the device corresponding to that usecase.
+     */
+    struct pcm_params *use_case_table[AUDIO_USECASE_MAX];
+    void *offload_effects_lib;
+    int (*offload_effects_start_output)(audio_io_handle_t, int);
+    int (*offload_effects_stop_output)(audio_io_handle_t, int);
 };
+
+int pcm_ioctl(void *pcm, int request, ...);
+
+int select_devices(struct audio_device *adev,
+                   audio_usecase_t uc_id);
+
+int disable_audio_route(struct audio_device *adev,
+                        struct audio_usecase *usecase);
+
+int disable_snd_device(struct audio_device *adev,
+                       snd_device_t snd_device);
+
+int enable_snd_device(struct audio_device *adev,
+                      snd_device_t snd_device);
+
+int enable_audio_route(struct audio_device *adev,
+                       struct audio_usecase *usecase);
+
+struct audio_usecase *get_usecase_from_list(struct audio_device *adev,
+                                            audio_usecase_t uc_id);
+
+#define LITERAL_TO_STRING(x) #x
+#define CHECK(condition) LOG_ALWAYS_FATAL_IF(!(condition), "%s",\
+            __FILE__ ":" LITERAL_TO_STRING(__LINE__)\
+            " ASSERT_FATAL(" #condition ") failed.")
 
 /*
  * NOTE: when multiple mutexes have to be acquired, always take the

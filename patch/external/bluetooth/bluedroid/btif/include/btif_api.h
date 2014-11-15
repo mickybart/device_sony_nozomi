@@ -206,7 +206,7 @@ bt_status_t btif_dm_cancel_discovery(void);
 ** Returns          bt_status_t
 **
 *******************************************************************************/
-bt_status_t btif_dm_create_bond(const bt_bdaddr_t *bd_addr);
+bt_status_t btif_dm_create_bond(const bt_bdaddr_t *bd_addr, int transport);
 
 /*******************************************************************************
 **
@@ -229,6 +229,17 @@ bt_status_t btif_dm_cancel_bond(const bt_bdaddr_t *bd_addr);
 **
 *******************************************************************************/
 bt_status_t btif_dm_remove_bond(const bt_bdaddr_t *bd_addr);
+
+/*******************************************************************************
+**
+** Function         btif_dm_get_connection_state
+**
+** Description      Returns whether the remote device is currently connected
+**
+** Returns          0 if not connected
+**
+*******************************************************************************/
+uint16_t btif_dm_get_connection_state(const bt_bdaddr_t *bd_addr);
 
 /*******************************************************************************
 **
@@ -335,6 +346,17 @@ bt_status_t btif_dut_mode_send(uint16_t opcode, uint8_t *buf, uint8_t len);
 **
 *******************************************************************************/
 bt_status_t btif_le_test_mode(uint16_t opcode, uint8_t *buf, uint8_t len);
+
+/*******************************************************************************
+**
+** Function         btif_dm_read_energy_info
+**
+** Description     Reads the energy info from controller
+**
+** Returns          void
+**
+*******************************************************************************/
+void btif_dm_read_energy_info();
 
 /*******************************************************************************
 **

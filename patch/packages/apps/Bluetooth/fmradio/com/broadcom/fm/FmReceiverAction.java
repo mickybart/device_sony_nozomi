@@ -21,7 +21,7 @@ import android.util.Log;
 
 public abstract class FmReceiverAction {
 	private static final String TAG = "FmReceiverAction";
-	private static final boolean DBG = true;
+	private static final boolean DBG = false;
 
 	public static final int FM_START = 0;
 	public static final int FM_RESET = 1;

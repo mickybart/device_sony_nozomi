@@ -43,6 +43,7 @@
          should be empty.  An example would be "softap.*" -->
     <string-array translatable="false" name="config_tether_wifi_regexs">
         <item>"wlan0"</item>
+        <item>"softap.*"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -131,6 +132,13 @@
     -->
     <bool name="config_enableWifiDisplay">true</bool>
 
+    <!-- Minimum span needed to begin a touch scaling gesture.
+         If the span is equal to or greater than this size, a scaling gesture
+         will begin, where supported. (See android.view.ScaleGestureDetector)
+
+         This value has been tuned for the "mako" device. -->
+    <dimen name="config_minScalingSpan">35mm</dimen>
+
     <!-- lockscreen translucent decor -->
     <bool name="config_enableLockScreenTranslucentDecor">true</bool>
 
@@ -139,6 +147,9 @@
 
     <!-- Flag indicating if the speed up audio on mt call code should be executed -->
     <bool name="config_speed_up_audio_on_mt_calls">true</bool>
+
+    <!-- MMS user agent string -->
+    <string name="config_mms_user_agent" translatable="false">Xperia S</string>
 
     <string-array name="config_locationProviderPackageNames" translatable="false"> 
          <!-- The Google provider --> 

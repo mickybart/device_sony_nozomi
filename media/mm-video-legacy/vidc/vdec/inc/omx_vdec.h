@@ -52,8 +52,6 @@ static ptrdiff_t x;
 #ifdef _ANDROID_
 #ifdef USE_ION
 #include <linux/msm_ion.h>
-#else
-#include <linux/android_pmem.h>
 #endif
 #include <binder/MemoryHeapBase.h>
 #include <ui/ANativeObjectBase.h>
@@ -670,6 +668,7 @@ private:
     //*******************MEMBER VARIABLES *************************
     //*************************************************************
     pthread_mutex_t       m_lock;
+    pthread_mutex_t       c_lock;
     //sem to handle the minimum procesing of commands
     sem_t                 m_cmd_lock;
     bool              m_error_propogated;

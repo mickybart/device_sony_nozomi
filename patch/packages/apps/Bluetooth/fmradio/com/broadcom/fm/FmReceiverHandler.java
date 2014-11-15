@@ -49,6 +49,7 @@ import com.stericsson.hardware.fm.IOnStereoListener;
 public final class FmReceiverHandler extends IFmReceiver.Stub {
 	
 	private static final String TAG = "FmReceiverHandler";
+	private static final boolean DBG = false;
 	
 	private static final int MAX_STATIONS = 50;
 
@@ -328,9 +329,14 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
   	}
 
   	private void onCommandCallback(int opcode, byte[] param) {
-		debugHci("Callback:", opcode, param);
+		if (DBG) debugHci("Callback:", opcode, param);
   		Message msg = mState.obtainMessage(FmReceiverState.FM_CALLBACK, 
   				opcode, 0, param);
+  		mState.sendMessage(msg);
+  	}
+  	
+  	public void onHardwareReady() {
+  		Message msg = mState.obtainMessage(FmReceiverState.FM_HARDWARE_READY);
   		mState.sendMessage(msg);
   	}
 
@@ -415,7 +421,7 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
 		}
 
 		public int execute() {
-			debugHci("Command:", mOpcode, mParam);
+			if (DBG) debugHci("Command:", mOpcode, mParam);
 			return sendCmdNative(mOpcode, mParam) ? SUCCESS : ERROR;
 		}
 
@@ -446,7 +452,7 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
 		}
 
 		public int execute() {
-			debugHci("Command:", mOpcode, mParam);
+			if (DBG) debugHci("Command:", mOpcode, mParam);
 			return sendCmdNative(mOpcode, mParam) ? SUCCESS : ERROR;
 		}
 
