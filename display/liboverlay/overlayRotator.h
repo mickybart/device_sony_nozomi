@@ -54,11 +54,11 @@ struct RotMem {
         Mem();
         ~Mem();
         bool valid() { return m.valid(); }
-        bool close() { return m.close(); }
+        bool close();
         uint32_t size() const { return m.bufSz(); }
         void setReleaseFd(const int& fence);
         // Max rotator buffers
-        enum { ROT_NUM_BUFS = 2 };
+        enum { ROT_NUM_BUFS = 3 };
         // rotator data info dst offset
         uint32_t mRotOffset[ROT_NUM_BUFS];
         int mRelFence[ROT_NUM_BUFS];

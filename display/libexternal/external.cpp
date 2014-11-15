@@ -482,6 +482,10 @@ void ExternalDisplay::resetInfo()
 
 int ExternalDisplay::getModeOrder(int mode)
 {
+    char property_value[PROPERTY_VALUE_MAX];
+    property_get("hw.hdmi.limit_to_720p", property_value, "0");
+    int limit_to_720p = atoi(property_value);
+
     // XXX: We dont support interlaced modes but having
     // it here for for future
     switch (mode) {
@@ -505,21 +509,21 @@ int ExternalDisplay::getModeOrder(int mode)
         case m720x576p50_16_9:
             return 9; // 576p 16:9
         case m1920x1080i60_16_9:
-            return 10; // 1080i 16:9
+            return limit_to_720p ? -1 : 10; // 1080i 16:9
         case m1280x720p50_16_9:
             return 11; // 720p@50Hz
         case m1280x720p60_16_9:
             return 12; // 720p@60Hz
         case m1920x1080p24_16_9:
-            return 13; //1080p@24Hz
+            return limit_to_720p ? -1 : 13; //1080p@24Hz
         case m1920x1080p25_16_9:
-            return 14; //108-p@25Hz
+            return limit_to_720p ? -1 : 14; //1080p@25Hz
         case m1920x1080p30_16_9:
-            return 15; //1080p@30Hz
+            return limit_to_720p ? -1 : 15; //1080p@30Hz
         case m1920x1080p50_16_9:
-            return 16; //1080p@50Hz
+            return limit_to_720p ? -1 : 16; //1080p@50Hz
         case m1920x1080p60_16_9:
-            return 17; //1080p@60Hz
+            return limit_to_720p ? -1 : 17; //1080p@60Hz
     }
 }
 

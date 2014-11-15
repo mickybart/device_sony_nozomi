@@ -46,14 +46,9 @@ public class FmBand implements Parcelable {
     public static final int BAND_JAPAN = 2;
 
     /**
-     * Default band for China 70MHz - 108MHz, 50kHz channel offset.
+     * Default band for China 87.5MHz - 108MHz, 50kHz channel offset.
      */
     public static final int BAND_CHINA = 3;
-
-    /**
-     * Default band for EU 87.5MHz - 108MHz, 50kHz channel offset.
-     */
-    public static final int BAND_EU_50K_OFFSET = 4;
 
     /**
      * Unknown frequency.
@@ -156,12 +151,6 @@ public class FmBand implements Parcelable {
             this.mChannelOffset = 100;
             break;
         case BAND_CHINA:
-            this.mMinFrequency = 70000;
-            this.mMaxFrequency = 108000;
-            this.mDefaultFrequency = 70000;
-            this.mChannelOffset = 50;
-            break;
-        case BAND_EU_50K_OFFSET:
             this.mMinFrequency = 87500;
             this.mMaxFrequency = 108000;
             this.mDefaultFrequency = 87500;

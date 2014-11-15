@@ -83,10 +83,15 @@ RotMem::Mem::Mem() : mCurrOffset(0) {
 }
 
 RotMem::Mem::~Mem() {
+    close();
+}
+
+bool RotMem::Mem::close() {
     for(int i = 0; i < ROT_NUM_BUFS; i++) {
         ::close(mRelFence[i]);
         mRelFence[i] = -1;
     }
+    return m.close();
 }
 
 void RotMem::Mem::setReleaseFd(const int& fence) {

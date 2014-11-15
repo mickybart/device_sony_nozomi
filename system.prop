@@ -35,6 +35,9 @@ debug.hwc.dynThreshold=1.9
 
 dev.pm.dyn_samplingrate=1
 
+hw.hdmi.limit_to_720p=1
+hw.hdmi.resolution=-1
+
 #
 # system prop for opengles version
 #
@@ -98,6 +101,7 @@ ro.ril.transmitpower=true
 
 # hwui
 ro.hwui.text_cache_width=2048
+ro.hwui.disable_tiled_rendering=true
 
 # It is changed to true in msm8660_surf
 # Change it back to false according to blue

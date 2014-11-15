@@ -38,7 +38,7 @@ namespace qdutils {
 
 MDPVersion::MDPVersion()
 {
-    int fb_fd = open("/dev/graphics/fb0", O_RDWR);
+    int fb_fd = open("/dev/graphics/fb0", O_RDONLY);
     int mdp_version = MDP_V_UNKNOWN;
     char panel_type = 0;
     struct fb_fix_screeninfo fb_finfo;

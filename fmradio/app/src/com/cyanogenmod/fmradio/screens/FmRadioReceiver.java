@@ -48,13 +48,6 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
 
     private FmRadioPlayer mPlayer; // Handle to the Media Player that plays the audio from the selected station
 
-    private FmReceiver.OnScanListener mReceiverScanListener; // The scan listener that receives the return values from the scans
-
-    private FmReceiver.OnRDSDataFoundListener mReceiverRdsDataFoundListener; // The listener that receives the RDS data from the current channel
-
-    private FmReceiver.OnStartedListener mReceiverStartedListener; // The started listener is activated when the radio has started
-    private FmReceiver.OnPlayingInStereoListener mOnPlayingInStereoListener;
-
     private TextView mTvFrequency; // Displays the currently tuned frequency
     private TextView mTvRDS_PSN, mTvRDS_RT; // Displays the current station name if there is adequate RDS data
 
@@ -92,6 +85,136 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
 
     private boolean isWiredHeadsetOn = false;
 
+    /**
+     * ScanListener
+     */
+    private FmReceiver.OnScanListener mReceiverScanListener = new FmReceiver.OnScanListener() {
+
+        // FullScan results
+        public void onFullScan(int[] frequency, int[] signalStrength, boolean aborted) {
+            Utils.debugFunc("onFullScan(). aborted: " + aborted, Log.INFO);
+            //stop progress animation
+            stopScanAnimation();
+
+            mStationList = new ArrayList<String>(frequency.length);
+            for (int i = 0; i < frequency.length; i++) {
+                Utils.debugFunc("[item] freq: " + frequency[i] + ", signal: " + signalStrength[i], Log.INFO);
+                String a = Double.toString((double) frequency[i] / 1000);
+                if (mFmBand.getChannelOffset() == Constants.CHANNEL_OFFSET_50KHZ) {
+                    a = String.format(a, "%.2f");
+                } else {
+                    a = String.format(a, "%.1f");
+                }
+                mStationList.add(a);
+            }
+
+            //fill stations list
+            mGalStationsList.setAdapter(new StationsAdapter(FmRadioReceiver.this, mStationList));
+            mGalStationsList.setOnItemClickListener(FmRadioReceiver.this);
+
+            //initialize playback of first station
+            if (mIsInitializing) {
+                mIsInitializing = false;
+                try {
+                    mFmReceiver.setFrequency(frequency[0]);
+                    mTvFrequency.setText(mStationList.get(0));
+                } catch (Exception e) {
+                    Utils.debugFunc("onFullScan(). E.: " + e.getMessage(), Log.ERROR);
+                    showToast(R.string.unable_to_set_frequency, Toast.LENGTH_LONG);
+                }
+            }
+        }
+
+        // Returns the new frequency.
+        public void onScan(int tunedFrequency, int signalStrength, int scanDirection, boolean aborted) {
+            Utils.debugFunc("onScan(). freq: " + tunedFrequency + ", signal: " + signalStrength + ", dir: " + scanDirection + ", aborted? " + aborted, Log.INFO);
+
+            stopScanAnimation();
+
+            String a = Double.toString((double) tunedFrequency / 1000);
+            if (mFmBand.getChannelOffset() == Constants.CHANNEL_OFFSET_50KHZ) {
+                mTvFrequency.setText(String.format(a, "%.2f"));
+            } else {
+                mTvFrequency.setText(String.format(a, "%.1f"));
+            }
+            mBtnSeekUp.setEnabled(true);
+            mBtnSeekDown.setEnabled(true);
+        }
+    };
+
+    /**
+     * RDS Listener
+     */
+    private FmReceiver.OnRDSDataFoundListener mReceiverRdsDataFoundListener = new FmReceiver.OnRDSDataFoundListener() {
+
+        // Receives the current frequency's RDS Data
+        public void onRDSDataFound(Bundle rdsData, int frequency) {
+            String newPSN = "", newRT = "";
+            if (rdsData.containsKey("PSN")) {
+                newPSN = rdsData.getString("PSN");
+            }
+            if (rdsData.containsKey("RT")) {
+                newRT = rdsData.getString("RT");
+            }
+            if (newPSN != null && !newPSN.trim().isEmpty()) {
+                if (newRT != null && !newRT.trim().isEmpty()) {
+                    newPSN = newPSN + " - ";
+                    mTvRDS_RT.setText(newRT.trim());
+                }
+                mTvRDS_PSN.setText(newPSN.trim());
+            }
+        }
+    };
+
+    /**
+     * OnStart Listener
+     */
+    private FmReceiver.OnStartedListener mReceiverStartedListener = new FmReceiver.OnStartedListener() {
+
+        public void onStarted() {
+            Utils.debugFunc("onStarted()", Log.INFO);
+            // Activate all the buttons
+            mBtnSeekUp.setEnabled(true);
+            mBtnSeekDown.setEnabled(true);
+            mBtnMute.setEnabled(true);
+            mBtnFullScan.setEnabled(true);
+            if (mStationList == null)
+                doFullScan();
+            startAudio();
+        }
+    };
+
+    /**
+     * PlayingInStereo Listener
+     */
+    private FmReceiver.OnPlayingInStereoListener mOnPlayingInStereoListener = new FmReceiver.OnPlayingInStereoListener() {
+        @Override
+        public void onPlayingInStereo(boolean inStereo) {
+            //Utils.debugFunc("onPlayingInStereo(): "+inStereo, Log.INFO);
+            if (inStereo) {
+                mIvStereo.setImageResource(R.drawable.fm_stereo);
+            } else {
+                mIvStereo.setImageResource(R.drawable.fm_mono);
+            }
+        }
+    };
+
+    /**
+     * Reset Listener
+     */
+    private FmReceiver.OnForcedResetListener mReceiverResetListener = new FmReceiver.OnForcedResetListener() {
+
+        public void onForcedReset(int reason) {
+            Utils.debugFunc("onForcedReset()", Log.INFO);
+            // Deactivate all the buttons
+            mBtnSeekUp.setEnabled(false);
+            mBtnSeekDown.setEnabled(false);
+            mBtnMute.setEnabled(false);
+            mBtnFullScan.setEnabled(false);
+			if (mPlayer != null)
+				mPlayer.stop();
+        }
+    };
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -130,120 +253,8 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
         if (isWiredHeadsetOn) {
             Utils.debugFunc("onStart", Log.DEBUG);
 
-            /**
-             * ScanListener
-             */
-            mReceiverScanListener = new FmReceiver.OnScanListener() {
-
-                // FullScan results
-                public void onFullScan(int[] frequency, int[] signalStrength, boolean aborted) {
-                    Utils.debugFunc("onFullScan(). aborted: " + aborted, Log.INFO);
-                    //stop progress animation
-                    stopScanAnimation();
-
-                    mStationList = new ArrayList<String>(frequency.length);
-                    for (int i = 0; i < frequency.length; i++) {
-                        Utils.debugFunc("[item] freq: " + frequency[i] + ", signal: " + signalStrength[i], Log.INFO);
-                        String a = Double.toString((double) frequency[i] / 1000);
-                        if (mFmBand.getChannelOffset() == Constants.CHANNEL_OFFSET_50KHZ) {
-                            a = String.format(a, "%.2f");
-                        } else {
-                            a = String.format(a, "%.1f");
-                        }
-                        mStationList.add(a);
-                    }
-
-                    //fill stations list
-                    mGalStationsList.setAdapter(new StationsAdapter(FmRadioReceiver.this, mStationList));
-                    mGalStationsList.setOnItemClickListener(FmRadioReceiver.this);
-
-                    //initialize playback of first station
-                    if (mIsInitializing) {
-                        mIsInitializing = false;
-                        try {
-                            mFmReceiver.setFrequency(frequency[0]);
-                            mTvFrequency.setText(mStationList.get(0));
-                        } catch (Exception e) {
-                            Utils.debugFunc("onFullScan(). E.: " + e.getMessage(), Log.ERROR);
-                            showToast(R.string.unable_to_set_frequency, Toast.LENGTH_LONG);
-                        }
-                    }
-                }
-
-                // Returns the new frequency.
-                public void onScan(int tunedFrequency, int signalStrength, int scanDirection, boolean aborted) {
-                    Utils.debugFunc("onScan(). freq: " + tunedFrequency + ", signal: " + signalStrength + ", dir: " + scanDirection + ", aborted? " + aborted, Log.INFO);
-
-                    stopScanAnimation();
-
-                    String a = Double.toString((double) tunedFrequency / 1000);
-                    if (mFmBand.getChannelOffset() == Constants.CHANNEL_OFFSET_50KHZ) {
-                        mTvFrequency.setText(String.format(a, "%.2f"));
-                    } else {
-                        mTvFrequency.setText(String.format(a, "%.1f"));
-                    }
-                    mBtnSeekUp.setEnabled(true);
-                    mBtnSeekDown.setEnabled(true);
-                }
-            };
-
-            /**
-             * RDS Listener
-             */
-            mReceiverRdsDataFoundListener = new FmReceiver.OnRDSDataFoundListener() {
-
-                // Receives the current frequency's RDS Data
-                public void onRDSDataFound(Bundle rdsData, int frequency) {
-                    String newPSN = "", newRT = "";
-                    if (rdsData.containsKey("PSN")) {
-                        newPSN = rdsData.getString("PSN");
-                    }
-                    if (rdsData.containsKey("RT")) {
-                        newRT = rdsData.getString("RT");
-                    }
-                    if (newPSN != null && !newPSN.trim().isEmpty()) {
-                        if (newRT != null && !newRT.trim().isEmpty()) {
-                            newPSN = newPSN + " - ";
-                            mTvRDS_RT.setText(newRT.trim());
-                        }
-                        mTvRDS_PSN.setText(newPSN.trim());
-                    }
-                }
-            };
-
-            /**
-             * OnStart Listener
-             */
-            mReceiverStartedListener = new FmReceiver.OnStartedListener() {
-
-                public void onStarted() {
-                    Utils.debugFunc("onStarted()", Log.INFO);
-                    // Activate all the buttons
-                    mBtnSeekUp.setEnabled(true);
-                    mBtnSeekDown.setEnabled(true);
-                    mBtnMute.setEnabled(true);
-                    mBtnFullScan.setEnabled(true);
-                    initialBandScan();
-                    startAudio();
-                }
-            };
-
-            /**
-             * PlayingInStereo Listener
-             */
-            mOnPlayingInStereoListener = new FmReceiver.OnPlayingInStereoListener() {
-                @Override
-                public void onPlayingInStereo(boolean inStereo) {
-                    //Utils.debugFunc("onPlayingInStereo(): "+inStereo, Log.INFO);
-                    if (inStereo) {
-                        mIvStereo.setImageResource(R.drawable.fm_stereo);
-                    } else {
-                        mIvStereo.setImageResource(R.drawable.fm_mono);
-                    }
-                }
-            };
-
-            mFmReceiver = FmReceiver.createInstance(this, this);
+            if (mFmReceiver == null)
+                mFmReceiver = FmReceiver.createInstance(this, this);
         }
     }
 
@@ -251,13 +262,6 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
     @Override
     protected void onStop() {
         super.onStop();
-        // Stops the FM Radio listeners
-        if (mFmReceiver != null) {
-            mFmReceiver.removeOnScanListener(mReceiverScanListener);
-            mFmReceiver.removeOnRDSDataFoundListener(mReceiverRdsDataFoundListener);
-            mFmReceiver.removeOnStartedListener(mReceiverStartedListener);
-            mFmReceiver.removeOnPlayingInStereoListener(mOnPlayingInStereoListener);
-        }
     }
 
 
@@ -283,6 +287,8 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
 		mFmReceiver.addOnRDSDataFoundListener(mReceiverRdsDataFoundListener);
 		mFmReceiver.addOnStartedListener(mReceiverStartedListener);
 		mFmReceiver.addOnPlayingInStereoListener(mOnPlayingInStereoListener);
+		mFmReceiver.addOnForcedResetListener(mReceiverResetListener);
+		turnRadioOn();
     }
 
     private void turnOffRadio() {
@@ -296,26 +302,6 @@ public class FmRadioReceiver extends Activity implements OnClickListener, Adapte
         	mPlayer = null;
         }
     }
-
-    /**
-     * Starts the initial bandscan in it's own thread
-     */
-    private void initialBandScan() {
-        Utils.debugFunc("initialBandScan()", Log.INFO);
-        Thread bandscanThread = new Thread() {
-            public void run() {
-                try {
-                    mFmReceiver.startFullScan();
-                } catch (IllegalStateException e) {
-                    showToast(R.string.unable_to_scan, Toast.LENGTH_LONG);
-                    Utils.debugFunc("initialBandScan(). E.: " + e.getMessage(), Log.ERROR);
-                    return;
-                }
-            }
-        };
-        bandscanThread.start();
-    }
-
 
     /**
      * Helper method to display toast

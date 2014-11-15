@@ -88,11 +88,11 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
             if (action.equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
                 Log.d(TAG, "onReceive:ACTION_AIRPLANE_MODE_CHANGED");
 
-                // check that airplane mode is off
-                if (isAirplaneModeOn()) {
-                	radioOn();
+                if(!isAirplaneModeOn()) {
+                    if (mRadioOn)
+                        mState.sendMessage(mState.obtainMessage(FmReceiverAction.FM_START, mBand));
                 } else {
-                	radioOff();
+                    mState.sendMessage(mState.obtainMessage(FmReceiverAction.FM_RESET));
                 }
             }
         }
@@ -116,22 +116,6 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
     	mContext.unregisterReceiver(mReceiver);
     	reset();
     	cleanupNative();
-    }
-
-    private void radioOff() {
-    	synchronized (mState) {
-    		mRadioOn = false;
-    		if (mState.getState() != FmReceiver.STATE_IDLE)
-    			reset();
-    	}
-    }
-
-    private void radioOn() {
-    	synchronized (mState) {
-    		mRadioOn = true;
-    		if (mState.getState() != FmReceiver.STATE_IDLE)
-    			start(mBand);
-    	}
     }
 
 	public FmReceiverAction processAction(Message msg) {
@@ -604,6 +588,9 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
 	}
 	
     public void start(FmBand band) {
+        if (isAirplaneModeOn())
+            return;
+        mRadioOn = true;
     	Message msg = mState.obtainMessage(FmReceiverAction.FM_START, band);
     	mState.sendMessage(msg);
 		synchronized (msg) {
@@ -616,11 +603,15 @@ public final class FmReceiverHandler extends IFmReceiver.Stub {
     }
 
     public void startAsync(FmBand band) {
+        if (isAirplaneModeOn())
+            return;
+        mRadioOn = true;
     	Message msg = mState.obtainMessage(FmReceiverAction.FM_START, band);
     	mState.sendMessage(msg);
     }
 
     public void reset() {
+        mRadioOn = false;
     	Message msg = mState.obtainMessage(FmReceiverAction.FM_RESET);
     	mState.sendMessage(msg);
 		synchronized (msg) {
