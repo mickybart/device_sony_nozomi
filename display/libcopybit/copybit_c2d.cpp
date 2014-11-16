@@ -192,22 +192,22 @@ static int open_copybit(const struct hw_module_t* module, const char* name,
                         struct hw_device_t** device);
 
 static struct hw_module_methods_t copybit_module_methods = {
-open:  open_copybit
+    .open = open_copybit
 };
 
 /*
  * The COPYBIT Module
  */
 struct copybit_module_t HAL_MODULE_INFO_SYM = {
-common: {
-tag: HARDWARE_MODULE_TAG,
-     version_major: 1,
-     version_minor: 0,
-     id: COPYBIT_HARDWARE_MODULE_ID,
-     name: "QCT COPYBIT C2D 2.0 Module",
-     author: "Qualcomm",
-     methods: &copybit_module_methods
-        }
+    .common = {
+        .tag = HARDWARE_MODULE_TAG,
+        .version_major = 1,
+        .version_minor = 0,
+        .id = COPYBIT_HARDWARE_MODULE_ID,
+        .name = "QCT COPYBIT C2D 2.0 Module",
+        .author = "Qualcomm",
+        .methods = &copybit_module_methods
+    }
 };
 
 
@@ -621,6 +621,39 @@ static int msm_copybit(struct copybit_context_t *ctx, unsigned int target)
 
 
 
+static int flush_get_fence_copybit (struct copybit_device_t *dev, int* fd)
+{
+    struct copybit_context_t* ctx = (struct copybit_context_t*)dev;
+    int status = COPYBIT_FAILURE;
+    if (!ctx)
+        return COPYBIT_FAILURE;
+    pthread_mutex_lock(&ctx->wait_cleanup_lock);
+    while(ctx->wait_timestamp) {
+        pthread_cond_wait(&(ctx->wait_cleanup_cond),
+                          &(ctx->wait_cleanup_lock));
+    }
+    status = msm_copybit(ctx, ctx->dst[ctx->dst_surface_type]);
+
+    if(LINK_c2dFlush(ctx->dst[ctx->dst_surface_type], &ctx->time_stamp)) {
+        ALOGE("%s: LINK_c2dFlush ERROR", __FUNCTION__);
+        // unlock the mutex and return failure
+        pthread_mutex_unlock(&ctx->wait_cleanup_lock);
+        return COPYBIT_FAILURE;
+    }
+    if(LINK_c2dCreateFenceFD(ctx->dst[ctx->dst_surface_type], ctx->time_stamp,
+                                                                        fd)) {
+        ALOGE("%s: LINK_c2dCreateFenceFD ERROR", __FUNCTION__);
+        status = COPYBIT_FAILURE;
+    }
+    if(status == COPYBIT_SUCCESS) {
+        //signal the wait_thread
+        ctx->wait_timestamp = true;
+        pthread_cond_signal(&ctx->wait_cleanup_cond);
+    }
+    pthread_mutex_unlock(&ctx->wait_cleanup_lock);
+    return status;
+}
+
 static int finish_copybit_internal(struct copybit_device_t *dev)
 {
     struct copybit_context_t* ctx = (struct copybit_context_t*)dev;
@@ -663,39 +696,6 @@ static int finish_copybit(struct copybit_device_t *dev)
                           &(ctx->wait_cleanup_lock));
     }
     status = finish_copybit_internal(dev);
-    pthread_mutex_unlock(&ctx->wait_cleanup_lock);
-    return status;
-}
-
-static int flush_get_fence_copybit (struct copybit_device_t *dev, int* fd)
-{
-    struct copybit_context_t* ctx = (struct copybit_context_t*)dev;
-    int status = COPYBIT_FAILURE;
-    if (!ctx)
-        return COPYBIT_FAILURE;
-    pthread_mutex_lock(&ctx->wait_cleanup_lock);
-    while(ctx->wait_timestamp) {
-        pthread_cond_wait(&(ctx->wait_cleanup_cond),
-                          &(ctx->wait_cleanup_lock));
-    }
-    status = msm_copybit(ctx, ctx->dst[ctx->dst_surface_type]);
-
-    if(LINK_c2dFlush(ctx->dst[ctx->dst_surface_type], &ctx->time_stamp)) {
-        ALOGE("%s: LINK_c2dFlush ERROR", __FUNCTION__);
-        // unlock the mutex and return failure
-        pthread_mutex_unlock(&ctx->wait_cleanup_lock);
-        return COPYBIT_FAILURE;
-    }
-    if(LINK_c2dCreateFenceFD(ctx->dst[ctx->dst_surface_type], ctx->time_stamp,
-                                                                        fd)) {
-        ALOGE("%s: LINK_c2dCreateFenceFD ERROR", __FUNCTION__);
-        status = COPYBIT_FAILURE;
-    }
-    if(status == COPYBIT_SUCCESS) {
-        //signal the wait_thread
-        ctx->wait_timestamp = true;
-        pthread_cond_signal(&ctx->wait_cleanup_cond);
-    }
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return status;
 }

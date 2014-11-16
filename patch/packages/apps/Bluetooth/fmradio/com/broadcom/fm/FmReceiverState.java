@@ -29,15 +29,17 @@ import com.stericsson.hardware.fm.FmReceiver;
 public class FmReceiverState extends StateMachine {
 	
 	private static final String TAG = "FmReceiverState";
-	private static final boolean DBG = true;
+	private static final boolean DBG = false;
 	
 	public static final int FM_CALLBACK = 100;
 	public static final int FM_TIMEOUT = 200;
+	public static final int FM_HARDWARE_READY = 300;
 
     private static final int START_TIMEOUT_DELAY = 5000;
     private static final int RESET_TIMEOUT_DELAY = 5000;
     private static final int PROPERTY_OP_DELAY =2000;
 
+    private InvalidState mInvalidState = new InvalidState();
     private IdleState mIdleState = new IdleState();
     private StartedState mStartedState = new StartedState();
     private PausedState mPausedState = new PausedState();
@@ -46,17 +48,18 @@ public class FmReceiverState extends StateMachine {
     private PendingState mPendingState = new PendingState();
 
     private FmReceiverHandler mHandler;
-    private int mState = FmReceiver.STATE_IDLE;
+    private int mState = -1;
 	
 	public FmReceiverState(FmReceiverHandler handler) {
         super("FmReceiverState:");
+        addState(mInvalidState);
         addState(mIdleState);
         addState(mStartedState);
         addState(mPausedState);
         addState(mScaningState);
         addState(mErrorState);
         addState(mPendingState);
-        setInitialState(mIdleState);
+        setInitialState(mInvalidState);
         mHandler = handler;
         mState = FmReceiver.STATE_IDLE;
     }
@@ -89,6 +92,29 @@ public class FmReceiverState extends StateMachine {
 			sendMessageDelayed(FM_TIMEOUT, timeout);
 		return true;
 	}
+
+    private class InvalidState extends State {
+        @Override
+        public void enter() {
+        	if (DBG) Log.d(TAG, "Entering InvalidState");
+        	setState(-1);
+        }
+
+        @Override
+        public void exit() {
+        	if (DBG) Log.d(TAG, "Exit InvalidState");
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            if (msg.what == FM_HARDWARE_READY) {
+               transitionTo(mIdleState);
+            } else {
+               deferMessage(msg);
+            }
+            return true;
+        }
+    }
 
     private class IdleState extends State {
         @Override

@@ -15,8 +15,7 @@
  */
 
 #define LOG_TAG "FmReceiverServiceJni"
-
-#define LOG_NDEBUG 0
+//#define LOG_NDEBUG 0
 
 #include "com_android_bluetooth.h"
 #include "hardware/bt_av.h"
@@ -48,8 +47,6 @@ static bool checkCallbackThread() {
 static void fm_state_callback(fm_state_t state) {
     jbyteArray addr;
 
-    ALOGD("%s", __FUNCTION__);
-
     if (!checkCallbackThread()) {                                       \
         ALOGE("Callback: '%s' is not called on the correct thread", __FUNCTION__); \
         return;                                                         \
@@ -61,8 +58,6 @@ static void fm_state_callback(fm_state_t state) {
 
 static void fm_command_callback(uint16_t opcode, uint8_t *buf, uint8_t len) {
     jbyteArray param;
-
-    ALOGD("%s", __FUNCTION__);
 
     if (!checkCallbackThread()) {                                       \
         ALOGE("Callback: '%s' is not called on the correct thread", __FUNCTION__); \
@@ -94,8 +89,6 @@ static void classInitNative(JNIEnv* env, jclass clazz) {
 
     method_onCommandCallback =
         env->GetMethodID(clazz, "onCommandCallback", "(I[B)V");
-
-    ALOGD("%s: succeeds", __FUNCTION__);
 }
 
 static void initNative(JNIEnv *env, jobject object) {
@@ -145,7 +138,6 @@ static jboolean enableNative(JNIEnv *env, jobject object) {
 static jboolean disableNative(JNIEnv *env, jobject object) {
 	int status;
 
-    ALOGD("%s: sFmInterface: %p", __FUNCTION__, sFmInterface);
     if (!sFmInterface) return JNI_FALSE;
 
     if ((status = sFmInterface->disable()) != FM_STATUS_SUCCESS) {

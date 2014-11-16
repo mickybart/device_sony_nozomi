@@ -1,4 +1,4 @@
-display-hals := libgralloc libgenlock libcopybit
+display-hals := libgralloc libcopybit
 display-hals += libhwcomposer liboverlay libqdutils libexternal libqservice
 display-hals += libmemtrack
 ifneq ($(filter msm8660,$(TARGET_BOARD_PLATFORM)),)

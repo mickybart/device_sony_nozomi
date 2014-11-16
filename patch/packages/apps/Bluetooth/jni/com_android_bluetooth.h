@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2014 The Android Open Source Project
  * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,9 +38,15 @@ JNIEnv* getCallbackEnv();
 
 int register_com_android_bluetooth_hfp(JNIEnv* env);
 
+int register_com_android_bluetooth_hfpclient(JNIEnv* env);
+
 int register_com_android_bluetooth_a2dp(JNIEnv* env);
 
+int register_com_android_bluetooth_a2dp_sink(JNIEnv* env);
+
 int register_com_android_bluetooth_avrcp(JNIEnv* env);
+
+int register_com_android_bluetooth_avrcp_controller(JNIEnv* env);
 
 int register_com_android_bluetooth_hid(JNIEnv* env);
 

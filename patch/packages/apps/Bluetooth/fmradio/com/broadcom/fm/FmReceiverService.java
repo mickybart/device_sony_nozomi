@@ -74,6 +74,7 @@ public class FmReceiverService extends Service implements ServiceConnection {
 	public void onServiceConnected(ComponentName name, IBinder service) {
 		Log.d(TAG, "onServiceConnected() name = " + name);
 		mBluetoothService = (IBluetooth) IBluetooth.Stub.asInterface(service);
+		mBinder.onHardwareReady();
 	}
 
 	public void onServiceDisconnected(ComponentName name) {

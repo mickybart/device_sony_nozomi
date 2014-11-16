@@ -543,6 +543,7 @@ omx_vdec::omx_vdec(): m_state(OMX_StateInvalid),
   drv_ctx.video_driver_fd = -1;
   m_vendor_config.pData = NULL;
   pthread_mutex_init(&m_lock, NULL);
+  pthread_mutex_init(&c_lock, NULL);
   sem_init(&m_cmd_lock,0,0);
 #ifdef _ANDROID_
   char extradata_value[PROPERTY_VALUE_MAX] = {0};
@@ -582,6 +583,7 @@ omx_vdec::~omx_vdec()
   DEBUG_PRINT_HIGH("Waiting on OMX Async Thread exit");
   pthread_join(async_thread_id,NULL);
   pthread_mutex_destroy(&m_lock);
+  pthread_mutex_destroy(&c_lock);
   sem_destroy(&m_cmd_lock);
 #ifdef _ANDROID_
   if (perf_flag)
@@ -2757,6 +2759,8 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
             QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka;
 #endif
         else if (1 == portFmt->nIndex) {
+          portFmt->eColorFormat = OMX_COLOR_FormatYUV420SemiPlanar;
+        } else if (2 == portFmt->nIndex) {
           portFmt->eColorFormat = OMX_COLOR_FormatYUV420Planar;
         }
         else
@@ -2765,6 +2769,7 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                   " NoMore Color formats\n");
            eRet =  OMX_ErrorNoMore;
         }
+        ALOGI("get_parameter: color-format=%x @ index=%d", portFmt->eColorFormat, portFmt->nIndex);
       }
       else
       {
@@ -3042,6 +3047,15 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
             if ( portDefn->nBufferCountActual >= drv_ctx.op_buf.mincount &&
                  portDefn->nBufferSize >=  buffer_size)
               {
+                // disallow more than 2 extrabuffers when we are in smoothstreaming mode
+                // and output memory comes from a budgeted carveout
+                if (m_use_smoothstreaming && secure_mode &&
+                    (portDefn->nBufferCountActual > drv_ctx.op_buf.actualcount + 2)) {
+                    ALOGI("NOTE: rejecting client's buffer-count %d v/s actual %d",
+                            portDefn->nBufferCountActual, drv_ctx.op_buf.actualcount);
+                    eRet = OMX_ErrorBadParameter;
+                    break;
+                }
                 drv_ctx.op_buf.actualcount = portDefn->nBufferCountActual;
                 drv_ctx.op_buf.buffer_size = portDefn->nBufferSize;
                 eRet = set_buffer_req(&drv_ctx.op_buf);
@@ -3581,10 +3595,10 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
       break;
 
 #if defined (_ANDROID_HONEYCOMB_) || defined (_ANDROID_ICS_)
-    case OMX_GoogleAndroidIndexPrepareForAdaptivePlayback:
+    case OMX_QcomIndexParamVideoAdaptivePlaybackMode:
         {
             DEBUG_PRINT_LOW("set_parameter: "
-                    "OMX_GoogleAndroidIndexPrepareForAdaptivePlayback");
+                    "OMX_QcomIndexParamVideoAdaptivePlaybackMode");
             PrepareForAdaptivePlaybackParams* adaptivePlaybackParams =
                     (PrepareForAdaptivePlaybackParams *) paramData;
             if (adaptivePlaybackParams->nPortIndex == OMX_CORE_OUTPUT_PORT_INDEX) {
@@ -3986,7 +4000,7 @@ OMX_ERRORTYPE  omx_vdec::get_extension_index(OMX_IN OMX_HANDLETYPE      hComp,
     }
     else if (!strncmp(paramName,"OMX.google.android.index.prepareForAdaptivePlayback",
             strlen("OMX.google.android.index.prepareForAdaptivePlayback") + 1)) {
-        *indexType = (OMX_INDEXTYPE)OMX_GoogleAndroidIndexPrepareForAdaptivePlayback;
+        *indexType = (OMX_INDEXTYPE)OMX_QcomIndexParamVideoAdaptivePlaybackMode;
     }
 #endif
 	else {
@@ -6906,7 +6920,7 @@ int omx_vdec::async_message_process (void *context, void* message)
 
         if (omx->output_use_buffer)
           memcpy ( omxhdr->pBuffer,
-                   (vdec_msg->msgdata.output_frame.bufferaddr +
+                   ((char*)vdec_msg->msgdata.output_frame.bufferaddr +
                     vdec_msg->msgdata.output_frame.offset),
                     vdec_msg->msgdata.output_frame.len );
       }
@@ -7790,9 +7804,7 @@ OMX_ERRORTYPE omx_vdec::get_buffer_req(vdec_allocatorproperty *buffer_prop)
     DEBUG_PRINT_LOW("GetBufReq UPDATE: ActCnt(%d) Size(%d) BufSize(%d)",
       buffer_prop->actualcount, buffer_prop->buffer_size, buf_size);
     if (in_reconfig) // BufReq will be set to driver when port is disabled
-    {
       buffer_prop->buffer_size = buf_size;
-    }
     else if (buf_size != buffer_prop->buffer_size)
     {
       buffer_prop->buffer_size = buf_size;
@@ -7980,6 +7992,11 @@ OMX_ERRORTYPE omx_vdec::update_portdef(OMX_PARAM_PORTDEFINITIONTYPE *portDefn)
   portDefn->format.video.nFrameWidth  =  drv_ctx.video_resolution.frame_width;
   portDefn->format.video.nStride = drv_ctx.video_resolution.stride;
   portDefn->format.video.nSliceHeight = drv_ctx.video_resolution.scan_lines;
+  if ((portDefn->format.video.eColorFormat == OMX_COLOR_FormatYUV420Planar) ||
+      (portDefn->format.video.eColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)) {
+      portDefn->format.video.nStride = drv_ctx.video_resolution.frame_width;
+      portDefn->format.video.nSliceHeight = drv_ctx.video_resolution.frame_height;
+  }
   DEBUG_PRINT_LOW("update_portdef Width = %d Height = %d Stride = %u"
     "SliceHeight = %u \n", portDefn->format.video.nFrameHeight,
     portDefn->format.video.nFrameWidth,
@@ -9029,6 +9046,7 @@ omx_vdec::allocate_color_convert_buf::allocate_color_convert_buf()
   omx = NULL;
   init_members();
   ColorFormat = OMX_COLOR_FormatMax;
+  dest_format = YCbCr420P;
 }
 
 void omx_vdec::allocate_color_convert_buf::set_vdec_client(void *client)
@@ -9063,18 +9081,20 @@ bool omx_vdec::allocate_color_convert_buf::update_buffer_req()
     return false;
   }
   if (!enabled){
-    DEBUG_PRINT_LOW("\n No color conversion required");
+    DEBUG_PRINT_ERROR("\n No color conversion required");
     return status;
   }
   if (omx->drv_ctx.output_format != VDEC_YUV_FORMAT_TILE_4x2 &&
-      ColorFormat != OMX_COLOR_FormatYUV420Planar) {
+      ColorFormat != OMX_COLOR_FormatYUV420Planar &&
+      ColorFormat != OMX_COLOR_FormatYUV420SemiPlanar) {
     DEBUG_PRINT_ERROR("\nupdate_buffer_req: Unsupported color conversion");
     return false;
   }
+  pthread_mutex_lock(&omx->c_lock);
   c2d.close();
   status = c2d.open(omx->drv_ctx.video_resolution.frame_height,
                     omx->drv_ctx.video_resolution.frame_width,
-                    YCbCr420Tile,YCbCr420P);
+                    YCbCr420Tile, dest_format);
   if (status) {
     status = c2d.get_buffer_size(C2D_INPUT,src_size);
     if (status)
@@ -9097,6 +9117,7 @@ bool omx_vdec::allocate_color_convert_buf::update_buffer_req()
             buffer_alignment_req = omx->drv_ctx.op_buf.alignment;
     }
   }
+  pthread_mutex_unlock(&omx->c_lock);
   return status;
 }
 
@@ -9116,13 +9137,18 @@ bool omx_vdec::allocate_color_convert_buf::set_color_format(
     DEBUG_PRINT_ERROR("\n Incorrect color format");
     status = false;
   }
+  pthread_mutex_lock(&omx->c_lock);
   if (status && (drv_color_format != dest_color_format)) {
-    if (dest_color_format != OMX_COLOR_FormatYUV420Planar) {
+    if ((dest_color_format != OMX_COLOR_FormatYUV420Planar) &&
+        (dest_color_format != OMX_COLOR_FormatYUV420SemiPlanar)) {
       DEBUG_PRINT_ERROR("\n Unsupported color format for c2d");
       status = false;
     } else {
       DEBUG_PRINT_HIGH("\n Planar color format set");
-      ColorFormat = OMX_COLOR_FormatYUV420Planar;
+      ColorFormat = dest_color_format;
+      dest_format = (dest_color_format == OMX_COLOR_FormatYUV420Planar) ?
+              YCbCr420P : YCbCr420SP;
+      ALOGI("C2D o/p color format = %x", dest_color_format);
       if (enabled)
         c2d.destroy();
       enabled = false;
@@ -9137,6 +9163,7 @@ bool omx_vdec::allocate_color_convert_buf::set_color_format(
       c2d.destroy();
     enabled = false;
   }
+  pthread_mutex_unlock(&omx->c_lock);
   return status;
 }
 
@@ -9167,13 +9194,16 @@ OMX_BUFFERHEADERTYPE* omx_vdec::allocate_color_convert_buf::get_il_buf_hdr
     m_out_mem_ptr_client[index].nTimeStamp = bufadd->nTimeStamp;
     bool status;
     if (!omx->in_reconfig && !omx->output_flush_progress) {
+      pthread_mutex_lock(&omx->c_lock);
       status = c2d.convert(omx->drv_ctx.ptr_outputbuffer[index].pmem_fd,
                   bufadd->pBuffer, bufadd->pBuffer, pmem_fd[index],
                   pmem_baseaddress[index], pmem_baseaddress[index]);
+      pthread_mutex_unlock(&omx->c_lock);
       m_out_mem_ptr_client[index].nFilledLen = buffer_size_req;
       if (!status){
         DEBUG_PRINT_ERROR("\n Failed color conversion %d", status);
-        return NULL;
+        m_out_mem_ptr_client[index].nFilledLen = 0;
+        return &m_out_mem_ptr_client[index];
       }
     } else
       m_out_mem_ptr_client[index].nFilledLen = 0;
@@ -9205,10 +9235,14 @@ bool omx_vdec::allocate_color_convert_buf::get_buffer_req
 {
   if (!enabled)
     buffer_size = omx->drv_ctx.op_buf.buffer_size;
-  else
+  else {
+    pthread_mutex_lock(&omx->c_lock);
     if (!c2d.get_buffer_size(C2D_OUTPUT,buffer_size)) {
       DEBUG_PRINT_ERROR("\n Get buffer size failed");
+      pthread_mutex_unlock(&omx->c_lock);
       return false;
+    }
+    pthread_mutex_unlock(&omx->c_lock);
   }
   if (buffer_size < omx->drv_ctx.op_buf.buffer_size)
         buffer_size = omx->drv_ctx.op_buf.buffer_size;
@@ -9245,8 +9279,10 @@ OMX_ERRORTYPE omx_vdec::allocate_color_convert_buf::free_output_buffer(
   else
     allocated_count = 0;
   if (!allocated_count) {
+    pthread_mutex_lock(&omx->c_lock);
     c2d.close();
     init_members();
+    pthread_mutex_unlock(&omx->c_lock);
   }
   return omx->free_output_buffer(&omx->m_out_mem_ptr[index]);
 }
@@ -9349,10 +9385,12 @@ bool omx_vdec::allocate_color_convert_buf::get_color_format(OMX_COLOR_FORMATTYPE
     else
       status = false;
   } else {
-    if (ColorFormat != OMX_COLOR_FormatYUV420Planar) {
-      status = false;
-    } else
-      dest_color_format = OMX_COLOR_FormatYUV420Planar;
+    if ((ColorFormat == OMX_COLOR_FormatYUV420Planar) ||
+       (ColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)) {
+        dest_color_format = ColorFormat;
+    } else {
+        status = false;
+    }
   }
   return status;
 }
@@ -9403,11 +9441,10 @@ OMX_ERRORTYPE omx_vdec::update_color_format(OMX_COLOR_FORMATTYPE eColorFormat)
    struct vdec_ioctl_msg ioctl_msg = {NULL,NULL};
    OMX_ERRORTYPE eRet = OMX_ErrorNone;
    enum vdec_output_fromat op_format;
-   if(eColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)
-     op_format = VDEC_YUV_FORMAT_NV12;
-   else if(eColorFormat ==
+   if(eColorFormat ==
            QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka ||
-           eColorFormat == OMX_COLOR_FormatYUV420Planar)
+           eColorFormat == OMX_COLOR_FormatYUV420Planar ||
+           eColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)
       op_format = VDEC_YUV_FORMAT_TILE_4x2;
    else
       eRet = OMX_ErrorBadParameter;
