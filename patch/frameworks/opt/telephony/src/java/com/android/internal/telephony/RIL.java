@@ -2585,6 +2585,14 @@ public final class RIL extends BaseCommands implements CommandsInterface {
             }
         }
 
+        if (rr.mRequest == RIL_REQUEST_SHUTDOWN) {
+            // Set RADIO_STATE to RADIO_UNAVAILABLE to continue shutdown process
+            // regardless of error code to continue shutdown procedure.
+            riljLog("Response to RIL_REQUEST_SHUTDOWN received. Error is " +
+                    error + " Setting Radio State to Unavailable regardless of error.");
+            setRadioState(RadioState.RADIO_UNAVAILABLE);
+        }
+
         // Here and below fake RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED, see b/7255789.
         // This is needed otherwise we don't automatically transition to the main lock
         // screen when the pin or puk is entered incorrectly.
@@ -4500,8 +4508,8 @@ public final class RIL extends BaseCommands implements CommandsInterface {
 
     @Override
     public void nvReadItem(int itemID, Message response) {
-
-/*        RILRequest rr = RILRequest.obtain(RIL_REQUEST_NV_READ_ITEM, response);
+/*
+        RILRequest rr = RILRequest.obtain(RIL_REQUEST_NV_READ_ITEM, response);
 
         rr.mParcel.writeInt(itemID);
 

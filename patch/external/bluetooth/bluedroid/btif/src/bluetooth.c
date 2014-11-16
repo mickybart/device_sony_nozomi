@@ -550,7 +550,7 @@ static int fm_close(struct hw_device_t* device)
 #endif
 
 static int open_bluetooth_stack (const struct hw_module_t* module, char const* name,
-struct hw_device_t** abstraction)
+                                 struct hw_device_t** abstraction)
 {
 #ifdef BOARD_HAVE_FMRADIO_BCM
 	if (!strncmp(name, FMRADIO_HARDWARE_MODULE_ID, strlen(FMRADIO_HARDWARE_MODULE_ID) + 1))
