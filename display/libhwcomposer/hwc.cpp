@@ -345,36 +345,37 @@ static int hwc_set_primary(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     const int dpy = HWC_DISPLAY_PRIMARY;
 
     if (LIKELY(list) && ctx->dpyAttr[dpy].isActive) {
-        uint32_t last = list->numHwLayers - 1;
-        hwc_layer_1_t *fbLayer = &list->hwLayers[last];
-        int fd = -1; //FenceFD from the Copybit(valid in async mode)
-        bool copybitDone = false;
-        if(ctx->mCopyBit[dpy])
-            copybitDone = ctx->mCopyBit[dpy]->draw(ctx, list, dpy, &fd);
-        if(list->numHwLayers > 1)
+        if (LIKELY(list->numHwLayers > 1)) {
+            uint32_t last = list->numHwLayers - 1;
+            hwc_layer_1_t *fbLayer = &list->hwLayers[last];
+            int fd = -1; //FenceFD from the Copybit(valid in async mode)
+            bool copybitDone = false;
+            if(ctx->mCopyBit[dpy])
+                copybitDone = ctx->mCopyBit[dpy]->draw(ctx, list, dpy, &fd);
             hwc_sync(ctx, list, dpy, fd);
 
-        if (!ctx->mMDPComp[dpy]->draw(ctx, list)) {
-            ALOGE("%s: MDPComp draw failed", __FUNCTION__);
-            ret = -1;
-        }
-
-        //TODO We dont check for SKIP flag on this layer because we need PAN
-        //always. Last layer is always FB
-        private_handle_t *hnd;
-        if(copybitDone) {
-            hnd = ctx->mCopyBit[dpy]->getCurrentRenderBuffer();
-        } else {
-            hnd = (private_handle_t *)ctx->mMDPComp[dpy]->getFbHandle();
-            if (!hnd)
-                hnd = (private_handle_t *)fbLayer->handle;
-        }
-        ctx->mMDPComp[dpy]->cacheFbHandle((buffer_handle_t)hnd);
-
-        if(hnd) {
-            if (!ctx->mFBUpdate[dpy]->draw(ctx, hnd)) {
-                ALOGE("%s: FBUpdate draw failed", __FUNCTION__);
+            if (!ctx->mMDPComp[dpy]->draw(ctx, list)) {
+                ALOGE("%s: MDPComp draw failed", __FUNCTION__);
                 ret = -1;
+            }
+
+            //TODO We dont check for SKIP flag on this layer because we need PAN
+            //always. Last layer is always FB
+            private_handle_t *hnd;
+            if(copybitDone) {
+                hnd = ctx->mCopyBit[dpy]->getCurrentRenderBuffer();
+            } else {
+                hnd = (private_handle_t *)ctx->mMDPComp[dpy]->getFbHandle();
+                if (!hnd)
+                    hnd = (private_handle_t *)fbLayer->handle;
+            }
+            ctx->mMDPComp[dpy]->cacheFbHandle((buffer_handle_t)hnd);
+
+            if(hnd) {
+                if (!ctx->mFBUpdate[dpy]->draw(ctx, hnd)) {
+                    ALOGE("%s: FBUpdate draw failed", __FUNCTION__);
+                    ret = -1;
+                }
             }
         }
 
@@ -398,35 +399,36 @@ static int hwc_set_external(hwc_context_t *ctx,
     if (LIKELY(list) && ctx->dpyAttr[dpy].isActive &&
         !ctx->dpyAttr[dpy].isPause &&
         ctx->dpyAttr[dpy].connected) {
-        uint32_t last = list->numHwLayers - 1;
-        hwc_layer_1_t *fbLayer = &list->hwLayers[last];
-        int fd = -1; //FenceFD from the Copybit(valid in async mode)
-        bool copybitDone = false;
-        if(ctx->mCopyBit[dpy])
-            copybitDone = ctx->mCopyBit[dpy]->draw(ctx, list, dpy, &fd);
+        if (LIKELY(list->numHwLayers > 1)) {
+            uint32_t last = list->numHwLayers - 1;
+            hwc_layer_1_t *fbLayer = &list->hwLayers[last];
+            int fd = -1; //FenceFD from the Copybit(valid in async mode)
+            bool copybitDone = false;
+            if(ctx->mCopyBit[dpy])
+                copybitDone = ctx->mCopyBit[dpy]->draw(ctx, list, dpy, &fd);
 
-        if(list->numHwLayers > 1)
             hwc_sync(ctx, list, dpy, fd);
 
-        if (!ctx->mMDPComp[dpy]->draw(ctx, list)) {
-            ALOGE("%s: MDPComp draw failed", __FUNCTION__);
-            ret = -1;
-        }
-
-        private_handle_t *hnd;
-        if(copybitDone) {
-            hnd = ctx->mCopyBit[dpy]->getCurrentRenderBuffer();
-        } else {
-            hnd = (private_handle_t *)ctx->mMDPComp[dpy]->getFbHandle();
-            if (!hnd)
-                hnd = (private_handle_t *)fbLayer->handle;
-        }
-        ctx->mMDPComp[dpy]->cacheFbHandle((buffer_handle_t)hnd);
-
-        if(hnd) {
-            if (!ctx->mFBUpdate[dpy]->draw(ctx, hnd)) {
-                ALOGE("%s: FBUpdate::draw fail!", __FUNCTION__);
+            if (!ctx->mMDPComp[dpy]->draw(ctx, list)) {
+                ALOGE("%s: MDPComp draw failed", __FUNCTION__);
                 ret = -1;
+            }
+
+            private_handle_t *hnd;
+            if(copybitDone) {
+                hnd = ctx->mCopyBit[dpy]->getCurrentRenderBuffer();
+            } else {
+                hnd = (private_handle_t *)ctx->mMDPComp[dpy]->getFbHandle();
+                if (!hnd)
+                    hnd = (private_handle_t *)fbLayer->handle;
+            }
+            ctx->mMDPComp[dpy]->cacheFbHandle((buffer_handle_t)hnd);
+
+            if(hnd) {
+                if (!ctx->mFBUpdate[dpy]->draw(ctx, hnd)) {
+                    ALOGE("%s: FBUpdate::draw fail!", __FUNCTION__);
+                    ret = -1;
+                }
             }
         }
 
