@@ -185,6 +185,11 @@ else
     PRODUCT_COPY_FILES += \
         $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc \
         $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
+    PRODUCT_PACKAGES += \
+        busybox-static \
+        extract_elf_ramdisk \
+        init.sh \
+        recovery.sh
 endif
 
 # USB
