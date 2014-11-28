@@ -106,7 +106,7 @@
 /sys/class/leds/* delay_off 0644 system system
 
 # these should not be world writable
-/dev/ttyHS0               0600   bluetooth  bluetooth
+/dev/ttyHS0               0600   bluetooth  net_bt_stack
 /dev/pmem_smipool*        0660   system     camera
 /dev/pmem_swiqi           0660   system     audio
 /dev/pmem_tzcom           0660   system     audio
