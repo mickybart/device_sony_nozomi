@@ -51,7 +51,8 @@ on early-boot
     setrlimit 8 67108864 67108864
 
 on early-init
-
+    # use legacy virtual address layout, our camera blobs relyon it
+    write /proc/sys/vm/legacy_va_layout 1
 
 on boot
     #Create QMUX deamon socket area
