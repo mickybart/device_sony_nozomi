@@ -14,7 +14,7 @@ source /sbin/bootrec-device
 # create directories
 busybox mkdir -m 755 -p /cache
 busybox mkdir -m 755 -p /dev/block
-busybox mkdir -m 755 -p /dev/input
+#busybox mkdir -m 755 -p /dev/input
 busybox mkdir -m 555 -p /proc
 busybox mkdir -m 755 -p /sys
 
@@ -44,7 +44,7 @@ fi
 load_image=/sbin/ramdisk.cpio
 
 # boot decision
-if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
+if [ -s /dev/keycheck -o -e /cache/recovery/boot ] || busybox grep -q warmboot=0x77665502 /proc/cmdline
 then
 	busybox echo 'RECOVERY BOOT' >>boot.txt
 	busybox rm -fr /cache/recovery/boot
