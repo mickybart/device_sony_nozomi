@@ -54,6 +54,11 @@ on early-init
     # use legacy virtual address layout, our camera blobs relyon it
     write /proc/sys/vm/legacy_va_layout 1
 
+    # enable kernel samepage merging
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
+
 on boot
     #Create QMUX deamon socket area
     mkdir /dev/socket/qmux_radio 0770 radio radio
