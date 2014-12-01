@@ -21,7 +21,7 @@ PRODUCT_PACKAGES += \
     Launcher3
 
 # Superuser
-TARGET_NO_SUPERUSER := true
+TARGET_NO_SUPERUSER := false
 
 ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
