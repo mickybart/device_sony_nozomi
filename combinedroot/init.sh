@@ -14,7 +14,7 @@ source /sbin/bootrec-device
 # create directories
 busybox mkdir -m 755 -p /cache
 busybox mkdir -m 755 -p /dev/block
-#busybox mkdir -m 755 -p /dev/input
+busybox mkdir -m 755 -p /dev/input
 busybox mkdir -m 555 -p /proc
 busybox mkdir -m 755 -p /sys
 
