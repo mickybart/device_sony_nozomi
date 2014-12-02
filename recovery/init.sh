@@ -37,8 +37,8 @@ if [ -s /recovery$RAMDISK ]; then
 
         # key check
         $BUSYBOX mkdir -m 755 /dev/input
-        $BUSYBOX mknod -m 660 /dev/input/event0 c 13 64
-        $BUSYBOX cat /dev/input/event0 > $KEYCHECK&
+        $BUSYBOX mknod -m 660 /dev/input/event1 c 13 65
+        $BUSYBOX cat /dev/input/event1 > $KEYCHECK&
         $BUSYBOX sleep 3
         kill $!
         if [ -s $KEYCHECK ]; then
