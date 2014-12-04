@@ -463,3 +463,10 @@ service qrngd /system/bin/qrngd -f
 on property:sys.radio.shutdown=true
    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
 
+# zram
+on property:sys.zram.enable=true
+   exec /system/bin/sh /system/etc/init.zram.sh
+
+on property:sys.zram.enable=false
+   exec /system/bin/sh /system/etc/init.zram.sh
+

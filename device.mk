@@ -170,6 +170,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.sony.rc:root/init.sony.rc \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
+# zram
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/init.zram.sh:system/etc/init.zram.sh
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    sys.zram.enable=true \
+    sys.zram.disksize=100
+
 # Normal/Native/Loop
 ifeq ($(BUILD_TARGET),native)
     PRODUCT_COPY_FILES += \
