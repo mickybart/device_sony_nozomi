@@ -7,6 +7,7 @@ ZRAM_DISKSIZE=$(/system/bin/getprop sys.zram.disksize)
 case "$ZRAM_ENABLE" in
     "true")
         echo $(($ZRAM_DISKSIZE*1024*1024)) > /sys/block/zram0/disksize
+	echo 0 > /proc/sys/vm/page-cluster
         /system/bin/mkswap /dev/block/zram0
         /system/bin/swapon /dev/block/zram0
         ;;
