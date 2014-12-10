@@ -1455,8 +1455,8 @@ public final class PowerManagerService extends SystemService
                             + screenOffTimeout - screenDimDuration;
                     if (now < nextTimeout) {
                         if (now > mLastUserActivityTime + BUTTON_ON_DURATION) {
-                            mButtonsLight.setBrightness(0);
-                        } else {
+                            mButtonsLight.turnOff();
+                        } else if (mDisplayPowerRequest.isBrightOrDim()) {
                             mButtonsLight.setBrightness(mDisplayPowerRequest.screenBrightness);
                             nextTimeout = now + BUTTON_ON_DURATION;
                         }
