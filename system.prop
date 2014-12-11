@@ -3,6 +3,10 @@
 # system.prop for nozomi
 #
 
+# zram 
+sys.zram.size=67108864
+sys.zram.enable=true
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
