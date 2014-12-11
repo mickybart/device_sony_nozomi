@@ -722,6 +722,7 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
     private boolean setScreenState(int state) {
         if (mPowerState.getScreenState() != state) {
             final boolean wasOn = (mPowerState.getScreenState() != Display.STATE_OFF);
+            final boolean wasLightOn = (mPowerState.getScreenState() == Display.STATE_ON);
             mPowerState.setScreenState(state);
 
             // Tell battery stats about the transition.
@@ -737,7 +738,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
             // the final state of the color fade animation.
             boolean isOn = (state != Display.STATE_OFF);
             if (wasOn && !isOn) {
-                mLights.getLight(LightsManager.LIGHT_ID_BUTTONS).setBrightness(0);
                 unblockScreenOn();
                 mWindowManagerPolicy.screenTurnedOff();
             } else if (!wasOn && isOn) {
@@ -747,6 +747,11 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
                     unblockScreenOn();
                 }
                 mWindowManagerPolicy.screenTurningOn(mPendingScreenOnUnblocker);
+            }
+
+            boolean isLightOn = (state == Display.STATE_ON);
+            if (wasLightOn && !isLightOn) {
+            	mLights.getLight(LightsManager.LIGHT_ID_BUTTONS).turnOff();
             }
         }
         return mPendingScreenOnUnblocker == null;
