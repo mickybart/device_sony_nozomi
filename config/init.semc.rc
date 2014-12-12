@@ -468,6 +468,7 @@ on property:sys.radio.shutdown=true
 
 on property:sys.zram.enable=true
     write /sys/block/zram0/disksize ${sys.zram.size}
+    write /proc/sys/vm/swappiness 100
     swapon_all fstab.semc
 
 on property:sys.zram.enable=false

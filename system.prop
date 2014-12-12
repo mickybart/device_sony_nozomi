@@ -4,7 +4,7 @@
 #
 
 # zram 
-sys.zram.size=67108864
+sys.zram.size=100663296
 sys.zram.enable=true
 
 # Notify the system that the RIL only signals once

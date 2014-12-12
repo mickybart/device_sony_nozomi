@@ -105,7 +105,7 @@
          thrashing if set too low.  Overrides the default value chosen by ActivityManager
          based on screen size and total memory for the largest lowmemorykiller bucket, and
          scaled proportionally to the smaller buckets.  -1 keeps the default. -->
-    <integer name="config_lowMemoryKillerMinFreeKbytesAbsolute">116120</integer>
+    <integer name="config_lowMemoryKillerMinFreeKbytesAbsolute">131072</integer>
 
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
