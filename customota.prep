@@ -1,0 +1,17 @@
+#!/sbin/sh
+
+nProp=/tmp/nAOSProm.prop
+
+#copy .nAOSProm.prop
+rm -f $nProp
+cp -f /sdcard/.nAOSProm.prop $nProp
+
+#create nAOSProm.prop if it doesn't exist
+[ ! -f $nProp ] && touch $nProp
+
+#check if kernel key is available and if not
+#request the standard kernel
+if (! grep -qi "kernel=" $nProp ); then
+    echo "kernel=standard" >> $nProp
+fi
+

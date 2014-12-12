@@ -22,8 +22,20 @@ RPMBIN := vendor/sony/nozomi/proprietary/boot/RPM.bin
 INITSH := device/sony/nozomi/combinedroot/init.sh
 BOOTREC_DEVICE := device/sony/nozomi/recovery/bootrec-device
 
+MULTI_KERNEL := $(PRODUCT_OUT)/kernel
+
+ifeq ($(TARGET_NO_MULTIKERNEL),false)
+ifeq ($(BOARD_KERNEL_MSM_OC),true)
+MULTI_KERNEL := $(MULTI_KERNEL) $(PRODUCT_OUT)/kernel-oc
+endif
+
+ifeq ($(BOARD_KERNEL_MSM_OC_ULTRA),true)
+MULTI_KERNEL := $(MULTI_KERNEL) $(PRODUCT_OUT)/kernel-oc_ultra
+endif
+endif
+
 ifneq ($(TARGET_NO_RECOVERY),true)
-$(INSTALLED_BOOTIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_RAMDISK_TARGET) $(INITSH) $(BOOTREC_DEVICE) $(PRODUCT_OUT)/utilities/busybox $(PRODUCT_OUT)/utilities/extract_elf_ramdisk $(MKBOOTIMG) $(MINIGZIP) $(INTERNAL_BOOTIMAGE_FILES)
+$(INSTALLED_BOOTIMAGE_TARGET): $(MULTI_KERNEL) $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_RAMDISK_TARGET) $(INITSH) $(BOOTREC_DEVICE) $(PRODUCT_OUT)/utilities/busybox $(PRODUCT_OUT)/utilities/extract_elf_ramdisk $(MKBOOTIMG) $(MINIGZIP) $(INTERNAL_BOOTIMAGE_FILES)
 	$(call pretty,"Boot image: $@")
 
 	$(hide) rm -fr $(PRODUCT_OUT)/combinedroot
@@ -43,6 +55,20 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(INSTALLED_RECOVERYIMAGE_T
 	$(hide) $(MKBOOTFS) $(PRODUCT_OUT)/combinedroot/ | $(MINIGZIP) > $(PRODUCT_OUT)/combinedroot.img
 
 	$(hide) python $(MKELF) -o $@ $(PRODUCT_OUT)/kernel@$(BOARD_KERNEL_ADDR) $(PRODUCT_OUT)/combinedroot.img@$(BOARD_RAMDISK_ADDR),ramdisk $(RPMBIN)@$(BOARD_RPM_ADDR),rpm
+	
+ifeq ($(TARGET_NO_MULTIKERNEL),false)
+ifeq ($(BOARD_KERNEL_MSM_OC),true)
+	$(call pretty,"Boot image: $@-oc")
+	$(hide) rm -f $@-oc
+	$(hide) python $(MKELF) -o $@-oc $(PRODUCT_OUT)/kernel-oc@$(BOARD_KERNEL_ADDR) $(PRODUCT_OUT)/combinedroot.img@$(BOARD_RAMDISK_ADDR),ramdisk $(RPMBIN)@$(BOARD_RPM_ADDR),rpm
+endif
+
+ifeq ($(BOARD_KERNEL_MSM_OC_ULTRA),true)
+	$(call pretty,"Boot image: $@-oc_ultra")
+	$(hide) rm -f $@-oc_ultra
+	$(hide) python $(MKELF) -o $@-oc_ultra $(PRODUCT_OUT)/kernel-oc_ultra@$(BOARD_KERNEL_ADDR) $(PRODUCT_OUT)/combinedroot.img@$(BOARD_RAMDISK_ADDR),ramdisk $(RPMBIN)@$(BOARD_RPM_ADDR),rpm
+endif
+endif
 
 $(INSTALLED_RECOVERYIMAGE_TARGET): $(INSTALLED_RAMDISK_TARGET) \
 		$(recovery_kernel) \
