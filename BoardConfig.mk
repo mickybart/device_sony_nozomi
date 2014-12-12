@@ -84,8 +84,18 @@ BOARD_HAVE_FMRADIO := true
 BOARD_HAVE_FMRADIO_BCM := true
 
 # kernel
+TARGET_NO_MULTIKERNEL := false
+
 BOARD_KERNEL_MSM := true
 KERNEL_DEFCONFIG := fuji_nozomi_defconfig
+
+ifeq ($(TARGET_NO_MULTIKERNEL),false)
+BOARD_KERNEL_MSM_OC := true
+KERNEL_DEFCONFIG_OC := fuji_nozomi_oc_defconfig
+
+BOARD_KERNEL_MSM_OC_ULTRA := true
+KERNEL_DEFCONFIG_OC_ULTRA := fuji_nozomi_oc_ultra_defconfig
+endif
 
 # board
 TARGET_BOARD_PLATFORM := msm8660
@@ -109,7 +119,7 @@ TARGET_NO_RADIOIMAGE := true
 TARGET_BOOTLOADER_TYPE := fastboot
 BOARD_HAS_NO_MISC_PARTITION := true
 
-# kernel
+# boot image
 BOARD_KERNEL_ADDR	:= 0x40208000
 BOARD_RAMDISK_ADDR	:= 0x41500000
 BOARD_RPM_ADDR		:= 0x20000
