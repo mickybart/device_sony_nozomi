@@ -4,7 +4,7 @@
 #
 
 # zram 
-sys.zram.size=100663296
+sys.zram.size=134217728
 sys.zram.enable=true
 
 # lightbar
