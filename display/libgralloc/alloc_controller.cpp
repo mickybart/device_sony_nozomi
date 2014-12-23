@@ -61,7 +61,7 @@ static bool canFallback(int usage, bool triedSystem)
     // 5. The buffer is meant for external display only
 
     if(QCCompositionType::getInstance().getCompositionType() &
-       COMPOSITION_TYPE_MDP)
+       (COMPOSITION_TYPE_MDP | COMPOSITION_TYPE_DYN))
         return false;
     if(triedSystem)
         return false;
