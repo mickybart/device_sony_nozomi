@@ -105,10 +105,7 @@ $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330
 
 # DASH
 PRODUCT_PACKAGES += \
-    sensors.msm8660 \
-    libmlplatform \
-    libmllite \
-    libmpl
+    sensors.msm8660
 
 PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)/config/sensors.conf:system/etc/sensors.conf
