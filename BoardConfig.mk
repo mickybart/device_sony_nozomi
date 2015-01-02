@@ -132,27 +132,20 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/recovery.fstab
 RECOVERY_FSTAB_VERSION := 2
 
-# Twrp recovery - not used
-#TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-#TARGET_RECOVERY_PRE_COMMAND := "touch /cache/recovery/boot;sync;"
-#TARGET_RECOVERY_INITRC := device/sony/nozomi/recovery/init.rc
-#DEVICE_RESOLUTION := 720x1280
-#RECOVERY_GRAPHICS_USE_LINELENGTH := true
-#BOARD_HAS_NO_REAL_SDCARD := true
-#TARGET_NO_SEPARATE_RECOVERY := true
-#TW_NO_USB_STORAGE := true
-#BOARD_HAS_NO_SELECT_BUTTON := true
-#BOARD_SDCARD_INTERNAL_DEVICE := /dev/block/mmcblk0p15
-#BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x01400000
-
 # OTA
 TARGET_OTA_ASSERT_DEVICE := LT26i,nozomi
 
 # custom boot
-BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custombootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
 
 # custom ota
-BOARD_CUSTOM_OTA_MK := device/sony/nozomi/customota.mk
+BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
+
+# Superuser
+TARGET_NO_SUPERUSER := false
+ifneq ($(TARGET_NO_SUPERUSER),true)
+SUPERUSER_EMBEDDED := true
+endif
 
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 

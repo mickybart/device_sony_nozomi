@@ -42,7 +42,6 @@
 #include "zlib.h"
 
 #define ELF_RAMDISK_LOCATION 2 // Ramdisk is the second file in the image
-#define EER_DEFAULT_TMP "/tmp" // Scatch folder default location
 #define EER_TMP_RAMDISK_CPIO "ramdisk.cpio" // temporary ramdisk cpio file name
 #define EER_SEARCH_STRING "fota-ua" // String to search to determine if the
                                     // ramdisk is a stock Sony FOTA ramdisk
@@ -54,7 +53,7 @@
 
 typedef char* byte_p;
 
-char input_filename[PATH_MAX], output_filename[PATH_MAX], tmp_dir[PATH_MAX];
+char input_filename[PATH_MAX], output_filename[PATH_MAX];
 int has_input = 0, has_output = 0, dont_unzip = 0, check_ramdisk = 0;
 int arg_error = 0, ramdisk_loc = ELF_RAMDISK_LOCATION;
 
@@ -336,14 +335,9 @@ void extract_android(const char* img_filename, unsigned long* offset,
 
 void extract_ramdisk() {
 	int img_fd, return_val = 0;
-	char output[PATH_MAX];
 	char command[4096], magic_buffer[4];
 	size_t result, read_size = sizeof(magic_buffer);
 	unsigned long offset, ramdisk_size;
-
-	// Make sure that tmp_dir ends with a /
-	if (tmp_dir[strlen(tmp_dir) - 1] != '/')
-		strcat(tmp_dir, "/");
 
 	if (elf_version(EV_CURRENT) == EV_NONE) {
 		printf("ELF library initialization failed.\n");
@@ -378,41 +372,24 @@ void extract_ramdisk() {
 	printf("Offset:      %lu\n", offset);
 	printf("Size:        %lu\n", ramdisk_size);
 
-	if (!check_ramdisk) {
-		strcpy(output, output_filename);
-	} else {
-		strcpy(output, tmp_dir);
-		strcat(output, EER_TMP_RAMDISK_CPIO);
-		if (path_exists(output) && unlink(output)) {
-			printf("Unable to unlink '%s'\n", output);
-			exit(-1);
-		}
-	}
-
-	copy_file_part(input_filename, output, offset,
+	copy_file_part(input_filename, output_filename, offset,
 		ramdisk_size);
-	printf("Uncompressed ramdisk written to '%s'.\n", output);
+	printf("Uncompressed ramdisk written to '%s'.\n", output_filename);
 
 	if (check_ramdisk) {
 		printf("Checking ramdisk to ensure it is not a stock Sony recovery.");
 		printf("\n  (Checking for %s)\n", EER_SEARCH_STRING);
 		unsigned char needle[7] = EER_SEARCH_STRING;
 		unsigned long fota_location;
-		return_val = scan_file_for_data(output, needle, sizeof(needle), 0,
+		return_val = scan_file_for_data(output_filename, needle, sizeof(needle), 0,
 			&fota_location);
 		if (return_val < 0) {
 			printf("This is not a stock Sony recovery ramdisk.\n");
-			if (rename(output, output_filename)) {
-				printf("Failed to rename '%s' to '%s'.\n", output,
-					output_filename);
-				exit(-1);
-			}
-			printf("Ramdisk copied to '%s'\nDONE!\n", output_filename);
 		} else {
 			printf("This is a stock Sony recovery ramdisk.\n");
-			printf("Ramdisk NOT copied to '%s'\n", output_filename);
+			unlink(output_filename);
+			exit(-1);
 		}
-		unlink(output);
 	}
 }
 
@@ -424,9 +401,6 @@ void print_usage() {
 	printf(" -o <output filename> Specifies the final target of the .cpio ");
 	printf("file (required)\n\n");
 	printf("Optional:\n");
-	printf(" -t <target dir>      Specifies directory to use for scratch\n");
-	printf("                      space (uses %s if not specified)\n",
-		EER_DEFAULT_TMP);
 	printf(" -d                   Do not gunzip\n");
 	printf(" -c                   Check ramdisk for stock recovery (cannot\n");
 	printf("                      be used with -d)\n\n");
@@ -445,8 +419,6 @@ int main(int argc, char** argv) {
 		print_usage();
 		exit(-1);
 	}
-
-	strcpy(tmp_dir, EER_DEFAULT_TMP);
 
 	for (index = 1; index < argc; index++) {
 		if (strlen(argv[index]) != 2) {
@@ -483,25 +455,6 @@ int main(int argc, char** argv) {
 			} else {
 				index++;
 				strcpy(output_filename, argv[index]);
-			}
-		} else if (strncmp(argv[index], "-t", 2) == 0) {
-			// Temp folder specified
-			if (index == argc - 1) {
-				arg_error = 1;
-				printf("Missing temp directory parameter.\n\n");
-				index = argc;
-			} else if (strlen(argv[index + 1]) > PATH_MAX - 1) {
-				arg_error = 2;
-				index = argc;
-			} else {
-				index++;
-				strcpy(tmp_dir, argv[index]);
-				if (!path_exists(tmp_dir)) {
-					arg_error = 5;
-					printf("Temp directory '%s' does not exist.\n\n",
-						tmp_dir);
-					index = argc;
-				}
 			}
 		} else if (strncmp(argv[index], "-d", 2) == 0) {
 			dont_unzip = 1;

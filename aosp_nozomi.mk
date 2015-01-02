@@ -20,16 +20,3 @@ PRODUCT_NAME := aosp_nozomi
 PRODUCT_PACKAGES += \
     Launcher3
 
-# Superuser
-TARGET_NO_SUPERUSER := false
-
-ifneq ($(TARGET_NO_SUPERUSER),true)
-SUPERUSER_EMBEDDED := true
-
-PRODUCT_PACKAGES += \
-    su
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.root_access=3
-
-endif

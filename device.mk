@@ -216,9 +216,11 @@ PRODUCT_PACKAGES += \
     Email \
     Stk
 
+# Busybox
 PRODUCT_PACKAGES += \
     busybox
 
+# Boot Animation
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/bootanimation.zip:system/media/bootanimation.zip
 
@@ -231,7 +233,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Recovery
 PRODUCT_PACKAGES += \
-    extract_elf_ramdisk
+    busybox-static \
+    extract_elf_ramdisk \
+    init.sh
+
+# Superuser
+ifneq ($(TARGET_NO_SUPERUSER),true)
+
+PRODUCT_PACKAGES += \
+    su
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.root_access=3
+
+endif
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
