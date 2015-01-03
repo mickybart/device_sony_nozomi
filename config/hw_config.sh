@@ -44,3 +44,6 @@ echo 2000 > $dev/button-backlight/max_current
 
 # TI BQ275xx firmware loader
 bq275xx_fwloader
+
+# clearpad tap2wake
+echo 1 > /sys/class/input/input3/wakeup

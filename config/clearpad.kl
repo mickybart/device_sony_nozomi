@@ -1,5 +1,5 @@
-# KEY_MENU, KEY_HOME, KEY_BACK
+# KEY_MENU, KEY_HOME, KEY_BACK, KEY_POWER
 key 139   MENU              VIRTUAL
 key 102   HOME              VIRTUAL
 key 158   BACK              VIRTUAL
-
+key 116   POWER             VIRTUAL
