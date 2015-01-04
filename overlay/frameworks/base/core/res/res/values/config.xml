@@ -36,6 +36,9 @@
     <!-- Minimum screen brightness allowed by the power manager. -->
     <integer name="config_screenBrightnessDim">20</integer>
 
+    <!-- Minimum allowable screen brightness to use in a very dark room. -->
+    <integer name="config_screenBrightnessDark">20</integer>
+
     <!-- Default screen brightness setting.
          Must be in the range specified by minimum and maximum. -->
     <integer name="config_screenBrightnessSettingDefault">87</integer>
