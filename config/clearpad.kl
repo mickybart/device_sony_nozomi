@@ -1,5 +1,5 @@
-# KEY_APP_SWITCH, KEY_HOME, KEY_BACK
+# KEY_APP_SWITCH, KEY_HOME, KEY_BACK, KEY_POWER
 key 580   APP_SWITCH        VIRTUAL
 key 102   HOME              VIRTUAL
 key 158   BACK              VIRTUAL
-
+key 116   POWER             VIRTUAL
