@@ -47,3 +47,9 @@ bq275xx_fwloader
 
 # clearpad tap2wake
 echo 1 > /sys/class/input/input3/wakeup
+
+# bma250 motion
+dev=/sys/class/input/input6
+echo 0 0 0 20 > $dev/tap_param
+echo 130 > $dev/tap_mode
+echo 3 48 > $dev/slope_param

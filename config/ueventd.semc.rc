@@ -148,3 +148,7 @@
 
 # Accelerometer device permission
 /sys/devices/virtual/input/input* bma250_rate 0640 system system
+/sys/devices/virtual/input/input* tap_mode 0640 system system
+/sys/devices/virtual/input/input* slope_mode 0640 system system
+/sys/devices/virtual/input/input* low_g_mode 0640 system system
+/sys/devices/virtual/input/input* high_g_mode 0640 system system
