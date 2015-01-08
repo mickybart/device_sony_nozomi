@@ -10,6 +10,9 @@ sys.zram.enable=true
 # lightbar
 sys.lightbar.enable=true
 
+# doze
+sys.screen.doze.brightness=-1
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
