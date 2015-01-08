@@ -170,7 +170,7 @@ PRODUCT_COPY_FILES += \
 # Normal/Native/Loop
 ifeq ($(BUILD_TARGET),native)
     PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc \
+        $(LOCAL_PATH)/config/$(TARGET_FSTAB):root/fstab.semc \
         $(LOCAL_PATH)/config/init.sony-platform.native.rc:root/init.sony-platform.rc
 else ifeq ($(BUILD_TARGET),loop)
     PRODUCT_COPY_FILES += \
@@ -180,7 +180,7 @@ else ifeq ($(BUILD_TARGET),loop)
         losetup-static
 else
     PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc \
+        $(LOCAL_PATH)/config/$(TARGET_FSTAB):root/fstab.semc \
         $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
 endif
 
@@ -211,8 +211,6 @@ PRODUCT_COPY_FILES += \
 # Software
 PRODUCT_PACKAGES += \
     libemoji \
-    e2fsck \
-    fsck_msdos \
     Email \
     Stk
 
@@ -247,6 +245,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.root_access=3
 
 endif
+
+# Filesystem tools
+PRODUCT_PACKAGES += \
+    e2fsck \
+    fsck_msdos \
+    fsck.f2fs \
+    mkfs.f2fs
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 

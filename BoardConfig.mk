@@ -125,12 +125,19 @@ BOARD_RPM_ADDR		:= 0x20000
 
 # image
 TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := false
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1056964608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2147483648
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-# Recovery
+# fstab
+ifeq ($(TARGET_USERIMAGES_USE_F2FS),true)
+TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/recovery.f2fs.fstab
+TARGET_FSTAB := fstab.f2fs.semc
+else
 TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/recovery.fstab
+TARGET_FSTAB := fstab.semc
+endif
 RECOVERY_FSTAB_VERSION := 2
 
 # OTA
