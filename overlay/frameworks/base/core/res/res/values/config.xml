@@ -98,17 +98,17 @@
          than the size of the config_autoBrightnessLevels array.
     -->
     <integer-array name="config_autoBrightnessButtonBacklightValues">
-        <item>10</item>
-        <item>20</item>
-        <item>30</item>
-        <item>70</item>
-        <item>93</item>
-        <item>105</item>
-        <item>120</item>
-        <item>162</item>
-        <item>200</item>
-        <item>236</item>
-        <item>255</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
     </integer-array>
 
     <!-- Array of output values for keyboard backlight corresponding to the LUX values
