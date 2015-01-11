@@ -17,6 +17,14 @@
 # define build target(normal/native/loop)
 BUILD_TARGET := normal
 
+# define build fs
+ifeq ($(BUILD_TARGET),loop)
+BUILD_FS := loop
+else
+# (ext4,f2fs)
+BUILD_FS := f2fs
+endif
+
 # overlay
 DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
 
@@ -168,21 +176,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
 # Normal/Native/Loop
-ifeq ($(BUILD_TARGET),native)
-    PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/config/$(TARGET_FSTAB):root/fstab.semc \
-        $(LOCAL_PATH)/config/init.sony-platform.native.rc:root/init.sony-platform.rc
-else ifeq ($(BUILD_TARGET),loop)
-    PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/config/fstab.loop.semc:root/fstab.semc \
-        $(LOCAL_PATH)/config/init.sony-platform.loop.rc:root/init.sony-platform.rc
-    PRODUCT_PACKAGES += \
-        losetup-static
-else
-    PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/config/$(TARGET_FSTAB):root/fstab.semc \
-        $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
-endif
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/fstab.$(BUILD_FS).semc:root/fstab.semc \
+    $(LOCAL_PATH)/config/init.sony-platform.$(BUILD_TARGET).rc:root/init.sony-platform.rc
 
 # USB
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
