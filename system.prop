@@ -3,9 +3,10 @@
 # system.prop for nozomi
 #
 
-# zram 
+# zram and memory
 sys.zram.size=167772160
 sys.zram.enable=true
+sys.ram.minfree=-1
 
 # lightbar
 sys.lightbar.enable=true
