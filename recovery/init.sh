@@ -6,6 +6,7 @@ BUSYBOX=/sbin/busybox-static
 EXTRACT_RAMDISK=/sbin/extract_elf_ramdisk
 KEYCHECK=/dev/keycheck
 RAMDISK=/ramdisk.cpio
+FSTAB=/fstab.semc
 
 LED_RED=/sys/class/leds/red/brightness
 LED_GREEN=/sys/class/leds/green/brightness
@@ -15,6 +16,12 @@ EVENT_NODE="/dev/input/event1 c 13 65"
 EVENT="/dev/input/event1"
 FOTA_NODE="/dev/block/mmcblk0p11 b 179 11"
 FOTA="/dev/block/mmcblk0p11"
+
+CACHE_NODE="/dev/block/mmcblk0p13 b 179 13"
+CACHE="/dev/block/mmcblk0p13"
+
+DATA_NODE="/dev/block/mmcblk0p14 b 179 14"
+DATA="/dev/block/mmcblk0p14"
 
 SLEEP_TIME=3
 
@@ -78,8 +85,28 @@ if [ -s /recovery$RAMDISK ]; then
     fi
 fi
 
+# Dynamic fstab
+if $BUSYBOX grep -q '# fstab.mount:dynamic' $FSTAB; then
+    $BUSYBOX mknod -m 660 ${CACHE_NODE}
+    $BUSYBOX mknod -m 660 ${DATA_NODE}
+
+    # /cache
+    PART=cache
+    PART_DEV=${CACHE}
+    TYPE=$($BUSYBOX blkid ${PART_DEV} | $BUSYBOX sed 's/.*TYPE="//;s/"$//')
+    $BUSYBOX echo "/$PART-$TYPE/+1s/#//"$'\nw' | $BUSYBOX ed $FSTAB
+    
+    # /data
+    PART=data
+    PART_DEV=${DATA}
+    TYPE=$($BUSYBOX blkid ${PART_DEV} | $BUSYBOX sed 's/.*TYPE="//;s/"$//')
+    $BUSYBOX echo "/$PART-$TYPE/+1s/#//"$'\nw' | $BUSYBOX ed $FSTAB
+fi
+
+# Cleanup
 $BUSYBOX rm -rf /recovery
 $BUSYBOX rm -rf /dev
 
+# Init
 exec /init
 
