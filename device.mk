@@ -219,11 +219,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/bootanimation.zip:system/media/bootanimation.zip
 
 # Hw keys
-# Layout=0 : Deprecated Android 2.3 behavior
-# Layout=1 : Modern Android 4.4+ behavior
+# layout : 1=> Modern Android 4.4+, 0=> Deprecated Android 2.3
+# music  : control music with volume and camera keys (1=> enable, 0=> disable)
 PRODUCT_PROPERTY_OVERRIDES += \
     qemu.hw.mainkeys=1 \
-    qemu.hw.mainkeys.layout=1
+    qemu.hw.mainkeys.layout=1 \
+    qemu.hw.mainkeys.music=1
 
 # Recovery
 PRODUCT_PACKAGES += \
