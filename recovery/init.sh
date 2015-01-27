@@ -23,6 +23,9 @@ CACHE="/dev/block/mmcblk0p13"
 DATA_NODE="/dev/block/mmcblk0p14 b 179 14"
 DATA="/dev/block/mmcblk0p14"
 
+SDCARD0_NODE="/dev/block/mmcblk0p15 b 179 15"
+SDCARD0="/dev/block/mmcblk0p15"
+
 SLEEP_TIME=3
 
 ###########################################################################
@@ -89,6 +92,7 @@ fi
 if $BUSYBOX grep -q '# fstab.mount:dynamic' $FSTAB; then
     $BUSYBOX mknod -m 660 ${CACHE_NODE}
     $BUSYBOX mknod -m 660 ${DATA_NODE}
+    $BUSYBOX mknod -m 660 ${SDCARD0_NODE}
 
     # /cache
     PART=cache
@@ -99,6 +103,12 @@ if $BUSYBOX grep -q '# fstab.mount:dynamic' $FSTAB; then
     # /data
     PART=data
     PART_DEV=${DATA}
+    TYPE=$($BUSYBOX blkid ${PART_DEV} | $BUSYBOX sed 's/.*TYPE="//;s/"$//')
+    $BUSYBOX echo "/$PART-$TYPE/+1s/#//"$'\nw' | $BUSYBOX ed $FSTAB
+
+    # sdcard0
+    PART=sdcard0
+    PART_DEV=${SDCARD0}
     TYPE=$($BUSYBOX blkid ${PART_DEV} | $BUSYBOX sed 's/.*TYPE="//;s/"$//')
     $BUSYBOX echo "/$PART-$TYPE/+1s/#//"$'\nw' | $BUSYBOX ed $FSTAB
 fi

@@ -17,6 +17,12 @@
 #data-f2fs
 #/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,encryptable=footer
 
-/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              vfat    defaults                                                      voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+#sdcard0-vfat
+#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              vfat    defaults                                 voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+#sdcard0-ext4
+#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              ext4    defaults                                 voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+#sdcard0-f2fs
+#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              f2fs    discard,inline_xattr,errors=recover      voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+
 /devices/platform/msm_hsusb_host.0         auto              vfat    defaults                                                      voldmanaged=usbdisk:auto
 /dev/block/zram0                           none              swap    defaults,pri=100                                              wait
