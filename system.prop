@@ -8,9 +8,6 @@ sys.zram.size=167772160
 sys.zram.enable=true
 sys.ram.minfree=-1
 
-# lightbar
-sys.lightbar.mode=1
-
 # doze
 sys.screen.doze.brightness=-1
 
