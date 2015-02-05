@@ -186,6 +186,10 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
+    #Double-tap to Wake (dt2w)
+    chown system system /sys/class/input/input3/wakeup
+    chmod 0664 /sys/class/input/input3/wakeup
+
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
    class late_start

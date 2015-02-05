@@ -33,7 +33,7 @@ ARCH_ARM_HAVE_TLS_REGISTER := true
 # compile flag
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
-COMMON_GLOBAL_CFLAGS += -DLEGACY_BLOB_COMPATIBLE
+COMMON_GLOBAL_CFLAGS += -DLEGACY_BLOB_COMPATIBLE -DQCOM_LEGACY_UIDS -DNEEDS_VECTORIMPL_SYMBOLS
 
 # display
 USE_OPENGL_RENDERER := true
@@ -151,6 +151,9 @@ TARGET_NO_SUPERUSER := false
 ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
 endif
+
+# CM Hardware
+BOARD_HARDWARE_CLASS := device/sony/nozomi/cmhw/
 
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 
