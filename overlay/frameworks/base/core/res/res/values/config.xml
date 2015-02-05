@@ -129,6 +129,9 @@
         <item>0</item>
     </integer-array>
 
+    <integer name="config_buttonBrightnessSettingDefault">80</integer>
+    <bool name="config_deviceHasVariableButtonBrightness">true</bool>
+
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
          USB interfaces.  If the device doesn't want to support tething over USB this should
          be empty.  An example would be "usb.*" -->
