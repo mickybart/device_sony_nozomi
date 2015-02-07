@@ -4,9 +4,9 @@
 #
 
 # zram and memory
-sys.zram.size=167772160
-sys.zram.enable=true
-sys.ram.minfree=-1
+persist.sys.zram_size=167772160
+persist.sys.zram_enable=true
+persist.sys.ram_minfree=138240
 
 # doze
 sys.screen.doze.brightness=-1
