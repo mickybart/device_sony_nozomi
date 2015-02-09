@@ -186,6 +186,10 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
+    #Double-tap to Wake (dt2w)
+    chown system system /sys/class/input/input3/wakeup
+    chmod 0664 /sys/class/input/input3/wakeup
+
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
    class late_start
@@ -472,10 +476,17 @@ service qrngd /system/bin/qrngd -f
 on property:sys.radio.shutdown=true
    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
 
-on property:sys.zram.enable=true
-    write /sys/block/zram0/disksize ${sys.zram.size}
+on property:persist.sys.zram_enable=true
+    write /sys/block/zram0/disksize ${persist.sys.zram_size}
     swapon_all fstab.semc
 
-on property:sys.zram.enable=false
+on property:persist.sys.zram_enable=false
     exec /system/bin/swapoff /dev/block/zram0
     write /sys/block/zram0/reset 1
+
+on property:persist.screen.tap_wake=true
+    write /sys/class/input/input3/wakeup 1
+
+on property:persist.screen.tap_wake=false
+    write /sys/class/input/input3/wakeup 0
+

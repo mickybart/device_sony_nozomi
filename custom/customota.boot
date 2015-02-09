@@ -8,7 +8,7 @@ package_extract_file("install-prep.sh", "/tmp/install-prep.sh");
 run_program("/sbin/sh", "/tmp/install-prep.sh");
 
 ifelse(
-    file_getprop("/tmp/nAOSProm.prop","kernel") == "oc",
+    file_getprop("/tmp/property.kernel.oc","kernel.oc") == "oc",
     (
         ui_print("Flashing OC kernel...");
         ui_print(" ");
@@ -16,7 +16,7 @@ ifelse(
     ),
     (
         ifelse(
-             file_getprop("/tmp/nAOSProm.prop","kernel") == "oc_ultra",
+             file_getprop("/tmp/property.kernel.oc","kernel.oc") == "oc_ultra",
              (
                  ui_print("Flashing OC ULTRA kernel...");
                  ui_print(" ");

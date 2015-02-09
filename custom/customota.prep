@@ -1,17 +1,19 @@
 #!/sbin/sh
 
-nProp=/tmp/nAOSProm.prop
+tmpPropertyKernel=/tmp/property.kernel.oc
+propertyKernel=/data/property/persist.kernel.oc
 
-#copy .nAOSProm.prop
-rm -f $nProp
-cp -f /sdcard/.nAOSProm.prop $nProp
+# set default
+echo "kernel.oc=disabled" > $tmpPropertyKernel
 
-#create nAOSProm.prop if it doesn't exist
-[ ! -f $nProp ] && touch $nProp
+# mount /data
+busybox umount /data
+busybox mount /data || exit 0
 
-#check if kernel key is available and if not
-#request the standard kernel
-if (! grep -qi "kernel=" $nProp ); then
-    echo "kernel=standard" >> $nProp
+# define property.kernel.oc
+if [ -f $propertyKernel ]; then
+	echo "kernel.oc=$(head -1 $propertyKernel)" > $tmpPropertyKernel
 fi
+
+busybox umount /data
 
