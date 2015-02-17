@@ -38,6 +38,6 @@ public class DisplayColorCalibration {
         return FileUtils.readOneLine(COLOR_FILE);
     }
     public static boolean setColors(String colors)  {
-        return FileUtils.writeLine(COLOR_FILE, colors)
+        return FileUtils.writeLine(COLOR_FILE, colors);
     }
 }
