@@ -46,7 +46,7 @@ echo 2000 > $dev/button-backlight/max_current
 bq275xx_fwloader
 
 # clearpad tap2wake
-echo 1 > /sys/class/input/input3/wakeup
+#echo 1 > /sys/class/input/input3/wakeup
 
 # bma250 motion
 dev=/sys/class/input/input6
