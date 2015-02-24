@@ -219,7 +219,10 @@ esac
 # Post-setup services
 case "$target" in
     "msm8660" | "msm8960")
-        start mpdecision
+        cpumax=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)
+        if [ $cpumax -eq 1512000 ]; then
+            start mpdecision
+        fi
     ;;
     "msm7627a")
         soc_id=`cat /sys/devices/system/soc/soc0/id`
