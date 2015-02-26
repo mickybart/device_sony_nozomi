@@ -166,6 +166,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.qcom.efs.sync.sh:system/etc/init.qcom.efs.sync.sh \
     $(LOCAL_PATH)/config/init.qcom.fm.sh:system/etc/init.qcom.fm.sh \
     $(LOCAL_PATH)/config/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
+    $(LOCAL_PATH)/config/init.swap.sh:root/init.swap.sh \
     $(LOCAL_PATH)/config/pre_hw_config.sh:system/etc/pre_hw_config.sh \
     $(LOCAL_PATH)/config/hw_config.sh:system/etc/hw_config.sh \
     $(LOCAL_PATH)/config/clearpad_fwloader.sh:system/etc/clearpad_fwloader.sh
