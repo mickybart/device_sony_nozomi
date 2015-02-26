@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import android.app.ActivityManager;
 import android.os.Build;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import com.android.internal.util.MemInfoReader;
 import com.android.server.wm.WindowManagerService;
 
@@ -229,8 +230,11 @@ final class ProcessList {
         else if (scale > 1) scale = 1;
         int minfree_adj = Resources.getSystem().getInteger(
                 com.android.internal.R.integer.config_lowMemoryKillerMinFreeKbytesAdjust);
-        int minfree_abs = Resources.getSystem().getInteger(
-                com.android.internal.R.integer.config_lowMemoryKillerMinFreeKbytesAbsolute);
+        int minfree_abs = SystemProperties.getInt("sys.ram.minfree", -1);
+        if (minfree_abs < 0) {
+            minfree_abs = Resources.getSystem().getInteger(
+                    com.android.internal.R.integer.config_lowMemoryKillerMinFreeKbytesAbsolute);
+        }
         if (false) {
             Slog.i("XXXXXX", "minfree_adj=" + minfree_adj + " minfree_abs=" + minfree_abs);
         }

@@ -37,6 +37,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.os.Trace;
 import android.util.MathUtils;
 import android.util.Slog;
@@ -267,8 +268,12 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         final int screenBrightnessSettingMinimum = clampAbsoluteBrightness(resources.getInteger(
                 com.android.internal.R.integer.config_screenBrightnessSettingMinimum));
 
-        mScreenBrightnessDozeConfig = clampAbsoluteBrightness(resources.getInteger(
-                com.android.internal.R.integer.config_screenBrightnessDoze));
+        int screenBrightnessDozeProperty = SystemProperties.getInt("sys.screen.doze.brightness",-1);
+        if (screenBrightnessDozeProperty < 0 || screenBrightnessDozeProperty > 255) {
+            screenBrightnessDozeProperty = resources.getInteger(
+                    com.android.internal.R.integer.config_screenBrightnessDoze);
+        }
+        mScreenBrightnessDozeConfig = clampAbsoluteBrightness(screenBrightnessDozeProperty);
 
         mScreenBrightnessDimConfig = clampAbsoluteBrightness(resources.getInteger(
                 com.android.internal.R.integer.config_screenBrightnessDim));
@@ -422,7 +427,7 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         // Initialize the power state object for the default display.
         // In the future, we might manage multiple displays independently.
         mPowerState = new DisplayPowerState(mBlanker,
-                mLights.getLight(LightsManager.LIGHT_ID_BACKLIGHT),
+                mLights,
                 new ColorFade(Display.DEFAULT_DISPLAY));
 
         mColorFadeOnAnimator = ObjectAnimator.ofFloat(
@@ -722,7 +727,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
     private boolean setScreenState(int state) {
         if (mPowerState.getScreenState() != state) {
             final boolean wasOn = (mPowerState.getScreenState() != Display.STATE_OFF);
-            final boolean wasLightOn = (mPowerState.getScreenState() == Display.STATE_ON);
             mPowerState.setScreenState(state);
 
             // Tell battery stats about the transition.
@@ -747,11 +751,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
                     unblockScreenOn();
                 }
                 mWindowManagerPolicy.screenTurningOn(mPendingScreenOnUnblocker);
-            }
-
-            boolean isLightOn = (state == Display.STATE_ON);
-            if (wasLightOn && !isLightOn) {
-            	mLights.getLight(LightsManager.LIGHT_ID_BUTTONS).turnOff();
             }
         }
         return mPendingScreenOnUnblocker == null;
