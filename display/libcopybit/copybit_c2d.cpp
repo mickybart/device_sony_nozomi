@@ -841,7 +841,10 @@ static int set_parameter_copybit(
                 transform = C2D_TARGET_ROTATE_270;
                 config_mask |= C2D_OVERRIDE_TARGET_ROTATE_270;
             } else {
-                config_mask |= C2D_OVERRIDE_TARGET_ROTATE_0;
+                if (value & COPYBIT_TRANSFORM_ROT_90) {
+                    transform = C2D_TARGET_ROTATE_270;
+                    config_mask |= C2D_OVERRIDE_TARGET_ROTATE_270;
+                }
                 if(value & COPYBIT_TRANSFORM_FLIP_H) {
                     config_mask |= C2D_MIRROR_H_BIT;
                 } else if(value & COPYBIT_TRANSFORM_FLIP_V) {
@@ -857,6 +860,7 @@ static int set_parameter_copybit(
                 // target transform. Draw all previous surfaces. This will be
                 // changed once we have a new mechanism to send different
                 // target rotations to c2d.
+                ctx->config_mask |= config_mask & (C2D_MIRROR_H_BIT | C2D_MIRROR_V_BIT);
                 finish_copybit_internal(dev);
             }
             ctx->trg_transform = transform;
