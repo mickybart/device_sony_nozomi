@@ -13,10 +13,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 MULTI_BOOT := boot.img
 
 ifeq ($(TARGET_NO_MULTIKERNEL),false)
-ifeq ($(BOARD_KERNEL_MSM_OC),true)
-MULTI_BOOT := $(MULTI_BOOT),boot.img-oc
-endif
-
 ifeq ($(BOARD_KERNEL_MSM_OC_ULTRA),true)
 MULTI_BOOT := $(MULTI_BOOT),boot.img-oc_ultra
 endif
