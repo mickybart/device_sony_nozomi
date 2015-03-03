@@ -68,9 +68,6 @@ on early-init
     # the modem firmware early.
     exec /system/bin/dd if=/dev/smd0 of=/dev/null bs=1 count=1 skip=1
 
-    # sdcard read speed
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 2048
-
 on boot
     #Create QMUX deamon socket area
     mkdir /dev/socket/qmux_radio 0770 radio radio
