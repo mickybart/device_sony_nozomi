@@ -151,7 +151,7 @@
 
     <!-- These are actual sound device specific mixer settings -->
     <path name="speaker">
-        <ctl name="speaker_stereo_rx" value="1" />
+        <ctl name="speaker_mono_rx" value="1" />
     </path>
 
     <path name="speaker-reverse">
@@ -180,7 +180,7 @@
     </path>
 
     <path name="speaker-and-headset">
-        <ctl name="headset_stereo_speaker_stereo_rx" value="1" />
+        <ctl name="headset_stereo_speaker_mono_rx" value="1" />
     </path>
 
     <path name="hdmi">
