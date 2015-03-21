@@ -193,7 +193,7 @@
     </path>
 
     <path name="voice-rec-mic">
-        <path name="speaker-mic" />
+        <ctl name="handset_asr_tx" value="1" />
     </path>
 
     <path name="camcorder-mic">
