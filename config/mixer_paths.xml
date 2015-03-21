@@ -214,15 +214,19 @@
 
     <!-- Dual MIC devices -->
     <path name="dmic-endfire">
+        <ctl name="handset_dual_mic_endfire_tx" value="1" />
     </path>
 
     <path name="dmic-broadside">
+        <ctl name="handset_dual_mic_endfire_tx" value="1" />
     </path>
 
     <path name="speaker-dmic-endfire">
+        <ctl name="speaker_dual_mic_endfire_tx" value="1" />
     </path>
 
     <path name="speaker-dmic-broadside">
+        <ctl name="speaker_dual_mic_endfire_tx" value="1" />
     </path>
 
     <path name="voice-dmic-ef">
