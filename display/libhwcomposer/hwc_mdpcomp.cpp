@@ -1041,7 +1041,7 @@ bool MDPComp::allocLayerPipes(hwc_context_t *ctx,
         info.rot = NULL;
         MdpPipeInfo& pipe_info = *info.pipeInfo;
 
-        ePipeType type = MDPCOMP_OV_ANY;
+        ePipeType type = layer->transform ? MDPCOMP_OV_RGB : MDPCOMP_OV_ANY;
 
         if(!qhwc::needsScaling(layer) && !ctx->mNeedsRotator
            && ctx->mMDP.version >= qdutils::MDSS_V5) {
