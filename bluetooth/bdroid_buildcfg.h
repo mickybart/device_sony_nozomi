@@ -18,6 +18,8 @@
 #define _BDROID_BUILDCFG_H
 
 #define BTM_DEF_LOCAL_NAME   "Xperia S"
-#define BTA_DISABLE_DELAY 3000 /* in milliseconds */
+
+#define BTM_WBS_INCLUDED TRUE
+#define BTIF_HF_WBS_PREFERRED TRUE
 
 #endif
