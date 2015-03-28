@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-name := uCyan-12.0
+name := uCyan-12.1
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
