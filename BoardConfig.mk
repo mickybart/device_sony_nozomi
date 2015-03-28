@@ -84,7 +84,8 @@ BOARD_HAVE_FMRADIO_BCM := true
 
 # kernel
 BOARD_KERNEL_MSM := true
-KERNEL_DEFCONFIG := fuji_nozomi_defconfig
+TARGET_KERNEL_SOURCE := kernel/msm
+TARGET_KERNEL_CONFIG := fuji_nozomi_defconfig
 
 # board
 TARGET_BOARD_PLATFORM := msm8660
