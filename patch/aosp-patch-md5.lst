@@ -11,7 +11,7 @@ f928dd0dd71c636ce6da287cdd4b1145 53488d77f887c8d6d305b478d02104a1 ./frameworks/b
 ecda372ff9dd581a29b6489e8000f777 dba559d2ba9e6e75f695b863331bc9fe ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
 d8f0614f8841e2c694dcb434cbdb21f3 f7052b832d203616632c159079f16dbc ./frameworks/base/services/core/java/com/android/server/lights/LightsManager.java
 3a2f036657e5977f9761dcf7db35d3bc 9728b352fc75e8cd43f3f6b704b00a1f ./frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
-9a9acec0df78722ff700fc986115d259 dbaf2f1137cd9a1a6cc23525c9304b22 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+9a9acec0df78722ff700fc986115d259 8ef37e8d173468fdfe9fda89a75cedac ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
 -------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/nozomi/Android.mk
 -------------------------------- 75ea406d59e96bdda5fc580c2870cb69 ./hardware/broadcom/libbt/conf/sony/nozomi/bt_vendor.conf
 -------------------------------- 944dfa963b34f6d274eedf4fa24f30d5 ./hardware/broadcom/libbt/include/vnd_nozomi.txt
