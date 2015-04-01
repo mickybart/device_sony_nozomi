@@ -6077,4 +6077,8 @@
 
     <!-- doze brightness -->
     <string name="doze_brightness_title">Ambient brightness level (*)</string>
+
+   <!-- fast charge -->
+   <string name="fast_charge">USB Fast Charge</string>
+
 </resources>

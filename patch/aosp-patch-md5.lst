@@ -22,9 +22,10 @@ fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/app
 -------------------------------- e986837f867f8776f6a5b0c817e67e7f ./packages/apps/Settings/src/com/android/settings/cyanogenmod/BacklightAdaptiveSeekBar.java
 a4863ccb6ffbb88d493d381710a04204 d603fdb5643b24a908cf9dcc5a51a21c ./packages/apps/Settings/src/com/android/settings/cyanogenmod/ButtonBacklightBrightness.java
 98406b022912f17d4fc970bd5344164d b7ce3bc9a64a03b7c5b8964c218aaa26 ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
+1585e1755064ee1667592ae9387c5513 10b46d5da789e0a04b842e4474227000 ./packages/apps/Settings/src/com/android/settings/fuelgauge/PowerUsageSummary.java
 b16d9e64b8d89d76619c1d14919397c6 2c8b021f6f6ba4b1f02ebfdc60cbcede ./packages/apps/Settings/res/layout/button_backlight.xml
 7a0e568d423f91a657d524e57b17edfb dd003fb8f62518d374e31ce289b95ec8 ./packages/apps/Settings/res/values/arrays.xml
-bc02296f655bca5f169ce0ace75dc777 ba696b5a99fdd5ccc2f0abbad979ab8d ./packages/apps/Settings/res/values/strings.xml
+bc02296f655bca5f169ce0ace75dc777 37561d1e0577970213bb50851b894090 ./packages/apps/Settings/res/values/strings.xml
 3c6bcae8e572a8d0a5bb5825f8c0783f 690f4d6c681bbe265f9ee818fd806625 ./packages/apps/Settings/res/xml/development_prefs.xml
 -------------------------------- 9fc38b6b09859cd7ae345ead73e431ab ./packages/apps/Camera2/src/com/android/camera/CameraButtonIntentReceiver.java
 dc49065b5bb3bb5a6f411398da6ea105 c3de53b18dcb6672a565b51eeb3ecda2 ./packages/apps/Camera2/AndroidManifest.xml
