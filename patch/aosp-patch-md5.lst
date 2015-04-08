@@ -27,6 +27,7 @@ ecc8e7c360976ac26e0ddf20a01ad651 da456ab876c2db35ed9e0f3b2557d38d ./hardware/lib
 780f48038ff8adb4529169586bf7afec b1c9c69b40b974b921e8513f32af533d ./hardware/libhardware/include/hardware/bt_rc.h
 b66b89cdfe357e9aba903be0f2fe6389 1b0edd5fb56139cccbed4e64d76f53fb ./hardware/libhardware/include/hardware/bt_sock.h
 -------------------------------- 2f20f20c2d1dfddb2c38200ea2a91526 ./hardware/libhardware/include/hardware/fmradio.h
+24bf72f40eeb28cfc3b5bcd520b0e249 1d8ed76204b9cfe7fbe98020d5a36441 ./hardware/libhardware/include/hardware/bt_gatt_server.h
 fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/apps/Nfc/nxp/jni/com_android_nfc_NativeNfcManager.cpp
 24f45c1327d6a18dabb3c7548f3a124b 8bf73b764b40ed826123b13f1b51c47b ./packages/apps/Email/emailcommon/src/com/android/emailcommon/provider/Policy.java
 07d51d911739a8eaf3f49f6e68e1a522 d5c3bb684db527be63172aab92d6808e ./packages/apps/Email/provider_src/com/android/email/SecurityPolicy.java
@@ -50,13 +51,12 @@ dc49065b5bb3bb5a6f411398da6ea105 c3de53b18dcb6672a565b51eeb3ecda2 ./packages/app
 -------------------------------- ba7a31279947ef9a5dc14ff4d7df3734 ./packages/apps/Bluetooth/fmradio/com/broadcom/fm/FmReceiverState.java
 2d5f2c6baebddc1ba5f6f71ba83cc0e8 f78b707f3e9411ff97161ad0375228df ./packages/apps/Bluetooth/jni/Android.mk
 eafd58826eb723a1cbe6b4f713062dcb af03bcf8df84d81845cea715adcf50c0 ./packages/apps/Bluetooth/jni/com_android_bluetooth.h
-75eb08cc102547a68d9cadf5890ef456 ef822ffd8c82fe0743310b667df57cc5 ./packages/apps/Bluetooth/jni/com_android_bluetooth_btservice_AdapterService.cpp
+a43037123f7dbef6933c2ac38c00f5f0 ab22d53f08b323b266eaa90ee783a09a ./packages/apps/Bluetooth/jni/com_android_bluetooth_btservice_AdapterService.cpp
 -------------------------------- 671212f828e965b8484d64616dd81cbc ./packages/apps/Bluetooth/jni/com_broadcom_fm.cpp
-89a0db367f57eb6375cb71804659b9db 13097255a841a9fa161b91412f3b61ad ./packages/apps/Bluetooth/src/com/android/bluetooth/a2dp/A2dpSinkService.java
-ddf2cf287d7c9ff1a989d196fc0abe10 229a1af4b7223fc3324bcaf1d3809f40 ./packages/apps/Bluetooth/src/com/android/bluetooth/avrcp/Avrcp.java
-a0feea75fcec1f54ad6ece0fbb297d4c bed38bc7cac9d6c4c2bd30d344ff57e0 ./packages/apps/Bluetooth/src/com/android/bluetooth/btservice/AdapterService.java
-6662d1887141097b2a31dd1867b26a2c e4ba10459d68d1733736db289363af56 ./packages/apps/Bluetooth/src/com/android/bluetooth/hid/HidService.java
-02fd133e29f16e94cf4f5b2c8e168d9b b509cf41e30ad9cb49eef5302f171d00 ./packages/apps/Bluetooth/src/com/android/bluetooth/map/BluetoothMapSmsPdu.java
+5a5ee9b719ea353b3c7a3b054e923cf2 e7f267ddd074764c187f8cc4ec3b64c7 ./packages/apps/Bluetooth/src/com/android/bluetooth/a2dp/A2dpSinkService.java
+1dca4349b507dfd1c0df0bd90b2d0a16 18c9c496c8e439f7c9d42a8a64dde6bd ./packages/apps/Bluetooth/src/com/android/bluetooth/avrcp/Avrcp.java
+d47eafd8ba9d259a69717e96d0c12671 ffd893928ddf6d7146e93bb5bc92d543 ./packages/apps/Bluetooth/src/com/android/bluetooth/btservice/AdapterService.java
+d7bf020eb7d6d7d715bdc63192e14b06 ba0e60f68b957d26d4623a8c7fd0c5e5 ./packages/apps/Bluetooth/src/com/android/bluetooth/hid/HidService.java
 17d6ef62a03080dfc41c67510152afa3 1341f80aa2a41debb51eda849f76e733 ./system/core/include/private/android_filesystem_config.h
 bc6279e53f2f8148f03cc1dbb166e4aa d57e83d99a48dd212e96e2c8694d13b6 ./system/core/rootdir/init.rc
 55f826c6248d8fd195db7a1e49f535af eda10e8dd9f1a79d15c56cf2bc00a77b ./system/vold/F2FS.cpp

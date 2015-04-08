@@ -916,7 +916,7 @@ static jboolean cancelBondNative(JNIEnv* env, jobject obj, jbyteArray address) {
     return result;
 }
 
-static int getConnectionStateNative(JNIEnv* env, jobject obj, jbyteArray address) {
+static jboolean isConnectedNative(JNIEnv* env, jobject obj, jbyteArray address) {
     ALOGV("%s:",__FUNCTION__);
     if (!sBluetoothInterface) return JNI_FALSE;
 
@@ -929,7 +929,7 @@ static int getConnectionStateNative(JNIEnv* env, jobject obj, jbyteArray address
     int ret = sBluetoothInterface->get_connection_state((bt_bdaddr_t *)addr);
     env->ReleaseByteArrayElements(address, addr, 0);
 
-    return ret;
+    return (ret != 0 ? JNI_TRUE : JNI_FALSE);
 }
 
 static jboolean pinReplyNative(JNIEnv *env, jobject obj, jbyteArray address, jboolean accept,
@@ -1247,7 +1247,7 @@ static JNINativeMethod sMethods[] = {
     {"createBondNative", "([BI)Z", (void*) createBondNative},
     {"removeBondNative", "([B)Z", (void*) removeBondNative},
     {"cancelBondNative", "([B)Z", (void*) cancelBondNative},
-    {"getConnectionStateNative", "([B)I", (void*) getConnectionStateNative},
+    {"isConnectedNative", "([B)Z", (void*) isConnectedNative},
     {"pinReplyNative", "([BZI[B)Z", (void*) pinReplyNative},
     {"sspReplyNative", "([BIZI)Z", (void*) sspReplyNative},
     {"getRemoteServicesNative", "([B)Z", (void*) getRemoteServicesNative},
