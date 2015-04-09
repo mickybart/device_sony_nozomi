@@ -13,6 +13,12 @@ fa088a3667fdde7991127a905d219b71 13b09d34e5ddf2a52cfa5a731ea7cfbb ./build/tools/
 48f0528b2d22592dec644a9dccc82b9b 99c2d469a0b413aa474bf34b76ecc84e ./external/libnfc-nxp/src/phLibNfc.h
 09ecd42940c5478403334bc4eedadf05 a25c313005d788da872e4acf4e40e4da ./frameworks/base/libs/hwui/OpenGLRenderer.cpp
 58c05b53de6c3798500d0054e01ea191 4ad91932c0f2fc326c1afa88b37e3d5c ./frameworks/base/services/core/java/com/android/server/MountService.java
+c3dada889637034162e837b8f9514df4 60f7b16fd21988e77e6de65e5b5f7cdf ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
+c645067edb9828c01cdf14c68450b82b a55a507c11bb7c7115d37a060f85420f ./frameworks/base/services/core/java/com/android/server/display/AutomaticBrightnessController.java
+b175965d838aa6e2982b9b6a2fc3a48b 2682b7f16325d5fbce93f0f1cc71b625 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
+419a8e724e9bc23ebfc4701191b79500 41d2237f0d888f3cbcc5595d9d50e547 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerState.java
+d8f0614f8841e2c694dcb434cbdb21f3 f7052b832d203616632c159079f16dbc ./frameworks/base/services/core/java/com/android/server/lights/LightsManager.java
+74d407af3e666f9f370f94dd7384141d 23289948f9cf5151db38db3733e700ca ./frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
 43b4600fd1d0321388c3d2093f75e2ec 99366b48182baa335625185e3e50b209 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
 034b69b80a40470a5eeec0830cf68dd3 2535312939360a41bf3834e93f5a1e33 ./hardware/broadcom/libbt/Android.mk
 -------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/nozomi/Android.mk
