@@ -27,6 +27,8 @@ d8f0614f8841e2c694dcb434cbdb21f3 f7052b832d203616632c159079f16dbc ./frameworks/b
 6bbc890979ee7b4c48ffdd7c5a4f8eb4 b75d311f36d1a03381357a53e94ba329 ./packages/apps/Nfc/nxp/jni/com_android_nfc_NativeNfcManager.cpp
 24f45c1327d6a18dabb3c7548f3a124b 8bf73b764b40ed826123b13f1b51c47b ./packages/apps/Email/emailcommon/src/com/android/emailcommon/provider/Policy.java
 50d27b8efe2567b634ad11992edf9605 152703651feb3cfb7b161033a458980c ./packages/apps/Email/src/com/android/email/SecurityPolicy.java
+6e7cdb6df6767471584602616cb88f75 2ef84912787214995bd23d907aa85866 ./packages/apps/Camera2/AndroidManifest.xml
+-------------------------------- 9fc38b6b09859cd7ae345ead73e431ab ./packages/apps/Camera2/src/com/android/camera/CameraButtonIntentReceiver.java
 b53be5302e681a9664fa77ae47a97b10 399bdec0a1da6baf265fb3ab0199404a ./system/core/include/private/android_filesystem_config.h
 eaa73c84a5feaa6302a0a8685dadcedd 7afcf85cd57758d8e273fc02a1ae229d ./system/core/rootdir/init.rc
 f540638c92b4904b630a57671ab593c5 d79e321e786aa14409087d8f3c48214c ./system/vold/Ext4.cpp
