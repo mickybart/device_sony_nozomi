@@ -136,8 +136,6 @@ class SonyRIL {
             case RIL_REQUEST_SET_DC_RT_INFO_RATE:
             case RIL_REQUEST_SET_DATA_PROFILE:
             case RIL_REQUEST_SHUTDOWN:
-            case RIL_REQUEST_GET_RADIO_CAPABILITY:
-            case RIL_REQUEST_SET_RADIO_CAPABILITY:
             return false;
         }
         return true;
