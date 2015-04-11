@@ -83,15 +83,8 @@ BOARD_HAVE_FMRADIO := true
 BOARD_HAVE_FMRADIO_BCM := true
 
 # kernel
-TARGET_NO_MULTIKERNEL := false
-
 BOARD_KERNEL_MSM := true
 KERNEL_DEFCONFIG := fuji_nozomi_defconfig
-
-ifeq ($(TARGET_NO_MULTIKERNEL),false)
-BOARD_KERNEL_MSM_OC_ULTRA := true
-KERNEL_DEFCONFIG_OC_ULTRA := fuji_nozomi_oc_ultra_defconfig
-endif
 
 # board
 TARGET_BOARD_PLATFORM := msm8660
