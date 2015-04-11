@@ -1,0 +1,12 @@
+./packages/apps/Mms/./res/drawable-hdpi/ic_menu_search_holo_dark.png
+./packages/apps/Mms/./res/drawable-hdpi/ic_menu_trash_holo_dark.png
+./packages/apps/Mms/./res/drawable-mdpi/ic_menu_search_holo_dark.png
+./packages/apps/Mms/./res/drawable-mdpi/ic_menu_trash_holo_dark.png
+./packages/apps/Mms/./res/drawable-xhdpi/ic_menu_search_holo_dark.png
+./packages/apps/Mms/./res/drawable-xhdpi/ic_menu_trash_holo_dark.png
+./packages/apps/Mms/./res/drawable-xxhdpi/ic_menu_search_holo_dark.png
+./packages/apps/Mms/./res/drawable-xxhdpi/ic_menu_trash_holo_dark.png
+./system/extras/./su/Android.mk
+./system/extras/./su/MODULE_LICENSE_APACHE2
+./system/extras/./su/NOTICE
+./system/extras/./su/su.c
