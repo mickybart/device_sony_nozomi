@@ -2,6 +2,7 @@
 
 AOSP=$1
 PATCHES="aosp-patch-md5.lst"
+DELETE="aosp-patch-delete.lst"
 
 function die {
         echo "ERROR - ${1-UNKNOWN}" >&2
@@ -41,4 +42,11 @@ do
 		fi
 	fi
 done < $PATCHES
+
+while read -r filename
+do
+	if [ -f $AOSP/$filename ]; then
+		rm -f $AOSP/$filename || die "failed to remove $AOSP/$filename"
+	fi
+done < $DELETE
 

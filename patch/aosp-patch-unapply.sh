@@ -2,6 +2,7 @@
 
 AOSP=$1
 PATCHES="aosp-patch-md5.lst"
+DELETE="aosp-patch-delete.lst"
 
 function die {
         echo "ERROR - ${1-UNKNOWN}" >&2
@@ -37,4 +38,13 @@ do
 EOF
 	fi
 done < $PATCHES
+
+while read -r filename
+do
+	cat << EOF | bash
+		mkdir -p $AOSP/$(dirname "$filename")
+		cd $AOSP/$(dirname "$filename")
+		git checkout -- $(basename "$filename") || echo "failed to checkout $filename" >&2
+EOF
+done < $DELETE
 
