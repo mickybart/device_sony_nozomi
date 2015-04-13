@@ -23,7 +23,6 @@ e17c5c3bae2fb5ba768e12c007056645 f87a02f4f54269651952160ebada5525 ./external/chr
 -------------------------------- cff7b0329e91cdec4f153a68cf2b1437 ./frameworks/base/core/res/res/values/cm_strings.xml
 ce8814a7d043e07f1247d6f25ca60f25 aa07ad60bf5c2a171d90e2e0f3084b1a ./frameworks/base/core/res/res/values/config.xml
 de59962f5d02ba70e64a51bdfc99aa1e eb473acce9f184be58556421ab266aad ./frameworks/base/core/res/res/values/symbols.xml
-5c0a173b11bce928da995fdb95e0c792 54a29b6ab7a4248486dd82bf7de9d362 ./frameworks/base/libs/hwui/OpenGLRenderer.cpp
 -------------------------------- b77f56eb1d0e07f0c792de17d47d6eb2 ./frameworks/base/packages/SystemUI/res/drawable/ic_dismiss_all.xml
 b28c941991102837a30772f8241348e4 567f0fa42631fc6ac54533a4af1d95dc ./frameworks/base/packages/SystemUI/res/layout/recents.xml
 -------------------------------- 92a7859057b5cd67bdf62aebaf32093e ./frameworks/base/packages/SystemUI/res/values/cm_strings.xml
