@@ -55,8 +55,8 @@ on early-init
     write /proc/sys/vm/legacy_va_layout 1
 
     # enable kernel samepage merging
-    write /sys/kernel/mm/ksm/pages_to_scan 100
-    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/pages_to_scan 256
+    write /sys/kernel/mm/ksm/sleep_millisecs 1500
     write /sys/kernel/mm/ksm/run 1
 
     # swap in 1 pages of memory at a time
