@@ -176,7 +176,7 @@
     <integer name="config_defaultNotificationLedOff">6000</integer>
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
-    <bool name="config_unplugTurnsOnScreen">true</bool>
+    <bool name="config_unplugTurnsOnScreen">false</bool>
 
     <!-- Default value for LED on time when the battery is low on charge in miliseconds -->
     <integer name="config_notificationsBatteryLedOn">100</integer>
