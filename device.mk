@@ -251,6 +251,10 @@ PRODUCT_PACKAGES += \
     fsck.f2fs \
     mkfs.f2fs
 
+# Wake Up
+PRODUCT_PACKAGES += \
+    WakeUp
+
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)

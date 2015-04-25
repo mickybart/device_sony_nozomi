@@ -186,9 +186,19 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
-    #Double-tap to Wake (dt2w)
-    chown system system /sys/class/input/input3/wakeup
-    chmod 0664 /sys/class/input/input3/wakeup
+    #Wake Gesture (touchscreen)
+    chown system system /sys/android_touch/wake_gestures
+    chown system system /sys/android_touch/wakeup
+    chown system system /sys/android_touch/doubletap2wake
+    chown system system /sys/android_touch/sweep2wake
+    chown system system /sys/android_touch/vib_strength
+    chown system system /sys/android_touch/proximity
+    chmod 0664 /sys/android_touch/wake_gestures
+    chmod 0664 /sys/android_touch/wakeup
+    chmod 0664 /sys/android_touch/doubletap2wake
+    chmod 0664 /sys/android_touch/sweep2wake
+    chmod 0664 /sys/android_touch/vib_strength
+    chmod 0664 /sys/android_touch/proximity
 
     #Color calibration
     chown system system /sys/devices/platform/mdp.458753/kcal
