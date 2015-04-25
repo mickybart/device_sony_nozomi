@@ -152,3 +152,7 @@
 /sys/devices/virtual/input/input* slope_mode 0640 system system
 /sys/devices/virtual/input/input* low_g_mode 0640 system system
 /sys/devices/virtual/input/input* high_g_mode 0640 system system
+
+# wake_gesture
+/dev/input/event4         0664   root       input
+
