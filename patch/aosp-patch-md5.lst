@@ -63,7 +63,6 @@ eafd58826eb723a1cbe6b4f713062dcb af03bcf8df84d81845cea715adcf50c0 ./packages/app
 75eb08cc102547a68d9cadf5890ef456 ef822ffd8c82fe0743310b667df57cc5 ./packages/apps/Bluetooth/jni/com_android_bluetooth_btservice_AdapterService.cpp
 -------------------------------- 671212f828e965b8484d64616dd81cbc ./packages/apps/Bluetooth/jni/com_broadcom_fm.cpp
 a0feea75fcec1f54ad6ece0fbb297d4c fb945dc46560c0cf891f984e1394991f ./packages/apps/Bluetooth/src/com/android/bluetooth/btservice/AdapterService.java
-1a7a61e3f65c6a384935baa274893c93 ecfe4139c4e48888403cfa1c9520ac11 ./packages/apps/Browser/src/com/android/browser/BrowserPreferencesPage.java
 a63031aa91bb48fdfa37a511010d454f b434f0b8b2e7c4d68f04fd0bcdf3dc5e ./packages/apps/Camera2/AndroidManifest.xml
 -------------------------------- 9fc38b6b09859cd7ae345ead73e431ab ./packages/apps/Camera2/src/com/android/camera/CameraButtonIntentReceiver.java
 24f45c1327d6a18dabb3c7548f3a124b 8bf73b764b40ed826123b13f1b51c47b ./packages/apps/Email/emailcommon/src/com/android/emailcommon/provider/Policy.java
