@@ -496,9 +496,3 @@ service swap-sh /system/bin/sh /init.swap.sh
     user root
     oneshot
 
-on property:persist.screen.tap_wake=true
-    write /sys/class/input/input3/wakeup 1
-
-on property:persist.screen.tap_wake=false
-    write /sys/class/input/input3/wakeup 0
-
