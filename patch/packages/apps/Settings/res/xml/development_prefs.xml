@@ -362,11 +362,6 @@
             android:title="@string/mainkeys_music_title"
             android:summary="@string/mainkeys_music_summary"/>
 
-        <SwitchPreference
-            android:key="tap_wake"
-            android:title="@string/tap_wake_title"
-            android:summary="@string/tap_wake_summary"/>
-
         <com.android.settings.DisplayColor
             android:key="color_calibration"
             android:title="@string/color_calibration_title"

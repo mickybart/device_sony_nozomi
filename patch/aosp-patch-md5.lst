@@ -113,10 +113,10 @@ fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/app
 -------------------------------- 13aab7bb329c0540799cd47047720eef ./packages/apps/Settings/res/drawable/color_tuning_preview.xml
 -------------------------------- f9ae5907255f2b0acdb23203cf24215a ./packages/apps/Settings/res/layout/display_color_calibration.xml
 7a0e568d423f91a657d524e57b17edfb c139cf8552ad91d0508ece484bfb95ac ./packages/apps/Settings/res/values/arrays.xml
-c847717c7f7704f853ec92883c3a296c 61ce07874d28332286919009d44f7aa7 ./packages/apps/Settings/res/values/strings.xml
+c847717c7f7704f853ec92883c3a296c 6b2ac7f9ed15b5da1e29f1ad92525985 ./packages/apps/Settings/res/values/strings.xml
 0630dddf4f431f34e8ee5752e7228ae3 5ca990abeff97aacd7f4dc4cc79aa80d ./packages/apps/Settings/res/xml/dashboard_categories.xml
-f847bef8a6f5b54f442b7c4112028051 50194f172af1d86d923b36b226999d1f ./packages/apps/Settings/res/xml/development_prefs.xml
-6342d8712a7becc51ce391658cafc2e1 b683dd5fcbe2ee4c4209c57430c4811b ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
+f847bef8a6f5b54f442b7c4112028051 74314364beaa728cf53abb400c2c2491 ./packages/apps/Settings/res/xml/development_prefs.xml
+6342d8712a7becc51ce391658cafc2e1 120802141819fcee0007b1046ee78b0c ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
 -------------------------------- 58864154db145bbed715f8c318832f59 ./packages/apps/Settings/src/com/android/settings/DisplayColor.java
 84c8c0769483586459453edaff69907d 0d1e5c71b313f84a4ee5c8995bb71eae ./packages/apps/Settings/src/com/android/settings/fuelgauge/PowerUsageSummary.java
 -------------------------------- acedb4a783a3c04755f9b464d7f10ba1 ./packages/apps/Settings/src/com/android/settings/util/FileUtils.java

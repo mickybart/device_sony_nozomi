@@ -6073,10 +6073,6 @@
    <!-- doze brightness -->
    <string name="doze_brightness_title">Ambient brightness level (*)</string>
    
-   <!-- tap_wake -->
-   <string name="tap_wake_title">Double tap to wake</string>
-   <string name="tap_wake_summary">Double tap on screen to wake up</string>
-
    <!-- color calibration -->
    <string name="color_calibration_title">Color calibration</string>
    <string name="color_calibration_summary">Calibrate on-screen colors</string>

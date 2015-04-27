@@ -187,9 +187,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private static final String MAINKEYS_MUSIC_KEY = "mainkeys_music";
     private static final String MAINKEYS_MUSIC_PROPERTY = "persist.qemu.hw.mainkeys_music";
 
-    private static final String TAP_WAKE_KEY = "tap_wake";
-    private static final String TAP_WAKE_PROPERTY = "persist.screen.tap_wake";
-
     private IWindowManager mWindowManager;
     private IBackupManager mBackupManager;
     private DevicePolicyManager mDpm;
@@ -261,7 +258,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private ListPreference mLightbarMode;
     private ListPreference mMainkeysLayout;
     private SwitchPreference mMainkeysMusic;
-    private SwitchPreference mTapWake;
 
     private PreferenceScreen mProcessStats;
     private final ArrayList<Preference> mAllPrefs = new ArrayList<Preference>();
@@ -407,7 +403,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mLightbarMode = addListPreference(LIGHTBAR_MODE_KEY);
         mMainkeysLayout = addListPreference(MAINKEYS_LAYOUT_KEY);
         mMainkeysMusic = (SwitchPreference) findPreference(MAINKEYS_MUSIC_KEY);
-        mTapWake = (SwitchPreference) findPreference(TAP_WAKE_KEY);
     }
 
     private ListPreference addListPreference(String prefKey) {
@@ -595,7 +590,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         updateLightbarModeOptions();
         updateMainkeysLayoutOptions();
         updateMainkeysMusicOptions();
-        updateTapWakeOptions();
     }
 
     private void resetDangerousOptions() {
@@ -1458,17 +1452,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         updateMainkeysMusicOptions();
     }
     
-    private void updateTapWakeOptions() {
-        updateSwitchPreference(mTapWake, 
-                !SystemProperties.get(TAP_WAKE_PROPERTY, "true").contentEquals("false"));
-    }
-    
-    private void writeTapWakeOptions() {
-        SystemProperties.set(TAP_WAKE_PROPERTY, 
-                mTapWake.isChecked() ? "true" : "false");
-        updateTapWakeOptions();
-    }
-    
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
         if (switchView != mSwitchBar.getSwitch()) {
@@ -1628,8 +1611,6 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
             writeUSBAudioOptions();
         } else if (preference == mMainkeysMusic) {
             writeMainkeysMusicOptions();
-        } else if (preference == mTapWake) {
-            writeTapWakeOptions();
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
