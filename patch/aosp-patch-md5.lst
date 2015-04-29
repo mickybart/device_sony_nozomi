@@ -67,9 +67,9 @@ a63031aa91bb48fdfa37a511010d454f b434f0b8b2e7c4d68f04fd0bcdf3dc5e ./packages/app
 -------------------------------- 9fc38b6b09859cd7ae345ead73e431ab ./packages/apps/Camera2/src/com/android/camera/CameraButtonIntentReceiver.java
 627f94e4e1f680418e548314193a612e cc3f7a99a10ba8cb7140157b5a971f3c ./packages/apps/Dialer/res/mipmap-hdpi/ic_launcher_phone.png
 00baf1a0ce2c18c24c3632a1e81b9381 0bfb830b7e4f0e013e32dbabcb8dec43 ./packages/apps/Dialer/res/mipmap-mdpi/ic_launcher_phone.png
-4fc327f64cd105c42295535e502316ac 2a72164f7509d620f6e1a8dfb9b5962f ./packages/apps/Dialer/res/mipmap-xdpi/ic_launcher_phone.png
-426bfe93ed8276d40dc004524966779a 2c664141df66cd2a9335b48bd3d1a41e ./packages/apps/Dialer/res/mipmap-xxdpi/ic_launcher_phone.png
-4ba799aad70ec5844c2a32c58e528314 e83d572c20511fc053c467640412b66f ./packages/apps/Dialer/res/mipmap-xxxdpi/ic_launcher_phone.png
+4fc327f64cd105c42295535e502316ac 2a72164f7509d620f6e1a8dfb9b5962f ./packages/apps/Dialer/res/mipmap-xhdpi/ic_launcher_phone.png
+426bfe93ed8276d40dc004524966779a 2c664141df66cd2a9335b48bd3d1a41e ./packages/apps/Dialer/res/mipmap-xxhdpi/ic_launcher_phone.png
+4ba799aad70ec5844c2a32c58e528314 e83d572c20511fc053c467640412b66f ./packages/apps/Dialer/res/mipmap-xxxhdpi/ic_launcher_phone.png
 24f45c1327d6a18dabb3c7548f3a124b 8bf73b764b40ed826123b13f1b51c47b ./packages/apps/Email/emailcommon/src/com/android/emailcommon/provider/Policy.java
 07d51d911739a8eaf3f49f6e68e1a522 d5c3bb684db527be63172aab92d6808e ./packages/apps/Email/provider_src/com/android/email/SecurityPolicy.java
 d577ec86ef2df5916b2d1cb2a3aaac6c 0eea9e1fc402a55313a3a932e314fb38 ./packages/apps/Mms/AndroidManifest.xml
