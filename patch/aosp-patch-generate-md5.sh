@@ -26,7 +26,7 @@ fi
 > $PATCHES
 
 # generate md5 file
-for file in $(find . -type f -not -name "aosp-patch-*"); do
+for file in $(find . -type f -not -name "aosp-patch-*" | sort); do
 	if [ -f $AOSP/$file ]; then
 		echo "$(md5sum $AOSP/$file | awk '{print $1}') $(md5sum $file | awk '{print $1}') $file" >> $PATCHES
 	else
