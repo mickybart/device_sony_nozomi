@@ -180,6 +180,8 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     
     private static final String LIGHTBAR_MODE_KEY = "lightbar_mode";
     private static final String LIGHTBAR_MODE_PROPERTY = "persist.sys.lightbar_mode";
+    private static final String LIGHTBAR_FLASH_KEY = "lightbar_flash";
+    private static final String LIGHTBAR_FLASH_PROPERTY = "persist.sys.lightbar_flash";
 
     private static final String MAINKEYS_LAYOUT_KEY = "mainkeys_layout";
     private static final String MAINKEYS_LAYOUT_PROPERTY = "persist.qemu.hw.mainkeys_layout";
@@ -256,6 +258,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private ListPreference mZramSize;
     private ListPreference mDozeBrightness;
     private ListPreference mLightbarMode;
+    private SwitchPreference mLightbarFlash;
     private ListPreference mMainkeysLayout;
     private SwitchPreference mMainkeysMusic;
 
@@ -401,6 +404,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mZramSize = addListPreference(ZRAM_SIZE_KEY);
         mDozeBrightness = addListPreference(DOZE_BRIGHTNESS_KEY);
         mLightbarMode = addListPreference(LIGHTBAR_MODE_KEY);
+        mLightbarFlash = (SwitchPreference) findPreference(LIGHTBAR_FLASH_KEY);
         mMainkeysLayout = addListPreference(MAINKEYS_LAYOUT_KEY);
         mMainkeysMusic = (SwitchPreference) findPreference(MAINKEYS_MUSIC_KEY);
     }
@@ -588,6 +592,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         updateZramSizeOptions();
         updateDozeBrightnessOptions();
         updateLightbarModeOptions();
+        updateLightbarFlashOptions();
         updateMainkeysLayoutOptions();
         updateMainkeysMusicOptions();
     }
@@ -1426,6 +1431,17 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         updateLightbarModeOptions();
     }
     
+    private void updateLightbarFlashOptions() {
+        updateSwitchPreference(mLightbarFlash, 
+                !SystemProperties.get(LIGHTBAR_FLASH_PROPERTY, "1").contentEquals("0"));
+    }
+    
+    private void writeLightbarFlashOptions() {
+        SystemProperties.set(LIGHTBAR_FLASH_PROPERTY, 
+                mLightbarFlash.isChecked() ? "1" : "0");
+        updateLightbarFlashOptions();
+    }
+    
     private void updateMainkeysLayoutOptions() {
         String value = SystemProperties.get(MAINKEYS_LAYOUT_PROPERTY, "1");
         int index = mMainkeysLayout.findIndexOfValue(value);
@@ -1611,6 +1627,8 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
             writeUSBAudioOptions();
         } else if (preference == mMainkeysMusic) {
             writeMainkeysMusicOptions();
+        } else if (preference == mLightbarFlash) {
+            writeLightbarFlashOptions();
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }

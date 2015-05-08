@@ -350,6 +350,11 @@
             android:entries="@array/lightbar_mode_entries"
             android:entryValues="@array/lightbar_mode_values" />
 
+        <SwitchPreference
+            android:key="lightbar_flash"
+            android:title="@string/lightbar_flash_title"
+            android:summary="@string/lightbar_flash_summary"/>
+
         <ListPreference
             android:key="mainkeys_layout"
             android:title="@string/mainkeys_layout_title"
