@@ -16,6 +16,10 @@ char const*const BLUE_LED_FILE_DELAYOFF	= "/sys/class/leds/blue/delay_off";
 
 
 char const*const BUTTON_BACKLIGHT_FILE 	= "/sys/class/leds/button-backlight/brightness";
+char const*const BUTTON_BACKLIGHT_FILE_TRIGGER 	= "/sys/class/leds/button-backlight/trigger";
+char const*const BUTTON_BACKLIGHT_FILE_DELAYON 	= "/sys/class/leds/button-backlight/delay_on";
+char const*const BUTTON_BACKLIGHT_FILE_DELAYOFF 	= "/sys/class/leds/button-backlight/delay_off";
 
 char const*const LCD_BACKLIGHT_FILE		= "/sys/class/leds/lcd-backlight/brightness";
+
 

@@ -20,9 +20,10 @@
 #define LOG_TAG "lights.lt26"
 
 #include <cutils/log.h>
+#include <cutils/properties.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdlib.h>.
+#include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -41,6 +42,10 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 /* Mini-led state machine */
 static struct light_state_t g_notification;
 static struct light_state_t g_battery;
+
+/* Buttons-backlight state machine */
+static int g_buttons_notification_support = 1;
+static struct light_state_t g_buttons;
 
 static int read_int (const char *path) {
 	int fd;
@@ -124,12 +129,23 @@ static int set_light_backlight (struct light_device_t *dev, struct light_state_t
 	return 0;
 }
 
-static int set_light_buttons (struct light_device_t *dev, struct light_state_t const* state) {
-	int brightness = rgb_to_brightness(state);
-	pthread_mutex_lock(&g_lock);
+static void set_shared_buttons_locked (struct light_device_t *dev, struct light_state_t *state) {
+	int brightness;
+	int delayOn,delayOff;
+	
+	brightness = rgb_to_brightness(state);
+	delayOn = state->flashOnMS;
+	delayOff = state->flashOffMS;
+	
+	if (state->flashMode != LIGHT_FLASH_NONE) {
+		write_string (BUTTON_BACKLIGHT_FILE_TRIGGER, "timer");
+		write_int (BUTTON_BACKLIGHT_FILE_DELAYON, delayOn);
+		write_int (BUTTON_BACKLIGHT_FILE_DELAYOFF, delayOff);
+	} else {
+		write_string (BUTTON_BACKLIGHT_FILE_TRIGGER, "none");
+	}
+	
 	write_int (BUTTON_BACKLIGHT_FILE, brightness);
-	pthread_mutex_unlock(&g_lock);
-	return 0;
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
@@ -175,6 +191,26 @@ static void handle_shared_battery_locked (struct light_device_t *dev) {
 	}
 }
 
+static void handle_shared_buttons_locked (struct light_device_t *dev) {
+	if (g_buttons_notification_support) {
+		if (is_lit (&g_buttons)) {
+			set_shared_buttons_locked (dev, &g_buttons);
+		} else {
+			set_shared_buttons_locked (dev, &g_notification);
+		}
+	} else {
+		set_shared_buttons_locked (dev, &g_buttons);
+	}
+}
+
+static int set_light_buttons (struct light_device_t *dev, struct light_state_t const* state) {
+	pthread_mutex_lock(&g_lock);
+	g_buttons = *state;
+	handle_shared_buttons_locked(dev);
+	pthread_mutex_unlock(&g_lock);
+	return 0;
+}
+
 static int set_light_battery (struct light_device_t *dev, struct light_state_t const* state) {
 	pthread_mutex_lock (&g_lock);
 	g_battery = *state;
@@ -187,13 +223,28 @@ static int set_light_notifications (struct light_device_t *dev, struct light_sta
 	pthread_mutex_lock (&g_lock);
 	g_notification = *state;
 	handle_shared_battery_locked(dev);
+	handle_shared_buttons_locked(dev);
 	pthread_mutex_unlock (&g_lock);
 	return 0;
 }
 
 /* Initializations */
 void init_globals () {
+	// mutex
 	pthread_mutex_init (&g_lock, NULL);
+	
+	// shared states
+	g_notification.color = 0;
+	g_notification.flashMode = LIGHT_FLASH_NONE;
+	g_battery.color = 0;
+	g_battery.flashMode = LIGHT_FLASH_NONE;
+	g_buttons.color = 0;
+	g_buttons.flashMode = LIGHT_FLASH_NONE;
+	
+	// buttons notification support ?
+	char value[PROPERTY_VALUE_MAX];
+	property_get("persist.sys.lightbar_flash", value, "1");
+	g_buttons_notification_support = atoi(value);
 }
 
 /* Glueing boilerplate */
