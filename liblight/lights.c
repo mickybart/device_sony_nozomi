@@ -46,6 +46,7 @@ static struct light_state_t g_battery;
 /* Buttons-backlight state machine */
 static int g_buttons_notification_support = 1;
 static struct light_state_t g_buttons;
+static struct light_state_t g_buttons_notification;
 
 static int read_int (const char *path) {
 	int fd;
@@ -196,7 +197,7 @@ static void handle_shared_buttons_locked (struct light_device_t *dev) {
 		if (is_lit (&g_buttons)) {
 			set_shared_buttons_locked (dev, &g_buttons);
 		} else {
-			set_shared_buttons_locked (dev, &g_notification);
+			set_shared_buttons_locked (dev, &g_buttons_notification);
 		}
 	} else {
 		set_shared_buttons_locked (dev, &g_buttons);
@@ -222,6 +223,9 @@ static int set_light_battery (struct light_device_t *dev, struct light_state_t c
 static int set_light_notifications (struct light_device_t *dev, struct light_state_t const* state) {
 	pthread_mutex_lock (&g_lock);
 	g_notification = *state;
+	g_buttons_notification = *state;
+	if (is_lit (&g_buttons_notification))
+		g_buttons_notification.color = 255;
 	handle_shared_battery_locked(dev);
 	handle_shared_buttons_locked(dev);
 	pthread_mutex_unlock (&g_lock);
@@ -240,6 +244,8 @@ void init_globals () {
 	g_battery.flashMode = LIGHT_FLASH_NONE;
 	g_buttons.color = 0;
 	g_buttons.flashMode = LIGHT_FLASH_NONE;
+	g_buttons_notification.color = 0;
+	g_buttons_notification.flashMode = LIGHT_FLASH_NONE;
 	
 	// buttons notification support ?
 	char value[PROPERTY_VALUE_MAX];
