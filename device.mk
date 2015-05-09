@@ -192,7 +192,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     com.stericsson.hardware.fm \
     com.stericsson.hardware.fm.xml \
-    FmRadio
+    FMRadio
 
 # Key layouts and touchscreen
 PRODUCT_COPY_FILES += \
