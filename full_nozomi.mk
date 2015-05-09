@@ -34,6 +34,10 @@ PRODUCT_MODEL := Xperia S
 PRODUCT_MANUFACTURER := Sony
 PRODUCT_RESTRICT_VENDOR_FILES := false
 
+#Disable Data roaming by default
+PRODUCT_PROPERTY_OVERRIDES := \
+    ro.com.android.dataroaming=false
+
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/sony/nozomi/device.mk)
 $(call inherit-product-if-exists, vendor/sony/nozomi/device-vendor.mk)
