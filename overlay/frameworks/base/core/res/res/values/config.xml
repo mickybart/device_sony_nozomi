@@ -66,13 +66,7 @@
         <item>1</item>
         <item>75</item>
         <item>120</item>
-        <item>420</item>
-        <item>673</item>
-        <item>1248</item>
-        <item>2099</item>
-        <item>4422</item>
-        <item>7724</item>
-        <item>10724</item>
+        <item>255</item>
     </integer-array>
 
     <!-- Array of output values for LCD backlight corresponding to the LUX values
@@ -80,16 +74,10 @@
          than the size of the config_autoBrightnessLevels array.
     -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-        <item>30</item>
+        <item>5</item>
         <item>50</item>
-        <item>60</item>
         <item>80</item>
-        <item>93</item>
-        <item>105</item>
-        <item>120</item>
-        <item>162</item>
         <item>200</item>
-        <item>236</item>
         <item>255</item>
     </integer-array>
 
@@ -103,12 +91,6 @@
         <item>0</item>
         <item>0</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
     </integer-array>
 
     <!-- Array of output values for keyboard backlight corresponding to the LUX values
@@ -116,12 +98,6 @@
          than the size of the config_autoBrightnessLevels array.
     -->
     <integer-array name="config_autoBrightnessKeyboardBacklightValues">
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
