@@ -13,6 +13,8 @@ e17c5c3bae2fb5ba768e12c007056645 f87a02f4f54269651952160ebada5525 ./external/chr
 2befbc91a15c3b23510fae03cda36263 944f0993f2b2a3cc8dd1b0ce8be223fb ./external/libnfc-nxp/src/phLibNfc.c
 07929bf98f69fb6c243b2bc8c37c0f81 3fa2c0991465d7668f15ce73ba533125 ./external/libnfc-nxp/src/phLibNfc.h
 6ace530c622423d42cf0f9caf7b527ec 46235bf090b80c15eb9cb53a3884f9eb ./frameworks/base/core/java/android/provider/Settings.java
+2c26ab6adf79788f756239a2e030d9d0 df9be844c8e97fdd31b3987fb3a61ad6 ./frameworks/base/core/java/android/service/dreams/DreamManagerInternal.java
+578fc2545146d4843ad3150bb49d3012 63878e24e514b4e2dd9b2162063c3c94 ./frameworks/base/core/java/android/service/dreams/IDreamManager.aidl
 -------------------------------- 969c04a58226dae631ad36d3c39658c7 ./frameworks/base/core/res/res/drawable-hdpi/ic_lock_power_reboot_alpha.png
 -------------------------------- 9a854b70f6569b2654ac7f6c7eac1004 ./frameworks/base/core/res/res/drawable-mdpi/ic_lock_power_reboot_alpha.png
 -------------------------------- 8a64967645112fd781b28808cb27548e ./frameworks/base/core/res/res/drawable-xhdpi/ic_lock_power_reboot_alpha.png
@@ -31,12 +33,13 @@ f1f47049e3d3345737fc228f3a4247f3 76ab2f381877d409f6210a98bbb82f7e ./frameworks/b
 b9af22378cfff2d57f4a862dcf74ba86 91c4855b3aa805ccc94cc3e5585b536b ./frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
 5d0c59908e4067b1fdde907de8fa4ec0 8fbae0006e05ceeffc0e7a6897d9f442 ./frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarWindowView.java
 3c08e83da92febc6901e061b6e303373 af74a1d0e951f07076330ac845e4b5ff ./frameworks/base/policy/src/com/android/internal/policy/impl/GlobalActions.java
-b98709a38f867b51d662335c7ac1c930 8feec12b395ff7bc16efc0155438fed1 ./frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+b98709a38f867b51d662335c7ac1c930 7370a16ed3b39405f47c37eb5cedb0bc ./frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
 4f9efe40b71d7badde7aa16dad6dcdd0 d112c54536876a1b83cac6fac548046a ./frameworks/base/services/core/java/com/android/server/MountService.java
 cd91ae0606629ebddac4eadc1f5666a4 bba7334cdb7343baa70e3f4e508e8fc3 ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
 9aeef8fb9560ec82681b444e5ec6236a a3b60e78c6fc46ab42a5ec61d1c4f9cd ./frameworks/base/services/core/java/com/android/server/display/AutomaticBrightnessController.java
 9da66aebcae2b7c48dd560c848ae20bd a6c05e2ffefdfda3b5374da6ff4f0611 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
 419a8e724e9bc23ebfc4701191b79500 21322605fc0258ab5a70ec77ade50192 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerState.java
+2f091977e403280ab1224ad0f1a43f8c 538434e0dc9ae1f038e43a6385f87caa ./frameworks/base/services/core/java/com/android/server/dreams/DreamManagerService.java
 0ef672d29130dca201305da60ffc054b a26d2e536aa3d2d81d5e44edf33b1aab ./frameworks/base/services/core/java/com/android/server/lights/Light.java
 a3c4d79841efc865c9950aaafec0d3c2 388e5e35a574f3a1f21c67af99390e10 ./frameworks/base/services/core/java/com/android/server/lights/LightsManager.java
 b3d40381eb19dfb769ae5ff196b797b9 e4d6305709eb4c0e48f55ca3edf8fea7 ./frameworks/base/services/core/java/com/android/server/lights/LightsService.java
