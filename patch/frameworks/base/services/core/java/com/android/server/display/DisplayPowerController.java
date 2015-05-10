@@ -271,8 +271,15 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         final int screenBrightnessSettingMinimum = clampAbsoluteBrightness(resources.getInteger(
                 com.android.internal.R.integer.config_screenBrightnessSettingMinimum));
 
-        int screenBrightnessDozeProperty = SystemProperties.getInt("sys.screen.doze.brightness",-1);
-        if (screenBrightnessDozeProperty < 0 || screenBrightnessDozeProperty > 255) {
+        // Doze brightness custom
+        int screenBrightnessDozeProperty = SystemProperties.getInt("persist.screen.doze_brightness",-1);
+        if (screenBrightnessDozeProperty == 0) {
+            mAllowAutoBrightnessWhileDozingConfig = true;
+        } else {
+            mAllowAutoBrightnessWhileDozingConfig = resources.getBoolean(
+                    com.android.internal.R.bool.config_allowAutoBrightnessWhileDozing);
+        }
+        if (mAllowAutoBrightnessWhileDozingConfig || screenBrightnessDozeProperty < 0 || screenBrightnessDozeProperty > 255) {
             screenBrightnessDozeProperty = resources.getInteger(
                     com.android.internal.R.integer.config_screenBrightnessDoze);
         }
@@ -303,9 +310,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
 
         mUseSoftwareAutoBrightnessConfig = resources.getBoolean(
                 com.android.internal.R.bool.config_automatic_brightness_available);
-
-        mAllowAutoBrightnessWhileDozingConfig = resources.getBoolean(
-                com.android.internal.R.bool.config_allowAutoBrightnessWhileDozing);
 
         if (mUseSoftwareAutoBrightnessConfig) {
             int[] lux = resources.getIntArray(
