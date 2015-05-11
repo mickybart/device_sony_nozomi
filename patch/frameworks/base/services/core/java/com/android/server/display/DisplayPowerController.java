@@ -47,6 +47,8 @@ import android.view.Display;
 import android.view.WindowManagerPolicy;
 
 import java.io.PrintWriter;
+import java.lang.Integer;
+import java.lang.String;
 
 /**
  * Controls the power state of the display.
@@ -313,10 +315,28 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
                 com.android.internal.R.bool.config_allowAutoBrightnessWhileDozing);
 
         if (mUseSoftwareAutoBrightnessConfig) {
-            int[] lux = resources.getIntArray(
-                    com.android.internal.R.array.config_autoBrightnessLevels);
-            int[] screenBrightness = resources.getIntArray(
-                    com.android.internal.R.array.config_autoBrightnessLcdBacklightValues);
+            String luxStr = SystemProperties.get("persist.screen.auto_lux","");
+            String screenBrightnessStr = SystemProperties.get("persist.screen.auto_brightness","");
+
+            int[] lux;
+            int[] screenBrightness;
+            if (luxStr.contentEquals("") || screenBrightnessStr.contentEquals("")) {
+                lux = resources.getIntArray(
+                        com.android.internal.R.array.config_autoBrightnessLevels);
+                screenBrightness = resources.getIntArray(
+                        com.android.internal.R.array.config_autoBrightnessLcdBacklightValues);
+            } else {
+                String[] luxSplit = luxStr.split(",");
+                String[] screenBrightnessSplit = screenBrightnessStr.split(",");
+                lux = new int[luxSplit.length];
+                screenBrightness = new int[screenBrightnessSplit.length];
+                for (int i=0; i<luxSplit.length; i++) {
+                    lux[i] = Integer.parseInt(luxSplit[i]);
+                }
+                for (int i=0; i<screenBrightnessSplit.length; i++) {
+                    screenBrightness[i] = Integer.parseInt(screenBrightnessSplit[i]);
+                }
+            }
             int lightSensorWarmUpTimeConfig = resources.getInteger(
                     com.android.internal.R.integer.config_lightSensorWarmupTime);
             final float dozeScaleFactor = resources.getFraction(
