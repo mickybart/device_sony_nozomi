@@ -12,10 +12,11 @@ persist.sys.ram_minfree=138240
 persist.sys.lightbar_mode=1
 persist.sys.lightbar_flash=1
 
-# screen (doze, dt2w, color)
-persist.screen.doze_brightness=-1
-persist.screen.tap_wake=true
+# screen (doze, color, auto brightness)
+persist.screen.doze_brightness=0
 persist.screen.color_control="255 255 255"
+persist.screen.auto_lux=
+persist.screen.auto_brightness=
 
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false

@@ -37,7 +37,7 @@ b98709a38f867b51d662335c7ac1c930 7370a16ed3b39405f47c37eb5cedb0bc ./frameworks/b
 4f9efe40b71d7badde7aa16dad6dcdd0 d112c54536876a1b83cac6fac548046a ./frameworks/base/services/core/java/com/android/server/MountService.java
 cd91ae0606629ebddac4eadc1f5666a4 bba7334cdb7343baa70e3f4e508e8fc3 ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
 9aeef8fb9560ec82681b444e5ec6236a a3b60e78c6fc46ab42a5ec61d1c4f9cd ./frameworks/base/services/core/java/com/android/server/display/AutomaticBrightnessController.java
-9da66aebcae2b7c48dd560c848ae20bd a6c05e2ffefdfda3b5374da6ff4f0611 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
+9da66aebcae2b7c48dd560c848ae20bd d1480106f341568af17b3ce68283d73c ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
 419a8e724e9bc23ebfc4701191b79500 21322605fc0258ab5a70ec77ade50192 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerState.java
 2f091977e403280ab1224ad0f1a43f8c 538434e0dc9ae1f038e43a6385f87caa ./frameworks/base/services/core/java/com/android/server/dreams/DreamManagerService.java
 0ef672d29130dca201305da60ffc054b a26d2e536aa3d2d81d5e44edf33b1aab ./frameworks/base/services/core/java/com/android/server/lights/Light.java
@@ -119,8 +119,8 @@ fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/app
 26840c834a51277d4184e1f4cc3f32d5 9d659b7dda005ca2b1bf942c545dc3e6 ./packages/apps/Settings/proguard.flags
 -------------------------------- 13aab7bb329c0540799cd47047720eef ./packages/apps/Settings/res/drawable/color_tuning_preview.xml
 -------------------------------- f9ae5907255f2b0acdb23203cf24215a ./packages/apps/Settings/res/layout/display_color_calibration.xml
-7a0e568d423f91a657d524e57b17edfb c139cf8552ad91d0508ece484bfb95ac ./packages/apps/Settings/res/values/arrays.xml
-c847717c7f7704f853ec92883c3a296c edfe19639d4da8d53800df9f0bf1a933 ./packages/apps/Settings/res/values/strings.xml
+7a0e568d423f91a657d524e57b17edfb ef8af286a8145c76bd1c3f2dd2fea2c2 ./packages/apps/Settings/res/values/arrays.xml
+c847717c7f7704f853ec92883c3a296c 4da7b8954b1336f93f5d9f05a26c1c7c ./packages/apps/Settings/res/values/strings.xml
 0630dddf4f431f34e8ee5752e7228ae3 5ca990abeff97aacd7f4dc4cc79aa80d ./packages/apps/Settings/res/xml/dashboard_categories.xml
 f847bef8a6f5b54f442b7c4112028051 45563ee5f4f5d14fa02d53d27a3b4c9e ./packages/apps/Settings/res/xml/development_prefs.xml
 6342d8712a7becc51ce391658cafc2e1 7197519edd004f3c37052b0e58d2e5d9 ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
