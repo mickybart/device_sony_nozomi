@@ -198,6 +198,9 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     
     private static final String DOZE_BRIGHTNESS_KEY = "doze_brightness";
     private static final String DOZE_BRIGHTNESS_PROPERTY = "persist.screen.doze_brightness";
+    
+    private static final String LIGHTBAR_FLASH_KEY = "lightbar_flash";
+    private static final String LIGHTBAR_FLASH_PROPERTY = "persist.sys.lightbar_flash";
 
     private IWindowManager mWindowManager;
     private IBackupManager mBackupManager;
@@ -282,6 +285,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
     private ListPreference mRamMinfree;
     private ListPreference mZramSize;
     private ListPreference mDozeBrightness;
+    private SwitchPreference mLightbarFlash;
 
     private final ArrayList<Preference> mAllPrefs = new ArrayList<Preference>();
 
@@ -452,6 +456,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         mRamMinfree = addListPreference(RAM_MINFREE_KEY);
         mZramSize = addListPreference(ZRAM_SIZE_KEY);
         mDozeBrightness = addListPreference(DOZE_BRIGHTNESS_KEY);
+        mLightbarFlash = (SwitchPreference) findPreference(LIGHTBAR_FLASH_KEY);
     }
 
     private ListPreference addListPreference(String prefKey) {
@@ -660,6 +665,7 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         updateRamMinfreeOptions();
         updateZramSizeOptions();
         updateDozeBrightnessOptions();
+        updateLightbarFlashOptions();
     }
 
     private void writeAdvancedRebootOptions() {
@@ -1620,7 +1626,18 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
         SystemProperties.set(DOZE_BRIGHTNESS_PROPERTY, newValue.toString());
         updateDozeBrightnessOptions();
     }
-
+    
+    private void updateLightbarFlashOptions() {
+        updateSwitchPreference(mLightbarFlash, 
+                !SystemProperties.get(LIGHTBAR_FLASH_PROPERTY, "1").contentEquals("0"));
+    }
+    
+    private void writeLightbarFlashOptions() {
+        SystemProperties.set(LIGHTBAR_FLASH_PROPERTY, 
+                mLightbarFlash.isChecked() ? "1" : "0");
+        updateLightbarFlashOptions();
+    }
+    
     @Override
     public void onSwitchChanged(Switch switchView, boolean isChecked) {
         if (switchView != mSwitchBar.getSwitch()) {
@@ -1839,6 +1856,8 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
                 }
                 mUpdateRecoveryDialog.setOnDismissListener(this);
             }
+        } else if (preference == mLightbarFlash) {
+            writeLightbarFlashOptions();
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }

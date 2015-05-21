@@ -415,6 +415,11 @@
             android:entries="@array/doze_brightness_entries"
             android:entryValues="@array/doze_brightness_values" />
 
+        <SwitchPreference
+            android:key="lightbar_flash"
+            android:title="@string/lightbar_flash_title"
+            android:summary="@string/lightbar_flash_summary"/>
+
      </PreferenceCategory>
 
 </PreferenceScreen>
