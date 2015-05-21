@@ -16,7 +16,7 @@ e17c5c3bae2fb5ba768e12c007056645 f87a02f4f54269651952160ebada5525 ./external/chr
 48f0528b2d22592dec644a9dccc82b9b 99c2d469a0b413aa474bf34b76ecc84e ./external/libnfc-nxp/src/phLibNfc.h
 c7e96a6a2efa2f14f87683f88c55ce31 7effac2508163e765dc7ff0de652884f ./frameworks/base/services/core/java/com/android/server/MountService.java
 4c4264c4c61727ade429406fa4e114d0 6dbd8d42268032cebff8d2abc685c094 ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
-1dc44d19bf8b85c356f8bff51483248c 29d5f9b9807ac8f1f2d712a27dfcd1a6 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
+1dc44d19bf8b85c356f8bff51483248c 632e84247da4340b2bd9725efbe79548 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
 419a8e724e9bc23ebfc4701191b79500 41d2237f0d888f3cbcc5595d9d50e547 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerState.java
 d8f0614f8841e2c694dcb434cbdb21f3 f7052b832d203616632c159079f16dbc ./frameworks/base/services/core/java/com/android/server/lights/LightsManager.java
 3a2f036657e5977f9761dcf7db35d3bc 9728b352fc75e8cd43f3f6b704b00a1f ./frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
@@ -54,8 +54,8 @@ dc49065b5bb3bb5a6f411398da6ea105 c3de53b18dcb6672a565b51eeb3ecda2 ./packages/app
 07d51d911739a8eaf3f49f6e68e1a522 d5c3bb684db527be63172aab92d6808e ./packages/apps/Email/provider_src/com/android/email/SecurityPolicy.java
 fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/apps/Nfc/nxp/jni/com_android_nfc_NativeNfcManager.cpp
 b16d9e64b8d89d76619c1d14919397c6 2c8b021f6f6ba4b1f02ebfdc60cbcede ./packages/apps/Settings/res/layout/button_backlight.xml
-7a0e568d423f91a657d524e57b17edfb dd003fb8f62518d374e31ce289b95ec8 ./packages/apps/Settings/res/values/arrays.xml
-bc02296f655bca5f169ce0ace75dc777 47366a1356f9fef391378a1e60b97476 ./packages/apps/Settings/res/values/strings.xml
+7a0e568d423f91a657d524e57b17edfb c320b124f8a558ca6b5fb8d2b47cf928 ./packages/apps/Settings/res/values/arrays.xml
+bc02296f655bca5f169ce0ace75dc777 3306ec21aaf0fd0c9b413c37729dc77c ./packages/apps/Settings/res/values/strings.xml
 3c6bcae8e572a8d0a5bb5825f8c0783f 9a7beff00dafffa4df83344b662a1f2c ./packages/apps/Settings/res/xml/development_prefs.xml
 98406b022912f17d4fc970bd5344164d 0e03aefbdfb396572b0ae2040ede2084 ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
 -------------------------------- e986837f867f8776f6a5b0c817e67e7f ./packages/apps/Settings/src/com/android/settings/cyanogenmod/BacklightAdaptiveSeekBar.java

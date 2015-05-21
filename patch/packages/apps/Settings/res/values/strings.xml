@@ -6067,6 +6067,7 @@
     <string name="urom_generic_disabled">Disabled</string>
     <string name="urom_generic_default">Default</string>
     <string name="urom_help_summary">(*) need a reboot, (**) need a reflash</string>
+    <string name="urom_screen_adaptive">Adaptive</string>
    
     <!-- Ram minfree -->
     <string name="ram_minfree_title">Low memory killer (*)</string>
