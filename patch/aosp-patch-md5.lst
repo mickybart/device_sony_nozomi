@@ -1,7 +1,6 @@
 64f08d5c0d8b795a00122bc7d67d3122 9b9ae1a1e193822aca81d84548a947ab ./bionic/libc/bionic/bionic_time_conversions.cpp
-b398466ad306bf65a20036c344935eac 1481b18613ba4a4bed3d9a2910c39ca8 ./build/core/Makefile
-bb09db77f2fd26243d62c64414fc2662 16e3aa661c0aa0630fb0491e0a54adb7 ./build/tools/releasetools/build_image.py
-30709a4c49ced18ff876e4c431a3517b 107b7fb67d57a6ff7ecdd6ea034b3b1c ./build/tools/releasetools/common.py
+abc665381aecdd3c9e458d95e6261269 29bcfa6431f989d872ca1fe84ff1ab76 ./build/core/Makefile
+f41b3f6b2ffeacf11179118a7860a6f5 3b28d693eacdfc04a45fbfc1278ff1fe ./build/tools/releasetools/common.py
 289b043ba4c24313c465437847fc52af 33a0ddcd6e23ad1f6b2731c708aaf828 ./build/tools/releasetools/edify_generator.py
 dc03e3764cd32710f25a7eb1b52af4ba bf2df2dd6c1a44bacedec1776ba19d94 ./build/tools/releasetools/img_from_target_files.py
 acb698e3daf951f7e53987d8e8b47e15 81943ae24b63f07d035bac0aab22a751 ./build/tools/releasetools/ota_from_target_files
@@ -15,12 +14,12 @@ e17c5c3bae2fb5ba768e12c007056645 f87a02f4f54269651952160ebada5525 ./external/chr
 2befbc91a15c3b23510fae03cda36263 944f0993f2b2a3cc8dd1b0ce8be223fb ./external/libnfc-nxp/src/phLibNfc.c
 48f0528b2d22592dec644a9dccc82b9b 99c2d469a0b413aa474bf34b76ecc84e ./external/libnfc-nxp/src/phLibNfc.h
 c7e96a6a2efa2f14f87683f88c55ce31 7effac2508163e765dc7ff0de652884f ./frameworks/base/services/core/java/com/android/server/MountService.java
-4c4264c4c61727ade429406fa4e114d0 6dbd8d42268032cebff8d2abc685c094 ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
+152a4549541398700ab8e05959ebb5cb d19432e69049d5709e8104bf81d3725e ./frameworks/base/services/core/java/com/android/server/am/ProcessList.java
 1dc44d19bf8b85c356f8bff51483248c 632e84247da4340b2bd9725efbe79548 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerController.java
 419a8e724e9bc23ebfc4701191b79500 41d2237f0d888f3cbcc5595d9d50e547 ./frameworks/base/services/core/java/com/android/server/display/DisplayPowerState.java
 d8f0614f8841e2c694dcb434cbdb21f3 f7052b832d203616632c159079f16dbc ./frameworks/base/services/core/java/com/android/server/lights/LightsManager.java
-3a2f036657e5977f9761dcf7db35d3bc 9728b352fc75e8cd43f3f6b704b00a1f ./frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
-9a9acec0df78722ff700fc986115d259 8ef37e8d173468fdfe9fda89a75cedac ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+2d9fee46f8b76871b5a2a56338736e71 aa676ef143c2724a62b14585e1d798f3 ./frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
+e9c4ad2a2e7b6fee10302849fe785c40 011265cea9f739f6cbb35874b2257820 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
 034b69b80a40470a5eeec0830cf68dd3 2535312939360a41bf3834e93f5a1e33 ./hardware/broadcom/libbt/Android.mk
 -------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/nozomi/Android.mk
 -------------------------------- 75ea406d59e96bdda5fc580c2870cb69 ./hardware/broadcom/libbt/conf/sony/nozomi/bt_vendor.conf
