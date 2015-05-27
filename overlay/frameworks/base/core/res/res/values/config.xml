@@ -113,10 +113,6 @@
         <item>0</item>
     </integer-array>
 
-    <!-- The debounce time value for automatic display brightness adjustment -->
-    <integer name="config_brighteningLightDebounce">1500</integer>
-    <integer name="config_darkeningLightDebounce">8000</integer>
-
     <integer name="config_buttonBrightnessSettingDefault">80</integer>
     <bool name="config_deviceHasVariableButtonBrightness">true</bool>
 
