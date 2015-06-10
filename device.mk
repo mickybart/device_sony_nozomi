@@ -153,7 +153,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/flashled_calc_parameters.cfg:system/etc/flashled_calc_parameters.cfg \
     $(LOCAL_PATH)/config/iddd.conf:system/etc/iddd.conf \
     $(LOCAL_PATH)/config/qosmgr_rules.xml:system/etc/qosmgr_rules.xml \
-    $(LOCAL_PATH)/config/thermald-semc.conf:system/etc/thermald-semc.conf
 
 # Common Qualcomm / Sony scripts
 PRODUCT_COPY_FILES += \
@@ -254,6 +253,14 @@ PRODUCT_PACKAGES += \
 # Wake Up
 PRODUCT_PACKAGES += \
     WakeUp
+
+# Thermal management
+PRODUCT_PACKAGES += \
+    thermanager
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/thermanager.xml:system/etc/thermanager.xml
+
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 

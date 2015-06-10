@@ -383,14 +383,13 @@ service touchd /system/bin/touchd
 # Preferably the ONLY_IN_VARIANT macro should be used but
 # seems like the build system does not parse this file properly.
 
-
-service thermald /system/bin/thermald -c /system/etc/thermald-semc.conf
-    socket thermald stream 0666 root root
+service thermanager /system/bin/thermanager /system/etc/thermanager.xml
     user root
+    group root
     disabled
 
 on property:init.svc.bootanim=stopped
-    start thermald
+    start thermanager
 
 on property:sys.shutdown.requested=*
    exec /system/bin/fstune
