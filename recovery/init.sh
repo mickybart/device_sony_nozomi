@@ -83,7 +83,9 @@ if [ -s /recovery$RAMDISK ]; then
         $BUSYBOX ln $BUSYBOX /recovery$BUSYBOX
         $BUSYBOX chroot /recovery $BUSYBOX cpio -i -F $RAMDISK
         $BUSYBOX rm /recovery$RAMDISK
-        $BUSYBOX cp /sbin/mkfs.f2fs /recovery/sbin/
+        if [ ! -f /recovery/sbin/mkfs.f2fs ]; then
+            $BUSYBOX cp /sbin/mkfs.f2fs /recovery/sbin/
+        fi
         exec $BUSYBOX chroot /recovery /init
     fi
 fi
