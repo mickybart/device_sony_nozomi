@@ -1091,7 +1091,11 @@ SYSTEMIMAGE_SOURCE_DIR := $(TARGET_OUT)
 # image size check calculation.
 ifneq ($(INSTALLED_RECOVERYIMAGE_TARGET),)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
+ifndef BOARD_CANT_BUILD_RECOVERY_FROM_BOOT_PATCH
 RECOVERY_FROM_BOOT_PATCH := $(intermediates)/recovery_from_boot.p
+else
+RECOVERY_FROM_BOOT_PATCH :=
+endif
 $(RECOVERY_FROM_BOOT_PATCH): $(INSTALLED_RECOVERYIMAGE_TARGET) \
                              $(INSTALLED_BOOTIMAGE_TARGET) \
 			     $(HOST_OUT_EXECUTABLES)/imgdiff \
@@ -1705,6 +1709,35 @@ bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(CM_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(CM_TARGET_PACKAGE) > $(CM_TARGET_PACKAGE).md5sum
 	@echo -e ${CL_CYN}"Package Complete: $(CM_TARGET_PACKAGE)"${CL_RST}
+
+# -----------------------------------------------------------------
+# The factory package
+
+name := $(TARGET_PRODUCT)-factory-$(FILE_NAME_TAG)
+
+INTERNAL_FACTORY_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
+
+ifeq ($(TARGET_RELEASETOOLS_EXTENSIONS),)
+# default to common dir for device vendor
+$(INTERNAL_FACTORY_PACKAGE_TARGET): extensions := $(TARGET_DEVICE_DIR)/../common
+else
+$(INTERNAL_FACTORY_PACKAGE_TARGET): extensions := $(TARGET_RELEASETOOLS_EXTENSIONS)
+endif
+
+$(INTERNAL_FACTORY_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
+	@echo -e ${CL_YLW}"Package:"${CL_RST}" $@"
+	if [ -z $(TARGET_RELEASETOOL_FACTORY_FROM_TARGET_SCRIPT) ]; then \
+          echo "Error: Factory script is not defined by target"; \
+          exit 1; \
+	fi
+	MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
+	$(TARGET_RELEASETOOL_FACTORY_FROM_TARGET_SCRIPT) -v \
+	   -s $(extensions) \
+	   -p $(HOST_OUT) \
+	   $(BUILT_TARGET_FILES_PACKAGE) $@
+
+.PHONY: factorypackage
+factorypackage: $(INTERNAL_FACTORY_PACKAGE_TARGET)
 
 endif    # recovery_fstab is defined
 endif    # TARGET_NO_KERNEL != true
