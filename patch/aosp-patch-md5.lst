@@ -1,9 +1,9 @@
 64f08d5c0d8b795a00122bc7d67d3122 9b9ae1a1e193822aca81d84548a947ab ./bionic/libc/bionic/bionic_time_conversions.cpp
 8fc790a9d40fbd9db501c210a58498ff 0b6168b7fceb637b48b97e6e129b4ff4 ./build/core/Makefile
-ccf72777f84a23854ecb3e542ae22768 c42f72f08ff0e7a6c42208d229d80011 ./build/target/product/generic_no_telephony.mk
+ccf72777f84a23854ecb3e542ae22768 78e567a903b6db82bb3bffab3abfef50 ./build/target/product/generic_no_telephony.mk
 6d8b2beadcdf61823d3983d843daeb5b d163e7565ee60f811f381fc903dbe47e ./build/target/product/sdk_base.mk
-d1578798dbd83f0071a2960c06f96e63 107b7fb67d57a6ff7ecdd6ea034b3b1c ./build/tools/releasetools/common.py
-e6afb537eacb738b1e99426252907765 13b09d34e5ddf2a52cfa5a731ea7cfbb ./build/tools/releasetools/ota_from_target_files
+9cbc2cb7f6fa9262d322753a2a646538 1399a422736b92ae8a46907bf5fa9991 ./build/tools/releasetools/common.py
+892a654aeeb706f2b1d7f73259736b41 763798cfb9afd4f586d8228ef52092cc ./build/tools/releasetools/ota_from_target_files
 8a571ce47588215bf644f79ee64f7fdc 9dcb8ec66dc4a7cbb85a446c1a5ea43a ./external/bluetooth/bluedroid/btif/include/btif_api.h
 bc5a0735be42ae2c90fa5d02953b66d9 2982dcec2245677a4bf8bb1b3bf4987a ./external/bluetooth/bluedroid/btif/src/bluetooth.c
 f7608712f5a0a4e98dc77feba3731968 9e8e2a294686893260b5cd99cd281288 ./external/bluetooth/bluedroid/btif/src/btif_core.c
@@ -13,7 +13,7 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 1b473409d92d3506e4699898ea7b71c3 fa6d9c70498f436ac83bb82d078c481f ./external/libnfc-nxp/src/phHal4Nfc.c
 2befbc91a15c3b23510fae03cda36263 944f0993f2b2a3cc8dd1b0ce8be223fb ./external/libnfc-nxp/src/phLibNfc.c
 07929bf98f69fb6c243b2bc8c37c0f81 3fa2c0991465d7668f15ce73ba533125 ./external/libnfc-nxp/src/phLibNfc.h
-6ace530c622423d42cf0f9caf7b527ec 46235bf090b80c15eb9cb53a3884f9eb ./frameworks/base/core/java/android/provider/Settings.java
+f6d4584aade528e2727b3ecbba9b61c2 a77dae609dd91ffb9af4e26c89a668d2 ./frameworks/base/core/java/android/provider/Settings.java
 2c26ab6adf79788f756239a2e030d9d0 df9be844c8e97fdd31b3987fb3a61ad6 ./frameworks/base/core/java/android/service/dreams/DreamManagerInternal.java
 578fc2545146d4843ad3150bb49d3012 63878e24e514b4e2dd9b2162063c3c94 ./frameworks/base/core/java/android/service/dreams/IDreamManager.aidl
 -------------------------------- 969c04a58226dae631ad36d3c39658c7 ./frameworks/base/core/res/res/drawable-hdpi/ic_lock_power_reboot_alpha.png
@@ -23,8 +23,8 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 -------------------------------- d855250778eb48e54cedc88ca05f4ac1 ./frameworks/base/core/res/res/drawable/ic_lock_power_reboot.xml
 -------------------------------- 4aa6e726f7766af420a07b47a206d58c ./frameworks/base/core/res/res/values/cm_arrays.xml
 -------------------------------- cff7b0329e91cdec4f153a68cf2b1437 ./frameworks/base/core/res/res/values/cm_strings.xml
-ce8814a7d043e07f1247d6f25ca60f25 aa07ad60bf5c2a171d90e2e0f3084b1a ./frameworks/base/core/res/res/values/config.xml
-de59962f5d02ba70e64a51bdfc99aa1e eb473acce9f184be58556421ab266aad ./frameworks/base/core/res/res/values/symbols.xml
+7e36c511e7d70fdd22ca79704cba1b80 d97bdddb997fd1c99d064b92bf11e99b ./frameworks/base/core/res/res/values/config.xml
+20d9ac1d34081570ed55152eb582e092 8d73f8e0dee4ac1385027c545cef2b99 ./frameworks/base/core/res/res/values/symbols.xml
 -------------------------------- b85464f8e4a000cda04d8401bee98eb7 ./frameworks/base/packages/SystemUI/res/drawable/fab.xml
 -------------------------------- 4659f07aeb2c2fb077a09363115d29be ./frameworks/base/packages/SystemUI/res/drawable/floating_action_button.xml
 -------------------------------- 92fec4a93afb794ff75a7c4d63e6fc90 ./frameworks/base/packages/SystemUI/res/layout/floating_action_button.xml
@@ -51,7 +51,7 @@ b3d40381eb19dfb769ae5ff196b797b9 e4d6305709eb4c0e48f55ca3edf8fea7 ./frameworks/b
 02d011c09b0100452456561a453580e7 c004d54cbdec153a47cc71d402e2e240 ./frameworks/base/services/core/java/com/android/server/power/ShutdownThread.java
 2d023a793116c315ad19f9cf4848c621 e07dba6986df22343eccf32aef2ff389 ./frameworks/native/include/gui/SurfaceComposerClient.h
 2ef010bf10354f3a899f74e8a7083530 f3038da7e801325ca81df0f2fb094cc1 ./frameworks/native/libs/gui/SurfaceComposerClient.cpp
-229187f074c3169280a8a79cd82757dc 1248875dffb2a16d065e2cf80b422036 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
+55d42bbf3a649d610ae1c43e8c07c4ca d3e15268f71c3e48f66a9c2be0f4acd6 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
 034b69b80a40470a5eeec0830cf68dd3 95f7e7d5b1397341d934a90264a56d0e ./hardware/broadcom/libbt/Android.mk
 -------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/nozomi/Android.mk
 -------------------------------- 75ea406d59e96bdda5fc580c2870cb69 ./hardware/broadcom/libbt/conf/sony/nozomi/bt_vendor.conf
@@ -119,12 +119,12 @@ ac40ff5f0402632efa3d708dabedccea ee893b73f538c486d0a5e19b5d5ad0c8 ./packages/app
 479ba724c825a5109c4f3b07a1478399 7a7fe5c92a183cfceff934c1079d7ae3 ./packages/apps/Mms/src/com/android/mms/ui/ConversationList.java
 fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/apps/Nfc/nxp/jni/com_android_nfc_NativeNfcManager.cpp
 8442f7e0387b8f5c39fe702c8b4eeb2d 5ad65d15d62dc92e3f613d5d0185695d ./packages/apps/Settings/Android.mk
-0425e1cd8bf3b9a91f96512da0027b8a f92357144b47c9b5522cbae5a8cb8551 ./packages/apps/Settings/AndroidManifest.xml
+93a41c42427ab905213d1c03e1af3690 0fc678b6b48a484cedd81bf1f45beac5 ./packages/apps/Settings/AndroidManifest.xml
 26840c834a51277d4184e1f4cc3f32d5 9d659b7dda005ca2b1bf942c545dc3e6 ./packages/apps/Settings/proguard.flags
 -------------------------------- 13aab7bb329c0540799cd47047720eef ./packages/apps/Settings/res/drawable/color_tuning_preview.xml
 -------------------------------- f9ae5907255f2b0acdb23203cf24215a ./packages/apps/Settings/res/layout/display_color_calibration.xml
 7a0e568d423f91a657d524e57b17edfb ef8af286a8145c76bd1c3f2dd2fea2c2 ./packages/apps/Settings/res/values/arrays.xml
-c847717c7f7704f853ec92883c3a296c 4da7b8954b1336f93f5d9f05a26c1c7c ./packages/apps/Settings/res/values/strings.xml
+75b8abe69195e6b7933dda552d89c956 dded47618ac3339bdc4e30a4f774a05c ./packages/apps/Settings/res/values/strings.xml
 0630dddf4f431f34e8ee5752e7228ae3 5ca990abeff97aacd7f4dc4cc79aa80d ./packages/apps/Settings/res/xml/dashboard_categories.xml
 f847bef8a6f5b54f442b7c4112028051 45563ee5f4f5d14fa02d53d27a3b4c9e ./packages/apps/Settings/res/xml/development_prefs.xml
 6342d8712a7becc51ce391658cafc2e1 7197519edd004f3c37052b0e58d2e5d9 ./packages/apps/Settings/src/com/android/settings/DevelopmentSettings.java
