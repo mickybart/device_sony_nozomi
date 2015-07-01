@@ -65,8 +65,12 @@ PRODUCT_PACKAGES += \
     audio.primary.msm8660 \
     audio.a2dp.default \
     audio.usb.default \
-	audio.r_submix.default \
-	libaudio-resampler
+    audio.r_submix.default \
+    libaudio-resampler
+
+PRODUCT_PACKAGES += \
+    ViPER4Android \
+    libv4a_fx_ics
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
@@ -76,6 +80,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/config/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/config/audio_policy.conf:system/etc/audio_policy.conf \
+    $(LOCAL_PATH)/config/audio_effects.conf:system/etc/audio_effects.conf \
     $(LOCAL_PATH)/config/mixer_paths.xml:system/etc/mixer_paths.xml
 
 # NFC

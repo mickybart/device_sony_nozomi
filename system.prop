@@ -70,7 +70,7 @@ lpa.decode=false
 
 # New added in msm8660_surf
 use.non-omx.mp3.decoder=true
-lpa.use-stagefright=true
+lpa.use-stagefright=false
 
 #system props for the MM modules
 media.stagefright.enable-player=true
