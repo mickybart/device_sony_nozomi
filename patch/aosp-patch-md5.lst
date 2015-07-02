@@ -32,7 +32,7 @@ b28c941991102837a30772f8241348e4 a526343182f285b3f523b94c97313928 ./frameworks/b
 a22644c9ae25c1c38090237113d0652f e4af6ea47c9f07d8bf6f1199e2a24c06 ./frameworks/base/packages/SystemUI/res/values/colors.xml
 4f54c5607ec246964dc3f69202dc627f 2737fd840d9e1af33786803f97bd5ad5 ./frameworks/base/packages/SystemUI/res/values/dimens.xml
 e121559e8ead104524a860e029bcbe46 90090bbe83dfd1e4135f39c475891cea ./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/RecentsActivity.java
-f1f47049e3d3345737fc228f3a4247f3 d93bf3470a104f51ee281af6a845d17c ./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/views/RecentsView.java
+f1f47049e3d3345737fc228f3a4247f3 d2e333d0cea7648cd6f23a6e37d02959 ./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/views/RecentsView.java
 9dcff2aba38deb83bfddab9da0f3c24e 167878727fdf57d33f36eb017178feda ./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/views/TaskStackView.java
 b9af22378cfff2d57f4a862dcf74ba86 91c4855b3aa805ccc94cc3e5585b536b ./frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/NotificationPanelView.java
 5d0c59908e4067b1fdde907de8fa4ec0 8fbae0006e05ceeffc0e7a6897d9f442 ./frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/StatusBarWindowView.java
