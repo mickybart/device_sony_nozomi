@@ -22,6 +22,7 @@ PRODUCT_PACKAGES := \
     Camera2 \
     Eleven \
     Gallery2 \
+    AudioFX \
     OneTimeInitializer \
     Provision \
     SystemUI \
