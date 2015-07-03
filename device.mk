@@ -68,9 +68,11 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     libaudio-resampler
 
+# Audio Effects
 PRODUCT_PACKAGES += \
     ViPER4Android \
-    libv4a_fx_ics
+    libv4a_fx_ics \
+    libqcomvoiceprocessing
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \

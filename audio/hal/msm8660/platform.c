@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2013-2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 #include "platform.h"
 
 #define LIB_ACDB_LOADER "libacdbloader.so"
+#define LIB_MSM_CLIENT "libaudioalsa.so"
 
 #define DUALMIC_CONFIG_NONE 0      /* Target does not contain 2 mics */
 #define DUALMIC_CONFIG_ENDFIRE 1
@@ -50,6 +51,11 @@
 /* EDID format ID for LPCM audio */
 #define EDID_FORMAT_LPCM    1
 
+#define MAX_VOL_INDEX 5
+#define MIN_VOL_INDEX 0
+#define percent_to_index(val, min, max) \
+                (val/20)
+
 struct audio_block_header
 {
     int reserved;
@@ -62,6 +68,23 @@ typedef int  (*acdb_init_t)();
 typedef void (*acdb_send_audio_cal_t)(int, int);
 typedef void (*acdb_send_voice_cal_t)(int, int);
 
+#define VOICE_SESSION_NAME "Voice session"
+//#define LEGACY_QCOM_VOICE
+
+typedef int (*msm_set_voice_rx_vol_t)(int);
+typedef void (*msm_set_voice_tx_mute_t)(int);
+typedef void (*msm_start_voice_t)(void);
+typedef int (*msm_end_voice_t)(void);
+typedef int (*msm_mixer_open_t)(const char*, int);
+typedef void (*msm_mixer_close_t)(void);
+typedef int (*msm_reset_all_device_t)(void);
+#ifndef LEGACY_QCOM_VOICE
+typedef int (*msm_get_voc_session_t)(const char*);
+typedef int (*msm_start_voice_ext_t)(int);
+typedef int (*msm_end_voice_ext_t)(int);
+typedef int (*msm_set_voice_tx_mute_ext_t)(int, int);
+typedef int (*msm_set_voice_rx_vol_ext_t)(int, int);
+#endif
 
 /* Audio calibration related functions */
 struct platform_data {
@@ -76,6 +99,25 @@ struct platform_data {
     acdb_deallocate_t acdb_deallocate;
     acdb_send_audio_cal_t acdb_send_audio_cal;
     acdb_send_voice_cal_t acdb_send_voice_cal;
+    
+    /* msm functions for voice call */
+    void *msm_client;
+    msm_set_voice_rx_vol_t msm_set_voice_rx_vol;
+    msm_set_voice_tx_mute_t msm_set_voice_tx_mute;
+    msm_start_voice_t msm_start_voice;
+    msm_end_voice_t msm_end_voice;
+    msm_mixer_open_t msm_mixer_open;
+    msm_mixer_close_t msm_mixer_close;
+    msm_reset_all_device_t msm_reset_all_device;
+#ifndef LEGACY_QCOM_VOICE
+    msm_get_voc_session_t msm_get_voc_session;
+    msm_start_voice_ext_t msm_start_voice_ext;
+    msm_end_voice_ext_t msm_end_voice_ext;
+    msm_set_voice_tx_mute_ext_t msm_set_voice_tx_mute_ext;
+    msm_set_voice_rx_vol_ext_t msm_set_voice_rx_vol_ext;
+#endif
+    
+    int voice_session_id;
 };
 
 static const int pcm_device_table[AUDIO_USECASE_MAX][2] = {
@@ -247,12 +289,71 @@ void *platform_init(struct audio_device *adev)
         else
             my_data->acdb_init();
     }
+    
+    my_data->msm_client = dlopen(LIB_MSM_CLIENT, RTLD_NOW);
+    if (my_data->msm_client == NULL) {
+      ALOGE("%s: DLOPEN failed for %s", __func__, LIB_MSM_CLIENT);
+    } else {
+      ALOGV("%s: DLOPEN successful for %s", __func__, LIB_MSM_CLIENT);
+      my_data->msm_set_voice_rx_vol = (msm_set_voice_rx_vol_t)dlsym(my_data->msm_client,
+					  "msm_set_voice_rx_vol");
+      my_data->msm_set_voice_tx_mute = (msm_set_voice_tx_mute_t)dlsym(my_data->msm_client,
+					  "msm_set_voice_tx_mute");
+      my_data->msm_start_voice = (msm_start_voice_t)dlsym(my_data->msm_client,
+					  "msm_start_voice");
+      my_data->msm_end_voice = (msm_end_voice_t)dlsym(my_data->msm_client,
+					  "msm_end_voice");
+      my_data->msm_mixer_open = (msm_mixer_open_t)dlsym(my_data->msm_client,
+					  "msm_mixer_open");
+      my_data->msm_mixer_close = (msm_mixer_close_t)dlsym(my_data->msm_client,
+					  "msm_mixer_close");
+      my_data->msm_reset_all_device = (msm_reset_all_device_t)dlsym(my_data->msm_client,
+					  "msm_reset_all_device");
+#ifndef LEGACY_QCOM_VOICE
+      my_data->msm_get_voc_session = (msm_get_voc_session_t)dlsym(my_data->msm_client,
+					  "msm_get_voc_session");
+      my_data->msm_start_voice_ext = (msm_start_voice_ext_t)dlsym(my_data->msm_client,
+					  "msm_start_voice_ext");
+      my_data->msm_end_voice_ext = (msm_end_voice_ext_t)dlsym(my_data->msm_client,
+					  "msm_end_voice_ext");
+      my_data->msm_set_voice_tx_mute_ext = (msm_set_voice_tx_mute_ext_t)dlsym(my_data->msm_client,
+					  "msm_set_voice_tx_mute_ext");
+      my_data->msm_set_voice_rx_vol_ext = (msm_set_voice_rx_vol_ext_t)dlsym(my_data->msm_client,
+					  "msm_set_voice_rx_vol_ext");
+#endif
+    }
+    
+    my_data->voice_session_id = 0;
+    
+    if(my_data->msm_mixer_open == NULL || my_data->msm_mixer_open("/dev/snd/controlC0", 0) < 0)
+      ALOGE("ERROR opening the device");
+    
+    //End any voice call if it exists. This is to ensure the next request
+    //to voice call after a mediaserver crash or sub system restart
+    //is not ignored by the voice driver.
+    if (my_data->msm_end_voice == NULL || my_data->msm_end_voice() < 0)
+      ALOGE("msm_end_voice() failed");
+
+    if(my_data->msm_reset_all_device == NULL || my_data->msm_reset_all_device() < 0)
+      ALOGE("msm_reset_all_device() failed");
 
     return my_data;
 }
 
 void platform_deinit(void *platform)
 {
+    struct platform_data *my_data = (struct platform_data *)platform;
+    
+    if(my_data->msm_mixer_close != NULL)
+	my_data->msm_mixer_close();
+    
+    if(my_data->acdb_deallocate != NULL)
+	my_data->acdb_deallocate();
+  
+    //dlclose
+    dlclose(LIB_MSM_CLIENT);
+    dlclose(LIB_ACDB_LOADER);
+    
     free(platform);
 }
 
@@ -391,55 +492,136 @@ int platform_switch_voice_call_device_post(void *platform,
 
 int platform_start_voice_call(void *platform, uint32_t vsid __unused)
 {
-    return 0;
+    struct platform_data *my_data = (struct platform_data *)platform;
+    int ret = 0;
+
+    if (my_data->msm_client) {
+#ifdef LEGACY_QCOM_VOICE
+        if (my_data->msm_start_voice == NULL) {
+            ALOGE("dlsym error for msm_client_start_voice");
+            ret = -ENOSYS;
+        } else {
+	  my_data->msm_start_voice();
+        }
+#else
+	if (my_data->msm_start_voice_ext == NULL || 
+	  my_data->msm_get_voc_session == NULL ||
+	  my_data->msm_set_voice_tx_mute_ext == NULL) {
+            ALOGE("dlsym error for msm_client_*");
+            ret = -ENOSYS;
+        } else {
+	  my_data->voice_session_id = my_data->msm_get_voc_session(VOICE_SESSION_NAME);
+	  if(my_data->voice_session_id <=0) {
+	      ALOGE("voice session invalid");
+	      return 0;
+	  }
+	  ret = my_data->msm_start_voice_ext(my_data->voice_session_id);
+	  if (ret < 0) {
+	    ALOGE("%s: msm_start_voice_ext error %d", __func__, ret);
+	  }
+        }
+#endif
+    }
+
+    return ret;
 }
 
 int platform_stop_voice_call(void *platform, uint32_t vsid __unused)
 {
-    return 0;
+    struct platform_data *my_data = (struct platform_data *)platform;
+    int ret = 0;
+
+    if (my_data->msm_client) {
+#ifdef LEGACY_QCOM_VOICE
+        if (my_data->msm_end_voice == NULL) {
+            ALOGE("dlsym error for msm_end_voice");
+        } else {
+            ret = my_data->msm_end_voice();
+            if (ret < 0) {
+                ALOGE("%s: msm_end_voice error %d\n", __func__, ret);
+            }
+        }
+#else
+	if (my_data->msm_end_voice_ext == NULL) {
+            ALOGE("dlsym error for msm_end_voice_ext");
+        } else {
+            ret = my_data->msm_end_voice_ext(my_data->voice_session_id);
+            if (ret < 0) {
+                ALOGE("%s: msm_end_voice_ext error %d\n", __func__, ret);
+            }
+	    my_data->voice_session_id = 0;
+        }
+#endif
+    }
+
+    return ret;
 }
 
 int platform_set_voice_volume(void *platform, int volume)
-{
+{   
     struct platform_data *my_data = (struct platform_data *)platform;
-    const char *mixer_ctl_name = "VoiceVolume";
-    struct mixer_ctl *ctl;
-    int value[3];
+    int ret = 0;
+    
+    // Voice volume levels are mapped to adsp volume levels as follows.
+    // 100 -> 5, 80 -> 4, 60 -> 3, 40 -> 2, 20 -> 1  0 -> 0
+    // But this values don't changed in kernel. So, below change is need.
+    volume = (int)percent_to_index(volume, MIN_VOL_INDEX, MAX_VOL_INDEX);
 
-    ctl = mixer_get_ctl_by_name(my_data->adev->mixer, mixer_ctl_name);
-    if (!ctl) {
-        ALOGE("%s: Could not get ctl for mixer cmd - %s",
-              __func__, mixer_ctl_name);
-        return -EINVAL;
+    if (my_data->msm_client) {
+#ifdef LEGACY_QCOM_VOICE
+        if (my_data->msm_set_voice_rx_vol == NULL) {
+            ALOGE("%s: dlsym error for msm_set_voice_rx_vol", __func__);
+        } else {
+            ret = my_data->msm_set_voice_rx_vol(volume);
+            if (ret < 0) {
+                ALOGE("%s: msm_set_voice_rx_vol error %d", __func__, ret);
+            }
+        }
+#else
+	if (my_data->msm_set_voice_rx_vol_ext == NULL) {
+            ALOGE("%s: dlsym error for msm_set_voice_rx_vol_ext", __func__);
+        } else {
+            ret = my_data->msm_set_voice_rx_vol_ext(volume,my_data->voice_session_id);
+            if (ret < 0) {
+                ALOGE("%s: msm_set_voice_rx_vol error_ext %d", __func__, ret);
+            }
+        }
+#endif
+    } else {
+        ALOGE("%s: No MSM Client present", __func__);
     }
-    value[0] = 1;
-    value[1] = (volume + 10) / 20;
-    value[2] = 0xFFF0;
-    return mixer_ctl_set_array(ctl, value, sizeof(value)/sizeof(value[0]));
+    return 0;
 }
 
 int platform_set_mic_mute(void *platform, bool state)
 {
     struct platform_data *my_data = (struct platform_data *)platform;
+    int ret = 0;
 
     if (my_data->adev->mode == AUDIO_MODE_IN_CALL) {
-        const char *mixer_ctl_name = "VoiceMute";
-        struct mixer_ctl *ctl;
-        int value[3];
-
-        ctl = mixer_get_ctl_by_name(my_data->adev->mixer, mixer_ctl_name);
-        if (!ctl) {
-            ALOGE("%s: Could not get ctl for mixer cmd - %s",
-                __func__, mixer_ctl_name);
-            return -EINVAL;
+        if (my_data->msm_client) {
+#ifdef LEGACY_QCOM_VOICE
+            if (my_data->msm_set_voice_tx_mute == NULL) {
+                ALOGE("%s: dlsym error for msm_set_voice_tx_mute", __func__);
+            } else {
+                my_data->msm_set_voice_tx_mute(state);
+            }
+#else
+	    if (my_data->msm_set_voice_tx_mute_ext == NULL) {
+                ALOGE("%s: dlsym error for msm_set_voice_tx_mute_ext", __func__);
+            } else {
+                ret = my_data->msm_set_voice_tx_mute_ext(state,my_data->voice_session_id);
+                if (ret < 0) {
+		  ALOGE("%s: msm_set_voice_tx_mute error %d", __func__, ret);
+                }
+            }
+#endif
+        } else {
+            ALOGE("%s: No MSM Client present", __func__);
         }
-        value[0] = 2;
-        value[1] = state;
-        value[2] = 0xFFF0;
-        return mixer_ctl_set_array(ctl, value, sizeof(value)/sizeof(value[0]));
     }
 
-    return 0;
+    return ret;
 }
 
 int platform_set_device_mute(void *platform __unused, bool state __unused, char *dir __unused)

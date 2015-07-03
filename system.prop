@@ -93,9 +93,10 @@ persist.data_netmgrd_nint=3
 persist.timed.enable=true
 
 # System props for audio
-persist.audio.fluence.mode=endfire
-persist.audio.vr.enable=false
-persist.audio.hp=true
+persist.audio.dualmic.config=endfire
+persist.audio.fluence.voicecall=true
+persist.audio.fluence.voicerec=false
+persist.audio.fluence.speaker=true
 
 # System prop to select audio resampler quality
 af.resampler.quality=3
