@@ -3,9 +3,15 @@
 # system.prop for nozomi
 #
 
-# zram and memory
+# zram, zswap, vnswap, swap and memory
 persist.sys.zram_size=167772160
 persist.sys.zram_enable=true
+persist.sys.zswap_size=22
+persist.sys.zswap_zmin=70
+persist.sys.vnswap_enable=false
+persist.sys.vnswap_size=5242880
+persist.sys.swap_enable=false
+persist.sys.swap_device=/dev/block/mmcblk0p16
 persist.sys.ram_minfree=138240
 
 # lightbar
