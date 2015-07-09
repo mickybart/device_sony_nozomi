@@ -22,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -76,15 +77,19 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
 
     private static final String KEY_BATTERY_SAVER = "low_power";
 
+    private static final String KEY_PER_APP_PROFILES = "app_perf_profiles_enabled";
+
     private static final String BATTERY_HISTORY_FILE = "tmp_bat_history.bin";
+    private static final String DOCK_BATTERY_HISTORY_FILE = "tmp_dock_bat_history.bin";
 
     private static final String FAST_CHARGE_FILE = "/sys/kernel/fast_charge/force_fast_charge";
 
     private static final int MENU_STATS_TYPE = Menu.FIRST;
     private static final int MENU_STATS_REFRESH = Menu.FIRST + 1;
-    private static final int MENU_BATTERY_SAVER = Menu.FIRST + 2;
-    private static final int MENU_HELP = Menu.FIRST + 3;
-    private static final int MENU_FAST_CHARGE = Menu.FIRST + 4;
+    private static final int MENU_STATS_RESET = Menu.FIRST + 2;
+    private static final int MENU_BATTERY_SAVER = Menu.FIRST + 3;
+    private static final int MENU_HELP = Menu.FIRST + 4;
+    private static final int MENU_FAST_CHARGE = Menu.FIRST + 5;
 
     private UserManager mUm;
 
@@ -103,6 +108,7 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
 
     private BatteryStatsHelper mStatsHelper;
 
+    private BatteryManager mBatteryManager;
     private PowerManager mPowerManager;
     private ListPreference mPerfProfilePref;
     private SwitchPreference mBatterySaverPref;
@@ -110,6 +116,7 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
     private String[] mPerfProfileValues;
     private String mPerfProfileDefaultEntry;
     private PerformanceProfileObserver mPerformanceProfileObserver = null;
+    private SwitchPreference mPerAppProfiles;
 
     private BroadcastReceiver mBatteryInfoReceiver = new BroadcastReceiver() {
 
@@ -149,6 +156,8 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
         super.onCreate(icicle);
         mStatsHelper.create(icicle);
 
+        mBatteryManager = (BatteryManager) getSystemService(Context.BATTERY_SERVICE);
+
         mPerfProfileEntries = getResources().getStringArray(
                 com.android.internal.R.array.perf_profile_entries);
         mPerfProfileValues = getResources().getStringArray(
@@ -160,9 +169,12 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
 
         mPerfProfilePref = (ListPreference) findPreference(KEY_PERF_PROFILE);
         mBatterySaverPref = (SwitchPreference) findPreference(KEY_BATTERY_SAVER);
+        mPerAppProfiles = (SwitchPreference) findPreference(KEY_PER_APP_PROFILES);
         if (mPerfProfilePref != null && !mPowerManager.hasPowerProfiles()) {
             removePreference(KEY_PERF_PROFILE);
+            removePreference(KEY_PER_APP_PROFILES);
             mPerfProfilePref = null;
+            mPerAppProfiles = null;
         } else if (mPerfProfilePref != null) {
             // Remove the battery saver switch, power profiles have 3 modes
             removePreference(KEY_BATTERY_SAVER);
@@ -240,6 +252,10 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
             mStatsHelper.storeStatsHistoryInFile(BATTERY_HISTORY_FILE);
             Bundle args = new Bundle();
             args.putString(BatteryHistoryDetail.EXTRA_STATS, BATTERY_HISTORY_FILE);
+            if (mBatteryManager.isDockBatterySupported()) {
+                mStatsHelper.storeDockStatsHistoryInFile(DOCK_BATTERY_HISTORY_FILE);
+                args.putString(BatteryHistoryDetail.EXTRA_DOCK_STATS, DOCK_BATTERY_HISTORY_FILE);
+            }
             args.putParcelable(BatteryHistoryDetail.EXTRA_BROADCAST,
                     mStatsHelper.getBatteryBroadcast());
             SettingsActivity sa = (SettingsActivity) getActivity();
@@ -281,6 +297,11 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
                 .setAlphabeticShortcut('r');
         refresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
                 MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        MenuItem reset = menu.add(0, MENU_STATS_RESET, 0, R.string.menu_stats_reset)
+                .setIcon(R.drawable.ic_actionbar_delete)
+                .setAlphabeticShortcut('d');
+        reset.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
+                MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         MenuItem batterySaver = menu.add(0, MENU_BATTERY_SAVER, 0,
                 R.string.battery_saver_threshold);
@@ -311,6 +332,9 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
                     mStatsType = BatteryStats.STATS_SINCE_CHARGED;
                 }
                 refreshStats();
+                return true;
+            case MENU_STATS_RESET:
+                resetStats();
                 return true;
             case MENU_STATS_REFRESH:
                 mStatsHelper.clearStats();
@@ -365,6 +389,24 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
             default:
                 return false;
         }
+    }
+
+    private void resetStats() {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+            .setTitle(R.string.menu_stats_reset)
+            .setMessage(R.string.reset_stats_msg)
+            .setPositiveButton(android.R.string.ok, new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Reset stats and request a refresh to initialize vars
+                    mStatsHelper.resetStatistics();
+                    refreshStats();
+                    mHandler.removeMessages(MSG_REFRESH_STATS);
+                }
+            })
+            .setNegativeButton(android.R.string.cancel, null)
+            .create();
+        dialog.show();
     }
 
     private void refreshBatterySaverOptions() {
@@ -431,16 +473,17 @@ public class PowerUsageSummary extends SettingsPreferenceFragment
     }
 
     private void refreshStats() {
+        final BatteryStats stats = mStatsHelper.getStats();
+        final BatteryStats dockStats = mStatsHelper.getDockStats();
+
         mAppListGroup.removeAll();
         mAppListGroup.setOrderingAsAdded(false);
-        mHistPref = new BatteryHistoryPreference(getActivity(), mStatsHelper.getStats(),
+        mHistPref = new BatteryHistoryPreference(getActivity(), stats, dockStats,
                 mStatsHelper.getBatteryBroadcast());
         mHistPref.setOrder(-1);
         mAppListGroup.addPreference(mHistPref);
         boolean addedSome = false;
-
         final PowerProfile powerProfile = mStatsHelper.getPowerProfile();
-        final BatteryStats stats = mStatsHelper.getStats();
         final double averagePower = powerProfile.getAveragePower(PowerProfile.POWER_SCREEN_FULL);
         if (averagePower >= MIN_AVERAGE_POWER_THRESHOLD_MILLI_AMP) {
             final List<UserHandle> profiles = mUm.getUserProfiles();

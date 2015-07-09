@@ -130,6 +130,25 @@ class EdifyGenerator(object):
            ");")
     self.script.append(self._WordWrap(cmd))
 
+  def AssertSomeBaseband(self, *basebands):
+    """Assert that the baseband version is one of *basebands."""
+    cmd = ("assert(" +
+           " || ".join(['getprop("ro.baseband") == "%s"' % (b,)
+                         for b in basebands]) +
+           ' || abort("This package supports baseband(s): ' +
+           ", ".join(["%s" % (b,) for b in basebands]) +
+           '; this device has baseband " + getprop("ro.baseband") + ".");' +
+           ");")
+    self.script.append(self._WordWrap(cmd))
+
+  def RunBackup(self, command):
+    self.script.append(('run_program("/tmp/install/bin/backuptool.sh", "%s");' % command))
+
+  def ValidateSignatures(self, command):
+    self.script.append('package_extract_file("META-INF/org/cyanogenmod/releasekey", "/tmp/releasekey");')
+    # Exit code 124 == abort. run_program returns raw, so left-shift 8bit
+    self.script.append('run_program("/tmp/install/bin/otasigcheck.sh") != "31744" || abort("Can\'t install this package on top of incompatible data. Please try another package or run a factory reset");')
+
   def ShowProgress(self, frac, dur):
     """Update the progress bar, advancing it over 'frac' over the next
     'dur' seconds.  'dur' may be zero to advance it via SetProgress
