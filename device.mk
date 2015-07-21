@@ -237,18 +237,6 @@ PRODUCT_PACKAGES += \
     fsck.f2fs \
     mkfs.f2fs
 
-# Wake Up
-PRODUCT_PACKAGES += \
-    WakeUp
-
-# Thermal management
-PRODUCT_PACKAGES += \
-    thermanager
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/thermanager.xml:system/etc/thermanager.xml
-
-
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
