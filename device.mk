@@ -70,8 +70,6 @@ PRODUCT_PACKAGES += \
 
 # Audio Effects
 PRODUCT_PACKAGES += \
-    ViPER4Android \
-    libv4a_fx_ics \
     libqcomvoiceprocessing
 
 PRODUCT_COPY_FILES += \
