@@ -78,10 +78,6 @@ WIFI_DRIVER_FW_PATH_P2P     := "/system/vendor/firmware/fw_bcmdhd.bin"
 BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
-# fm radio
-BOARD_HAVE_FMRADIO := true
-BOARD_HAVE_FMRADIO_BCM := true
-
 # kernel
 BOARD_KERNEL_MSM := true
 KERNEL_DEFCONFIG := fuji_nozomi_defconfig
