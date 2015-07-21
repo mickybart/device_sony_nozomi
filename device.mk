@@ -230,17 +230,6 @@ PRODUCT_PACKAGES += \
     extract_elf_ramdisk \
     init.sh
 
-# Superuser
-ifneq ($(TARGET_NO_SUPERUSER),true)
-
-PRODUCT_PACKAGES += \
-    su
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.root_access=3
-
-endif
-
 # Filesystem tools
 PRODUCT_PACKAGES += \
     e2fsck \
