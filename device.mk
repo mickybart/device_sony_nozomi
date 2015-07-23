@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 
+# Local variables (can be duplicate from BoardConfig.mk)
+TARGET_NO_SUPERUSER := false
+TARGET_RECOVERY_TWRP := true
+
 # define build target(normal/native/loop)
 BUILD_TARGET := normal
 
@@ -185,6 +189,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/fstab.$(BUILD_FS).semc:root/fstab.semc \
     $(LOCAL_PATH)/config/init.sony-platform.$(BUILD_TARGET).rc:root/init.sony-platform.rc
+
+# Recovery: Custom init for twrp
+ifeq ($(TARGET_RECOVERY_TWRP),true)
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/init.recovery.semc.rc:root/init.recovery.semc.rc
+endif
 
 # USB
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
