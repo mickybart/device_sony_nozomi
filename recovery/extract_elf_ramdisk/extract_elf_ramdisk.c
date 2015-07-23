@@ -45,8 +45,8 @@
 #define EER_TMP_RAMDISK_CPIO "ramdisk.cpio" // temporary ramdisk cpio file name
 #define EER_SEARCH_STRING "fota-ua" // String to search to determine if the
                                     // ramdisk is a stock Sony FOTA ramdisk
-#define MEMORY_BUFFER_SIZE (const size_t)8192*1024 // Max size of uncompressed
-                                                   // ramdisk (8MB)
+#define MEMORY_BUFFER_SIZE (const size_t)10240*1024 // Max size of uncompressed
+                                                    // ramdisk (10MB)
 #ifndef PATH_MAX
 #define PATH_MAX 255
 #endif
