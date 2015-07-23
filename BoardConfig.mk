@@ -143,6 +143,13 @@ ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
 endif
 
+# SELinux
+BOARD_SEPOLICY_DIRS += \
+    device/sony/nozomi/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    file_contexts
+
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 
 # Enable Minikin text layout engine (will be the default soon)
