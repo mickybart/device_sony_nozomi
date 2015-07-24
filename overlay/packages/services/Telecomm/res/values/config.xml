@@ -14,33 +14,9 @@
      limitations under the License.
 -->
 
-<!-- Telecomm resources that may need to be customized for different hardware or product
-    builds. -->
+<!-- Telecomm resources that may need to be customized
+     for different hardware or product builds. -->
 <resources>
-    <!-- Determines if the current device should allow emergency numbers to be logged in the
-         call log. Some carriers require that emergency calls *not* be logged, presumably to
-         avoid the risk of accidental redialing from the call log UI.
-         The default is false. -->
-    <bool name="allow_emergency_numbers_in_call_log">false</bool>
-
-    <!-- Determine whether we want to play local DTMF tones in a call, or just let the radio/BP
-         handle playing of the tones. -->
-    <bool name="allow_local_dtmf_tones">true</bool>
-
-    <!-- Package name for the default in-call UI and dialer [DO NOT TRANSLATE] -->
-    <string name="ui_default_package" translatable="false">com.android.dialer</string>
-
-    <!-- Class name for the default in-call UI Service [DO NOT TRANSLATE] -->
-    <string name="incall_default_class" translatable="false">com.android.incallui.InCallServiceImpl</string>
-
-    <!-- Class name for the default main dialer activity [DO NOT TRANSLATE] -->
-    <string name="dialer_default_class" translatable="false">com.android.dialer.DialtactsActivity</string>
-
     <!-- Flag indicating if the tty is enabled -->
     <bool name="tty_enabled">true</bool>
-
-    <!-- ComponentName for the default connection manager component. If this cannot be resolved, or
-         if this package has not registered any accounts, then it will be ignored.
-         [DO NOT TRANSLATE] -->
-    <string name="default_connection_manager_component" translatable="false"></string>
 </resources>
