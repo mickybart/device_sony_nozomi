@@ -55,6 +55,7 @@ $(INSTALLED_RECOVERYIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(MKBOOTFS) $(MKBOOTIMG
 	  cp -rf $(item) $(TARGET_RECOVERY_ROOT_OUT)/)
 	$(hide) $(foreach item,$(recovery_fstab), \
 	  cp -f $(item) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.fstab)
+	$(hide) cp -f $(TWRP_RECOVERY_FSTAB) $(TARGET_RECOVERY_ROOT_OUT)/etc/twrp.fstab
 	$(hide) cp $(RECOVERY_INSTALL_OTA_KEYS) $(TARGET_RECOVERY_ROOT_OUT)/res/keys
 	$(hide) cat $(INSTALLED_DEFAULT_PROP_TARGET) $(recovery_build_prop) \
 		> $(TARGET_RECOVERY_ROOT_OUT)/default.prop
