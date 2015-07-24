@@ -25,4 +25,3 @@
 #/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              f2fs    discard,inline_xattr,errors=recover      voldmanaged=sdcard0:15,nonremovable,noemulatedsd
 
 /devices/platform/msm_hsusb_host.0         auto              vfat    defaults                                                      voldmanaged=usbdisk:auto
-/dev/block/zram0                           none              swap    defaults,pri=100                                              wait
