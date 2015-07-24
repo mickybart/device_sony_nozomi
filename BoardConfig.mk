@@ -132,13 +132,6 @@ BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
 # custom ota
 BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
 
-# SELinux
-BOARD_SEPOLICY_DIRS += \
-    device/sony/nozomi/sepolicy
-
-BOARD_SEPOLICY_UNION += \
-    file_contexts
-
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 
 # Enable Minikin text layout engine (will be the default soon)
