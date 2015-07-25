@@ -118,7 +118,7 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 15728640
 
 # Recovery
-TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.recovery.semc
+TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/recovery.fstab
 RECOVERY_FSTAB_VERSION := 2
 
 # twrp
@@ -126,7 +126,6 @@ ifeq ($(TARGET_NO_RECOVERY),false)
 TARGET_RECOVERY_TWRP := true
 
 ifeq ($(TARGET_RECOVERY_TWRP),true)
-TWRP_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.twrp.semc
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 DEVICE_RESOLUTION := 720x1280
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
