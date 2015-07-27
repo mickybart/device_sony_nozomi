@@ -1,0 +1,8 @@
+# iddd
+type iddd, domain;
+type iddd_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(iddd)
+
+allow iddd self:process execmem;

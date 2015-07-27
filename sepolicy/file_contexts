@@ -2,5 +2,127 @@
 /dev/kgsl-2d0       u:object_r:gpu_device:s0
 /dev/kgsl-2d1       u:object_r:gpu_device:s0
 /dev/kgsl-3d0       u:object_r:gpu_device:s0
-/dev/msm_rotator    u:object_r:gpu_device:s0
+
+# Image Rotator Driver
+/dev/msm_rotator    u:object_r:video_device:s0
+
+# Qualcomm MSM Interface (QMI) devices
+/dev/socket/qmux_audio(/.*)?           u:object_r:qmuxd_socket:s0
+/dev/socket/qmux_bluetooth(/.*)?       u:object_r:qmuxd_socket:s0
+/dev/socket/qmux_gps(/.*)?             u:object_r:qmuxd_socket:s0
+/dev/socket/qmux_radio(/.*)?           u:object_r:qmuxd_socket:s0
+
+/dev/socket/tad                        u:object_r:tad_socket:s0
+/dev/socket/pps                        u:object_r:ppd_socket:s0
+
+/dev/diag                          u:object_r:diag_device:s0
+
+# Qualcomm MSM Audio devices
+/dev/msm_acdb                      u:object_r:audio_device:s0
+/dev/msm_mp3                       u:object_r:audio_device:s0
+/dev/msm_rtac                      u:object_r:audio_device:s0
+/dev/msm_vidc.*                    u:object_r:audio_device:s0
+/dev/msm_amrnb.*                   u:object_r:audio_device:s0
+/dev/msm_amrwb.*                   u:object_r:audio_device:s0
+/dev/msm_aac.*                     u:object_r:audio_device:s0
+/dev/msm_evrc.*                    u:object_r:audio_device:s0
+/dev/msm_multi_aac                 u:object_r:audio_device:s0
+/dev/msm_pcm.*                     u:object_r:audio_device:s0
+/dev/msm_qcelp.*                   u:object_r:audio_device:s0
+/dev/msm_wma.*                     u:object_r:audio_device:s0
+
+# Jpeg Engine support
+/dev/gemini.*                      u:object_r:camera_device:s0
+# MSM camera related
+/dev/v4l-subdev.*                  u:object_r:camera_device:s0
+/dev/video([0-9])+                 u:object_r:camera_device:s0
+/dev/msm_camera(/.*)?              u:object_r:camera_device:s0
+/dev/media([0-9])+                 u:object_r:camera_device:s0
+/dev/msm_vpe_standalone            u:object_r:camera_device:s0
+
+# Block labeling
+/dev/block/mmcblk0                 u:object_r:root_block_device:s0
+/dev/block/mmcblk0p1               u:object_r:tad_block_device:s0
+/dev/block/mmcblk0p[6-8]           u:object_r:rmt_block_device:s0
+
+# oncrpc
+/dev/oncrpc/0.*                    u:object_r:oncrpc_device:s0
+/dev/oncrpc/3.*                    u:object_r:oncrpc_device:s0
+
+## Radio related
+# mux controller
+/dev/rmnet_mux_ctrl                    u:object_r:radio_device:s0
+# shared memory drivers
+/dev/smdcntl[0-7]                      u:object_r:radio_device:s0
+/dev/smd7                              u:object_r:radio_device:s0
+/dev/oncrpc/30000017.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30000000.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30000016.*                 u:object_r:radio_device:s0
+/dev/oncrpc/3000003c.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30000019.*                 u:object_r:radio_device:s0
+/dev/oncrpc/3000000e.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30000012.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30000003.*                 u:object_r:radio_device:s0
+/dev/oncrpc/3000001b.*                 u:object_r:radio_device:s0
+/dev/oncrpc/30eeeeee.*                 u:object_r:radio_device:s0
+/dev/oncrpc/3000006b.*                 u:object_r:radio_device:s0
+
+## Bluetooth shared memory interfaces
+#/dev/smd2                              u:object_r:hci_attach_dev:s0
+#/dev/smd3                              u:object_r:hci_attach_dev:s0
+# Default label for shared memory drivers
+/dev/smd([0-9])+                   u:object_r:smd_device:s0
+/dev/smem_log                      u:object_r:shared_log_device:s0
+
+#rmt
+/dev/rmt_storage                   u:object_r:rmt_device:s0
+
+#tzcom
+/dev/pmem_tzcom                    u:object_r:tzcom_device:s0
+/dev/tzcom                         u:object_r:tzcom_device:s0
+
+/system/bin/hci_qcomm_init         u:object_r:hci_exec:s0
+/system/bin/qmuxd                  u:object_r:qmux_exec:s0
+/system/bin/netmgrd                u:object_r:netmgrd_exec:s0
+/system/bin/thermanager            u:object_r:thermanager_exec:s0
+/system/bin/rmt_storage            u:object_r:rmt_exec:s0
+/system/bin/bridgemgrd             u:object_r:bridge_exec:s0
+/system/bin/tad                    u:object_r:tad_exec:s0
+/system/bin/secchand               u:object_r:secchand_exec:s0
+/system/bin/iddd                   u:object_r:iddd_exec:s0
+/system/bin/suntrold               u:object_r:suntrold_exec:s0
+/system/bin/fast-dormancy          u:object_r:fast-dormancy_exec:s0
+/system/bin/updatemiscta           u:object_r:updatemiscta_exec:s0
+/system/bin/nvimport               u:object_r:nvimport_exec:s0
+/system/bin/touchd                 u:object_r:touchd_exec:s0
+/system/bin/ATFWD-daemon           u:object_r:atfwd_exec:s0
+/system/bin/mm-pp-daemon           u:object_r:ppd_exec:s0
+/system/bin/ta_rmt_service         u:object_r:ta_rmt_service_exec:s0
+/system/bin/time_daemon            u:object_r:time_daemon_exec:s0
+/system/bin/startupflag            u:object_r:setssflagbc_exec:s0
+/system/bin/qosmgr                 u:object_r:qosmgrd_exec:s0
+
+## sysfs
+# entry for the RmNet function driver
+/sys/class/android_usb/f_rmnet_smd_sdio/transport  --  u:object_r:sysfs_rmnet:s0
+/sys/devices/virtual/android_usb/android0/f_rmnet_smd_sdio/transport  --  u:object_r:sysfs_rmnet:s0
+
+# shared memory driver
+/sys/devices/virtual/smdpkt/smdcntl[0-7](/.*)?  --  u:object_r:sysfs_radio:s0
+
+# entry for touchd
+/sys/devices/virtual/input/input3/touchcmd  --  u:object_r:sysfs_touchd:s0
+
+# wakeup
+/sys/devices/virtual/input/input3/doubletap2wake  --  u:object_r:sysfs_wakeup:s0
+/sys/devices/virtual/input/input3/proximity  --  u:object_r:sysfs_wakeup:s0
+/sys/devices/virtual/input/input3/sweep2wake  --  u:object_r:sysfs_wakeup:s0
+/sys/devices/virtual/input/input3/vib_strength  --  u:object_r:sysfs_wakeup:s0
+/sys/devices/virtual/input/input3/wakeup  --  u:object_r:sysfs_wakeup:s0
+/sys/devices/virtual/input/input3/wake_gestures  --  u:object_r:sysfs_wakeup:s0
+
+# chargalg
+/sys/devices/platform/chargalg/power_supply/chargalg/enable_monitoring_ambient_temp  --  u:object_r:sysfs_chargalg:s0
+/sys/devices/platform/chargalg/power_supply/chargalg/disable_charging  --  u:object_r:sysfs_chargalg:s0
+/sys/devices/platform/chargalg/power_supply/chargalg/disable_usbhost  --  u:object_r:sysfs_chargalg:s0
 

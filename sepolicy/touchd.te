@@ -1,0 +1,14 @@
+# touchd
+type touchd, domain;
+type touchd_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(touchd)
+
+allow touchd self:capability dac_override;
+allow touchd self:netlink_kobject_uevent_socket { read bind create };
+allow touchd self:process execmem;
+allow touchd sysfs_touchd:file rw_file_perms;
+
+# wake lock access
+wakelock_use(touchd)

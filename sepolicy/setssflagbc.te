@@ -1,0 +1,12 @@
+# setssflagbc
+type setssflagbc, domain;
+type setssflagbc_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(setssflagbc)
+
+allow setssflagbc self:capability dac_override;
+allow setssflagbc self:process execmem;
+
+allow setssflagbc tad:unix_stream_socket connectto;
+allow setssflagbc tad_socket:sock_file { read write };

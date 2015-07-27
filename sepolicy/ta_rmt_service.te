@@ -1,0 +1,16 @@
+# ta_rmt_service
+type ta_rmt_service, domain;
+type ta_rmt_service_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(ta_rmt_service)
+
+allow ta_rmt_service self:capability dac_override;
+allow ta_rmt_service self:process execmem;
+allow ta_rmt_service shared_log_device:chr_file { read write ioctl open };
+
+allow ta_rmt_service tad:unix_stream_socket connectto;
+allow ta_rmt_service tad_socket:sock_file { read write };
+
+allow ta_rmt_service radio_device:chr_file rw_file_perms;
+allow ta_rmt_service oncrpc_device:chr_file rw_file_perms;

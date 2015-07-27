@@ -160,7 +160,48 @@ BOARD_SEPOLICY_DIRS += \
     device/sony/nozomi/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-    file_contexts
+    atfwd.te \
+    bluetooth.te \
+    bridge.te \
+    device.te \
+    domain.te \
+    fast-dormancy.te \
+    file.te \
+    file_contexts \
+    hci_init.te \
+    iddd.te \
+    init.te \
+    init_shell.te \
+    mediaserver.te \
+    netmgrd.te \
+    nvimport.te \
+    ppd.te \
+    property.te \
+    property_contexts \
+    qmux.te \
+    qosmgrd.te \
+    rild.te \
+    radio.te \
+    rmt.te \
+    secchand.te \
+    servicemanager.te \
+    setssflagbc.te \
+    shell.te \
+    suntrold.te \
+    surfaceflinger.te \
+    system_app.te \
+    system_server.te \
+    ta_rmt_service.te \
+    tad.te \
+    te_macros \
+    thermanager.te \
+    time_daemon.te \
+    touchd.te \
+    ueventd.te \
+    untrusted_app.te \
+    updatemiscta.te \
+    wpa.te \
+    zygote.te
 
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 

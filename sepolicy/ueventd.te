@@ -1,0 +1,1 @@
+allow ueventd sysfs_radio:file { write open };

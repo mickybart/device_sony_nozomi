@@ -1,0 +1,9 @@
+# tad
+type tad, domain;
+type tad_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(tad)
+
+allow tad self:process execmem;
+allow tad tad_block_device:blk_file rw_file_perms;

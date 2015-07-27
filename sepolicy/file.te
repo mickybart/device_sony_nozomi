@@ -1,0 +1,17 @@
+# Qualcomm MSM Interface (QMI) socket types
+type qmuxd_socket, file_type;
+
+# socket
+type camera_socket, file_type;
+type tad_socket, file_type;
+type ppd_socket, file_type;
+
+# sysfs
+type sysfs_rmnet, fs_type, sysfs_type;
+type sysfs_radio, fs_type, sysfs_type;
+type sysfs_touchd, fs_type, sysfs_type;
+type sysfs_wakeup, fs_type, sysfs_type;
+type sysfs_chargalg, fs_type, sysfs_type;
+
+# iddd
+type idd_data_file, file_type, data_file_type;

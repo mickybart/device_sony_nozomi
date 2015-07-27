@@ -1,0 +1,7 @@
+allow init wpa_socket:unix_dgram_socket { bind create };
+allow init self:process execmem;
+
+allow init shell_exec:file execute_no_trans;
+
+#superuser
+allow init su:process { siginh transition rlimitinh };
