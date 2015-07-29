@@ -14,7 +14,7 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 2befbc91a15c3b23510fae03cda36263 944f0993f2b2a3cc8dd1b0ce8be223fb ./external/libnfc-nxp/src/phLibNfc.c
 07929bf98f69fb6c243b2bc8c37c0f81 3fa2c0991465d7668f15ce73ba533125 ./external/libnfc-nxp/src/phLibNfc.h
 4409b4a843da4c319043ad3b400e2bde 9f8836d8701b1cbd907b2098c484be9e ./external/sepolicy/app.te
-88a8289350b537b31de93f9ea78fb9f1 1e45bd82ac04f207489f6070b856adf5 ./external/sepolicy/domain.te
+88a8289350b537b31de93f9ea78fb9f1 15604a051b6b646d11034f636d5f0e9a ./external/sepolicy/domain.te
 6ace530c622423d42cf0f9caf7b527ec 46235bf090b80c15eb9cb53a3884f9eb ./frameworks/base/core/java/android/provider/Settings.java
 2c26ab6adf79788f756239a2e030d9d0 df9be844c8e97fdd31b3987fb3a61ad6 ./frameworks/base/core/java/android/service/dreams/DreamManagerInternal.java
 578fc2545146d4843ad3150bb49d3012 63878e24e514b4e2dd9b2162063c3c94 ./frameworks/base/core/java/android/service/dreams/IDreamManager.aidl

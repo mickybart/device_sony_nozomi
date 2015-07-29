@@ -219,7 +219,7 @@ neverallow { domain -system_server } security_file:lnk_file { create setattr unl
 # init starts in kernel domain and switches to init domain via setcon in
 # the init.rc, so the setenforce occurs while still in kernel. After
 # switching domains, there is never any need to setenforce again by init.
-neverallow domain kernel:security setenforce;
+neverallow { domain -recovery } kernel:security setenforce;
 neverallow { domain -kernel } kernel:security setcheckreqprot;
 
 # No booleans in AOSP policy, so no need to ever set them.
