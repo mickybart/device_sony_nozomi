@@ -5,10 +5,14 @@ allow mediaserver radio_device:chr_file rw_file_perms;
 unix_socket_connect(mediaserver, property, init)
 allow mediaserver default_prop:property_service set;
 allow mediaserver iddd:unix_dgram_socket sendto;
+allow mediaserver idd_data_file:dir search;
 allow mediaserver idd_data_file:sock_file { read write };
 allow mediaserver audio_data_file:dir remove_name;
 allow mediaserver system_server:unix_stream_socket { read write };
+allow mediaserver camera_device:dir search;
 allow mediaserver camera_data_file:file rw_file_perms;
+
+allow mediaserver mediaserver_tmpfs:file execute;
 
 # Permit mediaserver to create sockets with no specific SELinux class.
 # TODO: Investigate the specific type of socket.

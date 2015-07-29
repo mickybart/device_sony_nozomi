@@ -278,6 +278,7 @@ neverallow {
     userdebug_or_eng(`-su')
     -system_server
     -zygote
+    -mediaserver
 } { file_type -system_file -exec_type }:file execute;
 neverallow {
     domain
