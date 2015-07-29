@@ -13,5 +13,9 @@ allow fast-dormancy socket_device:dir { write remove_name add_name };
 allow fast-dormancy socket_device:sock_file { write create unlink };
 allow fast-dormancy wifi_data_file:dir r_dir_perms;
 allow fast-dormancy wifi_data_file:file r_file_perms;
+allow fast-dormancy wpa_socket:dir r_dir_perms;
+
+#/data/fd_sync
+allow fast-dormancy system_data_file:fifo_file { read write open };
 
 qmux_socket(fast-dormancy)

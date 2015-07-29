@@ -6,3 +6,7 @@ type iddd_exec, exec_type, file_type;
 init_daemon_domain(iddd)
 
 allow iddd self:process execmem;
+allow iddd idd_data_file:file rw_file_perms;
+allow iddd idd_data_file:dir rw_dir_perms;
+allow iddd idd_data_file:sock_file { create unlink setattr read write };
+allow iddd iddd_exec:file execute_no_trans;

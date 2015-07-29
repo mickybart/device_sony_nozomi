@@ -492,7 +492,6 @@ service qosmgrd /system/bin/qosmgr /system/etc/qosmgr_rules.xml
 service qrngd /system/bin/qrngd -f
     class late_start
     user root
-    seclabel u:r:init:s0
 
 on property:sys.radio.shutdown=true
    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh

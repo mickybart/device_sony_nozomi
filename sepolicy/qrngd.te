@@ -1,0 +1,11 @@
+# qrngd
+type qrngd, domain;
+type qrngd_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(qrngd)
+
+allow qrngd hw_random_device:chr_file { read open };
+allow qrngd self:capability { setuid setgid sys_admin };
+allow qrngd self:process execmem;
+

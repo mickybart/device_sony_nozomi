@@ -1,0 +1,2 @@
+#for twrp
+allow recovery selinuxfs:file write;

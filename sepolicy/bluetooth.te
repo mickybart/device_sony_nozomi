@@ -1,1 +1,15 @@
 allow bluetooth smd_device:chr_file rw_file_perms;
+
+#
+# Not able to set the seclabel !
+# /proc/bluetooth/sleep/lpm
+# /proc/bluetooth/sleep/btwrite
+# /sys/class/rfkill/rfkill0/type
+# /sys/class/rfkill/rfkill0/state
+#
+allow bluetooth proc:file write;
+allow bluetooth sysfs:file write;
+
+#/data/etc
+allow bluetooth etc_data_file:dir r_dir_perms;
+allow bluetooth etc_data_file:file r_file_perms;

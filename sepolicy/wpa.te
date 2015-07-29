@@ -1,2 +1,6 @@
 allow wpa devpts:chr_file rw_file_perms;
 allow wpa wpa_socket:unix_dgram_socket { read write };
+
+#/data/etc/wifi/fw
+allow wpa etc_data_file:dir r_dir_perms;
+allow wpa etc_data_file:file r_file_perms;

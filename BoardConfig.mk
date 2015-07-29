@@ -168,7 +168,7 @@ BOARD_SEPOLICY_UNION += \
     fast-dormancy.te \
     file.te \
     file_contexts \
-    hci_init.te \
+    hostapd.te \
     iddd.te \
     init.te \
     init_shell.te \
@@ -180,6 +180,8 @@ BOARD_SEPOLICY_UNION += \
     property_contexts \
     qmux.te \
     qosmgrd.te \
+    qrngd.te \
+    recovery.te \
     rild.te \
     radio.te \
     rmt.te \
@@ -198,8 +200,8 @@ BOARD_SEPOLICY_UNION += \
     time_daemon.te \
     touchd.te \
     ueventd.te \
-    untrusted_app.te \
     updatemiscta.te \
+    vold.te \
     wpa.te \
     zygote.te
 
