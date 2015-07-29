@@ -10,7 +10,8 @@ allow mediaserver idd_data_file:sock_file { read write };
 allow mediaserver audio_data_file:dir remove_name;
 allow mediaserver system_server:unix_stream_socket { read write };
 allow mediaserver camera_device:dir search;
-allow mediaserver camera_data_file:file rw_file_perms;
+allow mediaserver camera_data_file:dir rw_dir_perms;
+allow mediaserver camera_data_file:file create_file_perms;
 
 allow mediaserver mediaserver_tmpfs:file execute;
 

@@ -15,5 +15,5 @@ allow nvimport default_prop:property_service set;
 allow nvimport sysfs_chargalg:file rw_file_perms;
 
 #/data/etc
-allow nvimport etc_data_file:dir rw_dir_perms;
-allow nvimport etc_data_file:file rw_file_perms;
+allow nvimport etc_data_file:dir create_dir_perms;
+allow nvimport etc_data_file:file create_file_perms;

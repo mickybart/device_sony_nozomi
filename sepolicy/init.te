@@ -3,6 +3,10 @@ allow init self:process execmem;
 
 allow init shell_exec:file execute_no_trans;
 
+#mount mmcblk0p10 with idd context
+allow init idd_data_file:filesystem { relabelfrom relabelto mount };
+allow idd_data_file self:filesystem associate;
+
 #Superuser Embedded
 allow init su:process { siginh transition rlimitinh };
 allow init su_device:sock_file relabelto;
