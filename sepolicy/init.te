@@ -3,5 +3,7 @@ allow init self:process execmem;
 
 allow init shell_exec:file execute_no_trans;
 
-#superuser
+#Superuser Embedded
 allow init su:process { siginh transition rlimitinh };
+allow init su_device:sock_file relabelto;
+allow init su_device:dir relabelto;

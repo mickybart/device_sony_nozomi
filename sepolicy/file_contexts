@@ -84,6 +84,9 @@
 /dev/pmem_tzcom                    u:object_r:tzcom_device:s0
 /dev/tzcom                         u:object_r:tzcom_device:s0
 
+#Superuser Embedded
+/dev/com.android.settings.*        u:object_r:su_device:s0
+
 #proc
 #/proc/bluetooth/sleep/btwrite      u:object_r:proc_bluetooth_writable:s0
 #/proc/bluetooth/sleep/lpm          u:object_r:proc_bluetooth_writable:s0

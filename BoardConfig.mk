@@ -160,6 +160,7 @@ BOARD_SEPOLICY_DIRS += \
     device/sony/nozomi/sepolicy
 
 BOARD_SEPOLICY_UNION += \
+    app.te \
     atfwd.te \
     bluetooth.te \
     bridge.te \
