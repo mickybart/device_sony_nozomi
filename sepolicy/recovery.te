@@ -2,11 +2,5 @@
 recovery_only(`
   allow recovery kernel:security setenforce;
   allow recovery selinuxfs:file write;
-  allow recovery rootfs:dir create_dir_perms;
-  allow recovery rootfs:file create_file_perms;
-  allow recovery rootfs:fifo_file create_file_perms;
-  allow recovery rootfs:lnk_file create_file_perms;
-  allow recovery default_prop:property_service set;
-  allow recovery mtp_device:chr_file rw_file_perms;
 ')
 

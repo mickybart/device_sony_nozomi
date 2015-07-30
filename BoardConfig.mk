@@ -134,9 +134,11 @@ ifeq ($(TARGET_RECOVERY_TWRP),true)
 TWRP_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.twrp.semc
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 DEVICE_RESOLUTION := 720x1280
+TW_THEME := portrait_hdpi
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 BOARD_HAS_NO_REAL_SDCARD := true
 TW_NO_USB_STORAGE := true
+TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/platform/msm_adc/msm_therm"
 endif #TARGET_RECOVERY_TWRP
 endif #TARGET_NO_RECOVERY
 
