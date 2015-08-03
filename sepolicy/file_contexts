@@ -152,3 +152,6 @@
 #/sys/class/rfkill/rfkill0/type  --  u:object_r:sysfs_bluetooth_writable:s0
 #/sys/class/rfkill/rfkill0/state  --  u:object_r:sysfs_bluetooth_writable:s0
 
+# fast charge
+/sys/kernel/fast_charge/force_fast_charge  --  u:object_r:sysfs_fastcharge:s0
+
