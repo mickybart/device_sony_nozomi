@@ -15,9 +15,13 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 07929bf98f69fb6c243b2bc8c37c0f81 3fa2c0991465d7668f15ce73ba533125 ./external/libnfc-nxp/src/phLibNfc.h
 4409b4a843da4c319043ad3b400e2bde 9f8836d8701b1cbd907b2098c484be9e ./external/sepolicy/app.te
 88a8289350b537b31de93f9ea78fb9f1 15604a051b6b646d11034f636d5f0e9a ./external/sepolicy/domain.te
+0b38f3c6c34f9967ca9b3124dd8ef39b 9e64aeb50fda794ec38026f6a67fae5c ./frameworks/base/cmds/idmap/create.cpp
+ba7a3b61f94ec80af3b5efcdc0f140c5 09a2ee0a9da408fb26a29474f4885f53 ./frameworks/base/cmds/idmap/scan.cpp
+f4034d574d480e03bc11e32fb4526900 1d7ae3eea50f0411858bac7e96d0e345 ./frameworks/base/core/java/android/content/res/AssetManager.java
 6ace530c622423d42cf0f9caf7b527ec 46235bf090b80c15eb9cb53a3884f9eb ./frameworks/base/core/java/android/provider/Settings.java
 2c26ab6adf79788f756239a2e030d9d0 df9be844c8e97fdd31b3987fb3a61ad6 ./frameworks/base/core/java/android/service/dreams/DreamManagerInternal.java
 578fc2545146d4843ad3150bb49d3012 63878e24e514b4e2dd9b2162063c3c94 ./frameworks/base/core/java/android/service/dreams/IDreamManager.aidl
+d35ee8f1db88b3b509264ed59c66913b 3524d1090bdd32941a2a27400ecfb6b2 ./frameworks/base/core/jni/android_util_AssetManager.cpp
 -------------------------------- 969c04a58226dae631ad36d3c39658c7 ./frameworks/base/core/res/res/drawable-hdpi/ic_lock_power_reboot_alpha.png
 -------------------------------- 9a854b70f6569b2654ac7f6c7eac1004 ./frameworks/base/core/res/res/drawable-mdpi/ic_lock_power_reboot_alpha.png
 -------------------------------- 8a64967645112fd781b28808cb27548e ./frameworks/base/core/res/res/drawable-xhdpi/ic_lock_power_reboot_alpha.png
@@ -27,6 +31,9 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 -------------------------------- cff7b0329e91cdec4f153a68cf2b1437 ./frameworks/base/core/res/res/values/cm_strings.xml
 ce8814a7d043e07f1247d6f25ca60f25 aa07ad60bf5c2a171d90e2e0f3084b1a ./frameworks/base/core/res/res/values/config.xml
 de59962f5d02ba70e64a51bdfc99aa1e eb473acce9f184be58556421ab266aad ./frameworks/base/core/res/res/values/symbols.xml
+7aa3c89c9bd623c3ac364ef3360061c1 c9fba8ec4d46ee5b1a5cdb78e03e140b ./frameworks/base/include/androidfw/AssetManager.h
+aba67da2d1a5957f0624d95ac1bb11a6 aaed5fc3fbd112d48032736a0eb0df5f ./frameworks/base/libs/androidfw/AssetManager.cpp
+1ec8e508363ff9809341628fc115087f 261b4835b4099dfc910d16dc71b2fa09 ./frameworks/base/libs/androidfw/ResourceTypes.cpp
 -------------------------------- b85464f8e4a000cda04d8401bee98eb7 ./frameworks/base/packages/SystemUI/res/drawable/fab.xml
 -------------------------------- 4659f07aeb2c2fb077a09363115d29be ./frameworks/base/packages/SystemUI/res/drawable/floating_action_button.xml
 -------------------------------- 92fec4a93afb794ff75a7c4d63e6fc90 ./frameworks/base/packages/SystemUI/res/layout/floating_action_button.xml
