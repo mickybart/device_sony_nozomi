@@ -24,6 +24,9 @@ persist.screen.color_control="255 255 255"
 persist.screen.auto_lux=
 persist.screen.auto_brightness=
 
+# Layers Manager
+ro.layers.noIcon=noIcon
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
