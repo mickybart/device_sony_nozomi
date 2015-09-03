@@ -264,7 +264,10 @@ PRODUCT_PACKAGES += \
     e2fsck \
     fsck_msdos \
     fsck.f2fs \
-    mkfs.f2fs
+    mkfs.f2fs \
+    btrfs \
+    mkfs.btrfs \
+    btrfstune
 
 # Wake Up
 PRODUCT_PACKAGES += \
