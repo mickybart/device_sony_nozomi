@@ -280,6 +280,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/thermanager.xml:system/etc/thermanager.xml
 
+# init.d
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/init.d/README:system/etc/init.d/README
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 

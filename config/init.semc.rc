@@ -506,3 +506,10 @@ service swap-sh /system/bin/sh /init.swap.sh
     oneshot
     seclabel u:r:init:s0
 
+service sysinit /system/xbin/busybox run-parts /system/etc/init.d
+    oneshot
+    class late_start
+    user root
+    group root
+    seclabel u:r:init:s0
+

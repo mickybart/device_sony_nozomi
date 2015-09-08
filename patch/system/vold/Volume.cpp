@@ -48,6 +48,7 @@
 #include "Ext4.h"
 #include "Fat.h"
 #include "F2FS.h"
+#include "Btrfs.h"
 #include "Process.h"
 #include "cryptfs.h"
 
@@ -308,6 +309,8 @@ int Volume::formatVol(bool wipe) {
         ret = F2FS::format(devicePath);
     } else if (strcmp(mType, "ext4") == 0) {
         ret = Ext4::format(devicePath, 0, NULL);
+    } else if (strcmp(mType, "btrfs") == 0) {
+        ret = Btrfs::format(devicePath);
     } else {
         ret = Fat::format(devicePath, 0, wipe);
     }
@@ -513,6 +516,19 @@ int Volume::mountVol() {
 
                 if (F2FS::doMount(devicePath, getMountpoint(), false, false, false, mOpts)) {
                     SLOGE("%s failed to mount via F2FS (%s)\n", devicePath, strerror(errno));
+                    continue;
+                }
+            } else if (strcmp(mType, "btrfs") == 0) {
+                if (Btrfs::check(devicePath)) {
+                    errno = EIO;
+                    /* Badness - abort the mount */
+                    SLOGE("%s failed FS checks (%s)", devicePath, strerror(errno));
+                    setState(Volume::State_Idle);
+                    return -1;
+                }
+
+                if (Btrfs::doMount(devicePath, getMountpoint(), false, false, false, mOpts)) {
+                    SLOGE("%s failed to mount via Btrfs (%s)\n", devicePath, strerror(errno));
                     continue;
                 }
             } else {

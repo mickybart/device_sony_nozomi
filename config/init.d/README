@@ -1,0 +1,12 @@
+##################################################
+#
+# Support init.d
+#
+# You can create multiple scripts
+# and put them into this folder.
+# Don't forget to run "chmod 755 <script files>"
+#
+# during the boot, init will execute every
+# scripts on this folder
+#
+##################################################

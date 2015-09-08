@@ -1,0 +1,33 @@
+# fstab.mount:dynamic
+# mount point   fstype  device                  [device2] fstype2
+
+/boot           emmc    /dev/block/mmcblk0p3
+
+##### auto #####
+
+#system-auto
+#/system         auto    /dev/block/mmcblk0p12
+
+#cache-auto
+#/cache          auto    /dev/block/mmcblk0p13
+
+#data-auto
+#/data           auto    /dev/block/mmcblk0p14   length=-16384
+
+#sdcard0-auto
+#/sdcard         auto    /dev/block/mmcblk0p15   flags=display="Internal SDcard";storage;wipeingui
+
+##### btrfs #####
+
+#system-btrfs
+#/system         btrfs   /dev/block/mmcblk0p12   fsflags="compress=lzo,subvol=system";rootfsflags="compress=lzo,subvolid=1"
+
+#cache-btrfs
+#/cache          btrfs   /dev/block/mmcblk0p13   fsflags="compress=lzo,subvol=cache";rootfsflags="compress=lzo,subvolid=1"
+
+#data-btrfs
+#/data           btrfs   /dev/block/mmcblk0p14   fsflags="compress=lzo,subvol=data";rootfsflags="compress=lzo,subvolid=1"
+
+#sdcard0-btrfs
+#/sdcard         btrfs   /dev/block/mmcblk0p15   fsflags="compress=lzo,subvol=sdcard";rootfsflags="compress=lzo,subvolid=1";flags=display="Internal SDcard";storage;wipeingui
+

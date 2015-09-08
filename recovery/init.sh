@@ -17,6 +17,9 @@ EVENT="/dev/input/event1"
 FOTA_NODE="/dev/block/mmcblk0p11 b 179 11"
 FOTA="/dev/block/mmcblk0p11"
 
+SYSTEM_NODE="/dev/block/mmcblk0p12 b 179 12"
+SYSTEM="/dev/block/mmcblk0p12"
+
 CACHE_NODE="/dev/block/mmcblk0p13 b 179 13"
 CACHE="/dev/block/mmcblk0p13"
 
@@ -86,16 +89,29 @@ if [ -s /recovery$RAMDISK ]; then
         if [ ! -f /recovery/sbin/mkfs.f2fs ]; then
             $BUSYBOX cp /sbin/mkfs.f2fs /recovery/sbin/
         fi
+        if [ ! -f /recovery/sbin/mkfs.btrfs ]; then
+            $BUSYBOX cp /sbin/mkfs.btrfs /recovery/sbin/
+        fi
+        if [ ! -f /recovery/sbin/btrfs ]; then
+            $BUSYBOX cp /sbin/btrfs /recovery/sbin/
+        fi
         exec $BUSYBOX chroot /recovery /init
     fi
 fi
 
 # Dynamic fstab
 if $BUSYBOX grep -q '# fstab.mount:dynamic' $FSTAB; then
+    $BUSYBOX mknod -m 660 ${SYSTEM_NODE}
     $BUSYBOX mknod -m 660 ${CACHE_NODE}
     $BUSYBOX mknod -m 660 ${DATA_NODE}
     $BUSYBOX mknod -m 660 ${SDCARD0_NODE}
 
+    # /system
+    PART=system
+    PART_DEV=${SYSTEM}
+    TYPE=$($BUSYBOX blkid ${PART_DEV} | $BUSYBOX sed 's/.*TYPE="//;s/"$//')
+    $BUSYBOX echo "/$PART-$TYPE/+1s/#//"$'\nw' | $BUSYBOX ed $FSTAB
+    
     # /cache
     PART=cache
     PART_DEV=${CACHE}
