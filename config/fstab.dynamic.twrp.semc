@@ -20,14 +20,14 @@
 ##### btrfs #####
 
 #system-btrfs
-#/system         btrfs   /dev/block/mmcblk0p12   fsflags="compress=lzo,subvol=system";rootfsflags="compress=lzo,subvolid=1"
+#/system         btrfs   /dev/block/mmcblk0p12   flags=fsflags="compress=lzo,subvol=system";rootfsflags="compress=lzo,subvolid=0"
 
 #cache-btrfs
-#/cache          btrfs   /dev/block/mmcblk0p13   fsflags="compress=lzo,subvol=cache";rootfsflags="compress=lzo,subvolid=1"
+#/cache          btrfs   /dev/block/mmcblk0p13   flags=fsflags="compress=lzo,subvol=cache";rootfsflags="compress=lzo,subvolid=0"
 
 #data-btrfs
-#/data           btrfs   /dev/block/mmcblk0p14   fsflags="compress=lzo,subvol=data";rootfsflags="compress=lzo,subvolid=1"
+#/data           btrfs   /dev/block/mmcblk0p14   flags=fsflags="compress=lzo,subvol=data";rootfsflags="compress=lzo,subvolid=0"
 
 #sdcard0-btrfs
-#/sdcard         btrfs   /dev/block/mmcblk0p15   fsflags="compress=lzo,subvol=sdcard";rootfsflags="compress=lzo,subvolid=1";flags=display="Internal SDcard";storage;wipeingui
+#/sdcard         btrfs   /dev/block/mmcblk0p15   flags=fsflags="compress=lzo,subvol=sdcard";rootfsflags="compress=lzo,subvolid=0";display="Internal SDcard";storage;wipeingui
 
