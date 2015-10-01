@@ -147,6 +147,10 @@ TW_CUSTOM_BATTERY_STATUS_PATH := /sys/class/power_supply/bq24185/status
 endif #TARGET_RECOVERY_TWRP
 endif #TARGET_NO_RECOVERY
 
+# hybris boot
+HYBRIS_BOOT_PART := /dev/block/mmcblk0p3
+HYBRIS_DATA_PART := /dev/block/mmcblk0p14
+
 # OTA
 TARGET_OTA_ASSERT_DEVICE := LT26i,nozomi
 
