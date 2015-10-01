@@ -161,7 +161,7 @@ BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
 BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
 
 # Superuser
-TARGET_NO_SUPERUSER := false
+TARGET_NO_SUPERUSER := true
 ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
 endif
