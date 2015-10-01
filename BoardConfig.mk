@@ -160,6 +160,10 @@ BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
 # custom ota
 BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
 
+# custom hybris
+BOARD_CUSTOM_HYBRIS_BOOTIMG_MK := device/sony/nozomi/custom/custom_hybris_bootimg.mk
+BOARD_CUSTOM_HYBRIS_RECOVERYIMG_MK := device/sony/nozomi/custom/custom_hybris_recoveryimg.mk
+
 # Superuser
 TARGET_NO_SUPERUSER := true
 ifneq ($(TARGET_NO_SUPERUSER),true)
