@@ -277,6 +277,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/thermanager.xml:system/etc/thermanager.xml
 
+# Dalvik
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.dex2oat-swap=false
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
