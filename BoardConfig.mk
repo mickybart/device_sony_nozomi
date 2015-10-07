@@ -161,53 +161,6 @@ endif
 BOARD_SEPOLICY_DIRS += \
     device/sony/nozomi/sepolicy
 
-BOARD_SEPOLICY_UNION += \
-    app.te \
-    atfwd.te \
-    bluetooth.te \
-    bridge.te \
-    device.te \
-    domain.te \
-    fast-dormancy.te \
-    file.te \
-    file_contexts \
-    hostapd.te \
-    iddd.te \
-    init.te \
-    init_shell.te \
-    mediaserver.te \
-    netmgrd.te \
-    nvimport.te \
-    ppd.te \
-    property.te \
-    property_contexts \
-    qmux.te \
-    qosmgrd.te \
-    qrngd.te \
-    recovery.te \
-    rild.te \
-    radio.te \
-    rmt.te \
-    secchand.te \
-    servicemanager.te \
-    setssflagbc.te \
-    shell.te \
-    suntrold.te \
-    surfaceflinger.te \
-    system_app.te \
-    system_server.te \
-    ta_rmt_service.te \
-    tad.te \
-    te_macros \
-    thermanager.te \
-    time_daemon.te \
-    touchd.te \
-    ueventd.te \
-    updatemiscta.te \
-    vold.te \
-    wpa.te \
-    zygote.te
-
 -include vendor/sony/nozomi/BoardConfigVendor.mk
 
 # Enable Minikin text layout engine (will be the default soon)
