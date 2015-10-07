@@ -11,9 +11,9 @@ on fs
     # prepare loop partitions
     mkdir /sd
     mount vfat /dev/block/mmcblk0p15 /sd wait nosuid nodev noexec utf8,uid=1023,gid=1023
-    exec /sbin/losetup-static /dev/block/loop2 /sd/custom_system.ext4
-    exec /sbin/losetup-static /dev/block/loop3 /sd/custom_cache.ext4
-    exec /sbin/losetup-static /dev/block/loop4 /sd/custom_data.ext4
+    exec - root root -- /sbin/losetup-static /dev/block/loop2 /sd/custom_system.ext4
+    exec - root root -- /sbin/losetup-static /dev/block/loop3 /sd/custom_cache.ext4
+    exec - root root -- /sbin/losetup-static /dev/block/loop4 /sd/custom_data.ext4
 
     # mount mmc partitions
     mount_all fstab.semc
@@ -24,9 +24,9 @@ on fs
 
     # SEMC, TA Daemon
     class_start trimarea
-    exec /system/bin/wait4tad
-    exec /sbin/mr
-    exec /sbin/checkabortedflash
+    exec - root root -- /system/bin/wait4tad
+    exec - root root -- /sbin/mr
+    exec - root root -- /sbin/checkabortedflash
 
 on post-fs
     mkdir /data/radio 0770 radio radio
@@ -34,12 +34,12 @@ on post-fs
     # Camera
     mkdir /data/camera 0771 root camera
 
-    exec /system/bin/rm -r /data/lost+found
+    exec - root root -- /system/bin/rm -r /data/lost+found
     mkdir /data/lost+found 0700 root root
 
 on post-fs-data
     # Clear dalvik cache
-    exec /init.clrdex.sh
+    exec - root root -- /init.clrdex.sh
 
     # USB related initialization
     chown system system /sys/devices/platform/msm_hsusb/gadget/lun1/file
@@ -62,7 +62,7 @@ on early-boot
    setrlimit 8 67108864 67108864
 
    #Run pre_hw_config.sh before entering charge only mode.
-   exec /system/bin/sh /system/etc/pre_hw_config.sh
+   exec - root root -- /system/bin/sh /system/etc/pre_hw_config.sh
 
    
 
@@ -70,10 +70,10 @@ on early-boot
    start secchan
 
    # Start the offline charging (This blocks booting further in some cases)
-   exec /system/bin/chargemon
+   exec - root root -- /system/bin/chargemon
 
    # Touch firmware update
-   exec /system/bin/sh /system/etc/clearpad_fwloader.sh
+   exec - root root -- /system/bin/sh /system/etc/clearpad_fwloader.sh
 
    # Permissions for AKM897x sensor
    chown system system /sys/class/compass/akm8972/interval
@@ -124,7 +124,7 @@ on early-boot
    chown system graphics /sys/devices/virtual/graphics/fb1/vendor_name
 
     # Configurate TCP/IP kernel settings
-    exec /system/bin/sh /system/etc/init.netconfig.sh
+    exec - root root -- /system/bin/sh /system/etc/init.netconfig.sh
 
 on boot
     mkdir /data/misc/wifi 0770 wifi wifi
@@ -193,11 +193,11 @@ on boot
     write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
     write /sys/class/android_usb/android0/iProduct ${ro.product.model}
 
-    exec /system/bin/usbeng
+    exec - root root -- /system/bin/usbeng
     
 
     # Disable C_A_D
-    exec system/bin/ctrlaltdel soft
+    exec - root root -- system/bin/ctrlaltdel soft
 
     # USB Host support
     mkdir /dev/bus 0711 system system
@@ -213,49 +213,49 @@ on boot
     write /proc/sys/kernel/sysrq 0
     write /proc/sys/kernel/watchdog_thresh 5
 
-    exec /system/bin/cal_data_manager
+    exec - root root -- /system/bin/cal_data_manager
 
     # Do not power down SIM in flight mode (required for Wi-Fi EAP-SIM)
     setprop persist.radio.apm_sim_not_pwdn 0
     
 
 on property:sys.usb.config=mass_storage
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     stop adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     stop adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,cdrom
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     stop adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,cdrom,adb
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     stop adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     stop adbd
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb
-    exec /init.usbmode.sh
+    exec - root root -- /init.usbmode.sh
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
@@ -401,7 +401,7 @@ on property:init.svc.bootanim=stopped
     start thermanager
 
 on property:sys.shutdown.requested=*
-   exec /system/bin/fstune
+   exec - root root -- /system/bin/fstune
 
 
 on early-boot

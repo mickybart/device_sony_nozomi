@@ -66,7 +66,7 @@ on early-init
     # Dummy command to open() /dev/smd0
     # This causes smd_tty_open() in arch/arm/mach-msm/smd_tty.c to load
     # the modem firmware early.
-    exec /system/bin/dd if=/dev/smd0 of=/dev/null bs=1 count=1 skip=1
+    exec - root root -- /system/bin/dd if=/dev/smd0 of=/dev/null bs=1 count=1 skip=1
 
 on boot
     #Create QMUX deamon socket area
@@ -354,8 +354,8 @@ on property:crypto.driver.load=1
      insmod /system/lib/modules/qcedev.ko
 
 on property:crypto.driver.load=0
-     exec /system/bin/rmmod qcedev.ko
-     exec /system/bin/rmmod qce.ko
+     exec - root root -- /system/bin/rmmod qcedev.ko
+     exec - root root -- /system/bin/rmmod qce.ko
 
 service drmdiag /system/bin/drmdiagapp
     class late_start
@@ -498,7 +498,7 @@ service qrngd /system/bin/qrngd -f
     user root
 
 on property:sys.radio.shutdown=true
-   exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
+   exec - root root -- /system/bin/sh /system/etc/init.qcom.efs.sync.sh
 
 service swap-sh /system/bin/sh /init.swap.sh
     class late_start
