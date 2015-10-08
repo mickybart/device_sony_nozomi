@@ -16,7 +16,7 @@
 
 # Local variables (can be duplicate from BoardConfig.mk)
 TARGET_NO_SUPERUSER := true
-TARGET_RECOVERY_TWRP := true
+TARGET_RECOVERY_TWRP := false
 
 # define build target(normal/native/loop)
 BUILD_TARGET := normal
