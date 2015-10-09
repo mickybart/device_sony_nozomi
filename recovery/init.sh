@@ -1,8 +1,8 @@
-#!/sbin/busybox-static sh
+#!/sbin/busybox-recovery sh
 
 ###########################################################################
 
-BUSYBOX=/sbin/busybox-static
+BUSYBOX=/sbin/busybox-recovery
 EXTRACT_RAMDISK=/sbin/extract_elf_ramdisk
 KEYCHECK=/dev/keycheck
 RAMDISK=/ramdisk.cpio

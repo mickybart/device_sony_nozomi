@@ -244,7 +244,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Recovery
 PRODUCT_PACKAGES += \
-    busybox-static \
+    busybox-recovery \
     extract_elf_ramdisk \
     init.sh
 

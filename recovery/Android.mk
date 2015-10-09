@@ -2,15 +2,12 @@ ifneq ($(filter nozomi,$(TARGET_DEVICE)),)
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_PATH_SAVE    := $(LOCAL_PATH)
-LOCAL_PATH         := $(PRODUCT_OUT)/utilities
-LOCAL_MODULE       := busybox-static
+LOCAL_MODULE       := busybox-recovery
 LOCAL_MODULE_TAGS  := optional
 LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT_SBIN)
-LOCAL_SRC_FILES    := busybox
+LOCAL_SRC_FILES    := busybox-recovery
 include $(BUILD_PREBUILT)
-LOCAL_PATH         := $(LOCAL_PATH_SAVE)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE       := init.sh
