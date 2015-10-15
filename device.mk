@@ -206,11 +206,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
 
-# Fm radio
-PRODUCT_PACKAGES += \
-    com.stericsson.hardware.fm \
-    com.stericsson.hardware.fm.xml \
-    FMRadio
+## Fm radio
+#PRODUCT_PACKAGES += \
+#    com.stericsson.hardware.fm \
+#    com.stericsson.hardware.fm.xml \
+#    FMRadio
 
 # Key layouts and touchscreen
 PRODUCT_COPY_FILES += \
