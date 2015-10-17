@@ -28,6 +28,9 @@ persist.screen.auto_brightness=
 # Layers Manager
 ro.layers.noIcon=noIcon
 
+# Mainly for microg (NoGapps)
+persist.sys.fake-signature=0
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
