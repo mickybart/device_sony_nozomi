@@ -1,5 +1,6 @@
 64f08d5c0d8b795a00122bc7d67d3122 9b9ae1a1e193822aca81d84548a947ab ./bionic/libc/bionic/bionic_time_conversions.cpp
-8fc790a9d40fbd9db501c210a58498ff 0b6168b7fceb637b48b97e6e129b4ff4 ./build/core/Makefile
+31eb343274aee8fc00053f25b6366caa d69b252671e1210b8b67db2156202460 ./build/core/Makefile
+71454f6f71f03a13a5170b5109f17751 4f94dbd2424310383bf0f7cc978ff327 ./build/target/product/core_minimal.mk
 ccf72777f84a23854ecb3e542ae22768 c42f72f08ff0e7a6c42208d229d80011 ./build/target/product/generic_no_telephony.mk
 6d8b2beadcdf61823d3983d843daeb5b d163e7565ee60f811f381fc903dbe47e ./build/target/product/sdk_base.mk
 d1578798dbd83f0071a2960c06f96e63 107b7fb67d57a6ff7ecdd6ea034b3b1c ./build/tools/releasetools/common.py
@@ -82,7 +83,7 @@ fbe52159462740fffe52671b44dce050 9c458f30cbc3b52ca02c162b3f79479b ./packages/app
 4d3ec51167ac525a6ef499a51b321f7c 2a112264226dd069ea50dec02e329cae ./system/core/include/private/android_filesystem_config.h
 0afbe5fd23c72102711636d9ecb70010 07c91e379fb9201773db1bfc7d2dd394 ./system/core/include/utils/VectorImpl.h
 caa5418fc22768183a42f0a13adf6c55 4b14b12f4007631921e3593da86cc460 ./system/core/init/builtins.c
-6bc3785da195b68594ebb53e9e645dd0 9a6684dd75259efd0cb254210d354c7f ./system/core/libutils/VectorImpl.cpp
+50a8630b9820b7fd1b3c93af8e73f33c ae693fdc6a1a06dc87c610cd94e653a3 ./system/core/libutils/VectorImpl.cpp
 b03ced5077d3f16b01a397e1b5bf4546 87226a51f542789961a354dc12948700 ./system/core/rootdir/init.rc
 7fb6012b90d7a7985a46f6c48ec747f8 fba9e95b2f10112be3dbbd47f88241b3 ./system/vold/Android.mk
 c0a0d20498a1b8fb999aed64eac45711 bbc9dd94740b2cecfdeac3945d558654 ./system/vold/CleanSpec.mk

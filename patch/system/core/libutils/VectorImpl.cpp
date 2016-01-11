@@ -21,6 +21,7 @@
 #include <stdio.h>
 
 #include <cutils/log.h>
+#include <safe_iop.h>
 
 #include <utils/Errors.h>
 #include <utils/SharedBuffer.h>
@@ -85,14 +86,19 @@ VectorImpl& VectorImpl::operator = (const VectorImpl& rhs)
 void* VectorImpl::editArrayImpl()
 {
     if (mStorage) {
-        SharedBuffer* sb = SharedBuffer::bufferFromData(mStorage)->attemptEdit();
-        if (sb == 0) {
-            sb = SharedBuffer::alloc(capacity() * mItemSize);
-            if (sb) {
-                _do_copy(sb->data(), mStorage, mCount);
-                release_storage();
-                mStorage = sb->data();
-            }
+        const SharedBuffer* sb = SharedBuffer::bufferFromData(mStorage);
+        SharedBuffer* editable = sb->attemptEdit();
+        if (editable == 0) {
+            // If we're here, we're not the only owner of the buffer.
+            // We must make a copy of it.
+            editable = SharedBuffer::alloc(sb->size());
+            // Fail instead of returning a pointer to storage that's not
+            // editable. Otherwise we'd be editing the contents of a buffer
+            // for which we're not the only owner, which is undefined behaviour.
+            LOG_ALWAYS_FATAL_IF(editable == NULL);
+            _do_copy(editable->data(), mStorage, mCount);
+            release_storage();
+            mStorage = editable->data();
         }
     }
     return mStorage;
