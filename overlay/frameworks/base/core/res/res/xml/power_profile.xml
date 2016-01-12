@@ -34,8 +34,8 @@
     <item name="radio.scanning">122.68</item>
     <!-- Current consumed by the radio at different signal strengths, when paging -->
     <array name="radio.on"> <!-- Strength 0 to BINS-1 -->
-        <value>1.16</value>
-        <value>2.15</value>
+        <value>7.65</value> <!-- no signal -->
+        <value>0.97</value> <!-- others -->
     </array>
     <!-- Different CPU speeds as reported in
          /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state -->
