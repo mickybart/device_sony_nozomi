@@ -51,20 +51,18 @@ libOmxVdec-def += -DUSE_ION
 include $(CLEAR_VARS)
 LOCAL_PATH:= $(ROOT_DIR)
 
-libmm-vdec-inc          := bionic/libc/include
-libmm-vdec-inc          += bionic/libstdc++/include
-libmm-vdec-inc          += $(LOCAL_PATH)/vdec/inc
+libmm-vdec-inc          := $(LOCAL_PATH)/vdec/inc
 libmm-vdec-inc          += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-vdec-inc          += hardware/qcom/media/mm-core/inc
 #DRM include - Interface which loads the DRM library
 libmm-vdec-inc	        += $(OMX_VIDEO_PATH)/DivxDrmDecrypt/inc
-libmm-vdec-inc          += device/sony/nozomi/display/libgralloc
-libmm-vdec-inc          += device/sony/nozomi/display/libcopybit
-libmm-vdec-inc          += device/sony/nozomi/display/libqservice
-libmm-vdec-inc          += device/sony/nozomi/display/libqdutils
+libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libgralloc
+libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libcopybit
+libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libqservice
+libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libqdutils
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
-libmm-vdec-inc          += device/sony/nozomi/media/libc2dcolorconvert
+libmm-vdec-inc          += $(LOCAL_PATH)/../../libc2dcolorconvert
 libmm-vdec-inc          += frameworks/av/include/media/stagefright
 
 LOCAL_MODULE                    := libOmxVdec
@@ -72,7 +70,6 @@ LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libOmxVdec-def)
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
 
-LOCAL_PRELINK_MODULE    := false
 LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
 
 LOCAL_SHARED_LIBRARIES  += libdivxdrmdecrypt

@@ -267,6 +267,7 @@ static int get_format(int format) {
         case HAL_PIXEL_FORMAT_YCrCb_420_SP:   return C2D_COLOR_FORMAT_420_NV21;
         case HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED: return C2D_COLOR_FORMAT_420_NV12 |
                                                   C2D_FORMAT_MACROTILED;
+        case HAL_PIXEL_FORMAT_YV12:           return C2D_COLOR_FORMAT_420_I420;
         default:                              ALOGE("%s: invalid format (0x%x",
                                                      __FUNCTION__, format);
                                               return -EINVAL;
@@ -285,6 +286,7 @@ static int get_c2d_format_for_yuv_destination(int halFormat) {
         case HAL_PIXEL_FORMAT_YCbCr_420_SP:   return C2D_COLOR_FORMAT_420_NV21;
         case HAL_PIXEL_FORMAT_NV12_ENCODEABLE:return C2D_COLOR_FORMAT_420_NV21;
         case HAL_PIXEL_FORMAT_YCrCb_420_SP:   return C2D_COLOR_FORMAT_420_NV12;
+        case HAL_PIXEL_FORMAT_YV12:           return C2D_COLOR_FORMAT_420_YV12;
         default:                              return get_format(halFormat);
     }
     return -EINVAL;
@@ -423,7 +425,8 @@ static int is_supported_yuv_format(int format)
         case HAL_PIXEL_FORMAT_YCbCr_420_SP:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP:
         case HAL_PIXEL_FORMAT_NV12_ENCODEABLE:
-        case HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED: {
+        case HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED:
+        case HAL_PIXEL_FORMAT_YV12: {
             return COPYBIT_SUCCESS;
         }
         default:
@@ -475,6 +478,15 @@ static int calculate_yuv_offset_and_stride(const bufferInfo& info,
             } else
                 yuvInfo.plane1_offset = aligned_width * height;
 
+            break;
+        }
+        case HAL_PIXEL_FORMAT_YV12: {
+            aligned_width = ALIGN(width, 32);
+            yuvInfo.yStride = aligned_width;
+            yuvInfo.plane1_stride = ALIGN(aligned_width / 2, 32);
+            yuvInfo.plane1_offset = aligned_width * height;
+            yuvInfo.plane2_stride = yuvInfo.plane1_stride;
+            yuvInfo.plane2_offset = yuvInfo.plane1_offset + yuvInfo.plane1_stride * height / 2;
             break;
         }
         default: {
@@ -950,15 +962,19 @@ static bool need_temp_buffer(struct copybit_image_t const *img)
         return false;
 
     struct private_handle_t* handle = (struct private_handle_t*)img->handle;
+    int num_planes = get_num_planes(img->format);
 
     // The width parameter in the handle contains the aligned_w. We check if we
     // need to convert based on this param. YUV formats have bpp=1, so checking
     // if the requested stride is aligned should suffice.
-    if (0 == (handle->width)%32) {
-        return false;
+    if ((handle->width)%32) {
+        return true;
+    }
+    if ((3 == num_planes) && ((handle->width/2)%32)) {
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 /* Function to extract the information from the copybit image and set the corresponding
@@ -993,6 +1009,12 @@ static size_t get_size(const bufferInfo& info)
             {
                 size = aligned_w * h +
                        ALIGN(aligned_w/2, 32) * (h/2) * 2;
+                size = ALIGN(size, 4096);
+            } break;
+        case HAL_PIXEL_FORMAT_YV12:
+            {
+                size = aligned_w * h +
+                        ALIGN(aligned_w/2, 32) * (h/2) *2;
                 size = ALIGN(size, 4096);
             } break;
         default: break;
@@ -1062,6 +1084,7 @@ static int copy_image(private_handle_t *src_handle,
         case HAL_PIXEL_FORMAT_NV12_ENCODEABLE:
         case HAL_PIXEL_FORMAT_YCbCr_420_SP:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP:
+        case HAL_PIXEL_FORMAT_YV12:
             {
                 if (CONVERT_TO_ANDROID_FORMAT == conversionType) {
                     return convert_yuv_c2d_to_yuv_android(src_handle, rhs);
@@ -1161,7 +1184,7 @@ static int stretch_copybit_internal(
 
     if (ctx->blit_rgb_count == MAX_RGB_SURFACES ||
         ctx->blit_yuv_2_plane_count == MAX_YUV_2_PLANE_SURFACES ||
-        ctx->blit_yuv_3_plane_count == MAX_YUV_2_PLANE_SURFACES ||
+        ctx->blit_yuv_3_plane_count == MAX_YUV_3_PLANE_SURFACES ||
         ctx->blit_count == MAX_BLIT_OBJECT_COUNT ||
         ctx->dst_surface_type != dst_surface_type) {
         // we have reached the max. limits of our internal structures or
@@ -1231,7 +1254,7 @@ static int stretch_copybit_internal(
             src_surface = ctx->blit_yuv_2_plane_object[ctx->blit_yuv_2_plane_count];
         } else if (num_planes == 3) {
             src_surface_type = YUV_SURFACE_3_PLANES;
-            src_surface = ctx->blit_yuv_3_plane_object[ctx->blit_yuv_2_plane_count];
+            src_surface = ctx->blit_yuv_3_plane_object[ctx->blit_yuv_3_plane_count];
         } else {
             ALOGE("%s: src number of YUV planes is invalid src format = 0x%x",
                   __FUNCTION__, src->format);

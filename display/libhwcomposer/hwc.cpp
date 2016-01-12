@@ -45,20 +45,20 @@ static int hwc_device_open(const struct hw_module_t* module,
                            struct hw_device_t** device);
 
 static struct hw_module_methods_t hwc_module_methods = {
-    open: hwc_device_open
+    .open = hwc_device_open
 };
 
 hwc_module_t HAL_MODULE_INFO_SYM = {
-    common: {
-        tag: HARDWARE_MODULE_TAG,
-        version_major: 2,
-        version_minor: 0,
-        id: HWC_HARDWARE_MODULE_ID,
-        name: "Qualcomm Hardware Composer Module",
-        author: "CodeAurora Forum",
-        methods: &hwc_module_methods,
-        dso: 0,
-        reserved: {0},
+    .common = {
+        .tag = HARDWARE_MODULE_TAG,
+        .version_major = 2,
+        .version_minor = 0,
+        .id = HWC_HARDWARE_MODULE_ID,
+        .name = "Qualcomm Hardware Composer Module",
+        .author = "CodeAurora Forum",
+        .methods = &hwc_module_methods,
+        .dso = 0,
+        .reserved = {0},
     }
 };
 
@@ -485,6 +485,7 @@ static int hwc_set(hwc_composer_device_1 *dev,
     // frames to the display.
     CALC_FPS();
     MDPComp::resetIdleFallBack();
+    ctx->mVideoTransFlag = false;
     return ret;
 }
 

@@ -128,10 +128,12 @@ struct copyInfo{
     int height;
     int src_stride;
     int dst_stride;
-    int src_plane1_offset;
-    int src_plane2_offset;
-    int dst_plane1_offset;
-    int dst_plane2_offset;
+    int plane_width;
+    int plane_height;
+    int src_plane_stride;
+    int dst_plane_stride;
+    int src_plane_offset;
+    int dst_plane_offset;
 };
 
 /* Internal function to do the actual copy of source to destination */
@@ -157,14 +159,14 @@ static int copy_source_to_destination(const int src_base, const int dst_base,
     }
 
     // Copy plane 1
-    src = (unsigned char*)(src_base + info.src_plane1_offset);
-    dst = (unsigned char*)(dst_base + info.dst_plane1_offset);
-    width = width/2;
-    height = height/2;
+    src = (unsigned char*)(src_base + info.src_plane_offset);
+    dst = (unsigned char*)(dst_base + info.dst_plane_offset);
+    width = info.plane_width;
+    height = info.plane_height;
     for (int i = 0; i < height; i++) {
-        memcpy(dst, src, info.src_stride);
-        src += info.src_stride;
-        dst += info.dst_stride;
+        memcpy(dst, src, width);
+        src += info.src_plane_stride;
+        dst += info.dst_plane_stride;
     }
     return 0;
 }
@@ -198,13 +200,29 @@ int convert_yuv_c2d_to_yuv_android(private_handle_t *hnd,
     switch(rhs->format) {
         case HAL_PIXEL_FORMAT_YCbCr_420_SP:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP: {
-            info.src_plane1_offset = info.src_stride*info.height;
-            info.dst_plane1_offset = info.dst_stride*info.height;
+            info.plane_width = info.width;
+            info.plane_height = info.height / 2;
+            info.src_plane_stride = info.src_stride;
+            info.dst_plane_stride = info.dst_stride;
+            info.src_plane_offset = info.src_stride*info.height;
+            info.dst_plane_offset = info.dst_stride*info.height;
         } break;
         case HAL_PIXEL_FORMAT_NV12_ENCODEABLE: {
+            info.plane_width = info.width;
+            info.plane_height = info.height / 2;
+            info.src_plane_stride = info.src_stride;
+            info.dst_plane_stride = info.dst_stride;
             // Chroma is 2K aligned for the NV12 encodeable format.
-            info.src_plane1_offset = ALIGN(info.src_stride*info.height, 2048);
-            info.dst_plane1_offset = ALIGN(info.dst_stride*info.height, 2048);
+            info.src_plane_offset = ALIGN(info.src_stride*info.height, 2048);
+            info.dst_plane_offset = ALIGN(info.dst_stride*info.height, 2048);
+        } break;
+        case HAL_PIXEL_FORMAT_YV12: {
+            info.plane_width = info.width / 2;
+            info.plane_height = info.height;
+            info.src_plane_stride = ALIGN(info.width / 2, 32);
+            info.dst_plane_stride = ALIGN(info.width / 2, 16);
+            info.src_plane_offset = info.src_stride*info.height;
+            info.dst_plane_offset = info.dst_stride*info.height;
         } break;
         default:
             ALOGE("%s: unsupported format (format=0x%x)", __FUNCTION__,
@@ -243,13 +261,29 @@ int convert_yuv_android_to_yuv_c2d(private_handle_t *hnd,
     switch(rhs->format) {
         case HAL_PIXEL_FORMAT_YCbCr_420_SP:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP: {
-            info.src_plane1_offset = info.src_stride*info.height;
-            info.dst_plane1_offset = info.dst_stride*info.height;
+            info.plane_width = info.width;
+            info.plane_height = info.height / 2;
+            info.src_plane_stride = info.src_stride;
+            info.dst_plane_stride = info.dst_stride;
+            info.src_plane_offset = info.src_stride*info.height;
+            info.dst_plane_offset = info.dst_stride*info.height;
         } break;
         case HAL_PIXEL_FORMAT_NV12_ENCODEABLE: {
+            info.plane_width = info.width;
+            info.plane_height = info.height / 2;
+            info.src_plane_stride = info.src_stride;
+            info.dst_plane_stride = info.dst_stride;
             // Chroma is 2K aligned for the NV12 encodeable format.
-            info.src_plane1_offset = ALIGN(info.src_stride*info.height, 2048);
-            info.dst_plane1_offset = ALIGN(info.dst_stride*info.height, 2048);
+            info.src_plane_offset = ALIGN(info.src_stride*info.height, 2048);
+            info.dst_plane_offset = ALIGN(info.dst_stride*info.height, 2048);
+        } break;
+        case HAL_PIXEL_FORMAT_YV12: {
+            info.plane_width = info.width / 2;
+            info.plane_height = info.height;
+            info.src_plane_stride = ALIGN(info.width / 2, 16);
+            info.dst_plane_stride = ALIGN(info.width / 2, 32);
+            info.src_plane_offset = info.src_stride*info.height;
+            info.dst_plane_offset = info.dst_stride*info.height;
         } break;
         default:
             ALOGE("%s: unsupported format (format=0x%x)", __FUNCTION__,

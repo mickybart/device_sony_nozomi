@@ -42,17 +42,15 @@ libmm-venc-def += -D_ANDROID_ICS_
 
 include $(CLEAR_VARS)
 
-libmm-venc-inc      := bionic/libc/include
-libmm-venc-inc      += bionic/libstdc++/include
 libmm-venc-inc      := $(LOCAL_PATH)/venc/inc
 libmm-venc-inc      += $(OMX_VIDEO_PATH)/vidc/common/inc
 libmm-venc-inc      += hardware/qcom/media/mm-core/inc
 libmm-venc-inc      += hardware/qcom/media/libstagefrighthw
-libmm-venc-inc      += device/sony/nozomi/display/libgralloc
-libmm-venc-inc      += device/sony/nozomi/display/libcopybit
+libmm-venc-inc      += $(LOCAL_PATH)/../../../display/libgralloc
+libmm-venc-inc      += $(LOCAL_PATH)/../../../display/libcopybit
 libmm-venc-inc      += frameworks/native/include/media/hardware
 libmm-venc-inc      += frameworks/native/include/media/openmax
-libmm-venc-inc      += device/sony/nozomi/media/libc2dcolorconvert
+libmm-venc-inc      += $(LOCAL_PATH)/../../libc2dcolorconvert
 libmm-venc-inc      += frameworks/av/include/media/stagefright
 
 LOCAL_MODULE                    := libOmxVenc
@@ -60,7 +58,6 @@ LOCAL_MODULE_TAGS               := optional
 LOCAL_CFLAGS                    := $(libmm-venc-def)
 LOCAL_C_INCLUDES                := $(libmm-venc-inc)
 
-LOCAL_PRELINK_MODULE      := false
 LOCAL_SHARED_LIBRARIES    := liblog libutils libbinder libcutils \
                              libc2dcolorconvert libdl
 

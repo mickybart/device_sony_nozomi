@@ -146,6 +146,9 @@ char ouputextradatafilename [] = "/data/extradata";
 
 #define Log2(number, power)  { OMX_U32 temp = number; power = 0; while( (0 == (temp & 0x1)) &&  power < 16) { temp >>=0x1; power++; } }
 #define Q16ToFraction(q,num,den) { OMX_U32 power; Log2(q,power);  num = q >> power; den = 0x1 << (16 - power); }
+#define ALIGN( num, to ) (((num) + (to-1)) & (~(to-1)))
+#define ALIGN32 32
+#define ALIGN16 16
 
 bool omx_vdec::m_secure_display = false;
 
@@ -434,7 +437,9 @@ PARAMETERS
 RETURN VALUE
   None.
 ========================================================================== */
-omx_vdec::omx_vdec(): m_state(OMX_StateInvalid),
+omx_vdec::omx_vdec(): msg_thread_id(0),
+                      async_thread_id(0),
+                      m_state(OMX_StateInvalid),
                       m_app_data(NULL),
                       m_inp_mem_ptr(NULL),
                       m_out_mem_ptr(NULL),
@@ -579,9 +584,13 @@ omx_vdec::~omx_vdec()
   m_pipe_in = -1;
   m_pipe_out = -1;
   DEBUG_PRINT_HIGH("Waiting on OMX Msg Thread exit");
-  pthread_join(msg_thread_id,NULL);
+  if (msg_thread_id != 0) {
+    pthread_join(msg_thread_id,NULL);
+  }
   DEBUG_PRINT_HIGH("Waiting on OMX Async Thread exit");
-  pthread_join(async_thread_id,NULL);
+  if (async_thread_id != 0) {
+    pthread_join(async_thread_id,NULL);
+  }
   pthread_mutex_destroy(&m_lock);
   pthread_mutex_destroy(&c_lock);
   sem_destroy(&m_cmd_lock);
@@ -1184,6 +1193,14 @@ OMX_ERRORTYPE omx_vdec::component_init(OMX_STRING role)
   int fds[2];
   int r;
   OMX_STRING device_name = "/dev/msm_vidc_dec";
+
+#ifdef _ANDROID_
+    /*
+     * turn off frame parsing for Android by default.
+     * Clients may configure OMX_QCOM_FramePacking_Arbitrary to enable this mode
+     */
+    arbitrary_bytes = false;
+#endif
 
   if(!strncmp(role, "OMX.qcom.video.decoder.avc.smoothstreaming",OMX_MAX_STRINGNAME_SIZE)){
       ALOGI("smooth streaming role");
@@ -2769,7 +2786,7 @@ OMX_ERRORTYPE  omx_vdec::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
                   " NoMore Color formats\n");
            eRet =  OMX_ErrorNoMore;
         }
-        ALOGI("get_parameter: color-format=%x @ index=%d", portFmt->eColorFormat, portFmt->nIndex);
+        DEBUG_PRINT_HIGH("get_parameter: color-format=%x @ index=%d", portFmt->eColorFormat, portFmt->nIndex);
       }
       else
       {
@@ -3565,6 +3582,7 @@ OMX_ERRORTYPE  omx_vdec::set_parameter(OMX_IN OMX_HANDLETYPE     hComp,
           EnableAndroidNativeBuffersParams* enableNativeBuffers = (EnableAndroidNativeBuffersParams *) paramData;
           if(enableNativeBuffers) {
               m_enable_android_native_buffers = enableNativeBuffers->enable;
+              client_buffers.enable_native_buffers(m_enable_android_native_buffers);
           }
       }
       break;
@@ -3975,31 +3993,31 @@ OMX_ERRORTYPE  omx_vdec::get_extension_index(OMX_IN OMX_HANDLETYPE      hComp,
         DEBUG_PRINT_ERROR("Get Extension Index in Invalid State\n");
         return OMX_ErrorInvalidState;
     }
-    else if (!strncmp(paramName, "OMX.QCOM.index.param.video.SyncFrameDecodingMode",strlen("OMX.QCOM.index.param.video.SyncFrameDecodingMode") + 1)) {
+    else if (!strncmp(paramName, "OMX.QCOM.index.param.video.SyncFrameDecodingMode",sizeof("OMX.QCOM.index.param.video.SyncFrameDecodingMode") - 1)) {
         *indexType = (OMX_INDEXTYPE)OMX_QcomIndexParamVideoSyncFrameDecodingMode;
     }
 #ifdef MAX_RES_1080P
-    else if (!strncmp(paramName, "OMX.QCOM.index.param.IndexExtraData",strlen("OMX.QCOM.index.param.IndexExtraData") + 1))
+    else if (!strncmp(paramName, "OMX.QCOM.index.param.IndexExtraData",sizeof("OMX.QCOM.index.param.IndexExtraData") - 1))
     {
         *indexType = (OMX_INDEXTYPE)OMX_QcomIndexParamIndexExtraDataType;
     }
 #endif
 #if defined (_ANDROID_HONEYCOMB_) || defined (_ANDROID_ICS_)
-    else if(!strncmp(paramName,"OMX.google.android.index.enableAndroidNativeBuffers", strlen("OMX.google.android.index.enableAndroidNativeBuffers") + 1)) {
+    else if(!strncmp(paramName,"OMX.google.android.index.enableAndroidNativeBuffers", sizeof("OMX.google.android.index.enableAndroidNativeBuffers") - 1)) {
         *indexType = (OMX_INDEXTYPE)OMX_GoogleAndroidIndexEnableAndroidNativeBuffers;
     }
-    else if(!strncmp(paramName,"OMX.google.android.index.useAndroidNativeBuffer2", strlen("OMX.google.android.index.enableAndroidNativeBuffer2") + 1)) {
+    else if(!strncmp(paramName,"OMX.google.android.index.useAndroidNativeBuffer2", sizeof("OMX.google.android.index.enableAndroidNativeBuffer2") - 1)) {
         *indexType = (OMX_INDEXTYPE)OMX_GoogleAndroidIndexUseAndroidNativeBuffer2;
     }
-    else if(!strncmp(paramName,"OMX.google.android.index.useAndroidNativeBuffer", strlen("OMX.google.android.index.enableAndroidNativeBuffer") + 1)) {
+    else if(!strncmp(paramName,"OMX.google.android.index.useAndroidNativeBuffer", sizeof("OMX.google.android.index.enableAndroidNativeBuffer") - 1)) {
         DEBUG_PRINT_ERROR("Extension: %s is supported\n", paramName);
         *indexType = (OMX_INDEXTYPE)OMX_GoogleAndroidIndexUseAndroidNativeBuffer;
     }
-    else if(!strncmp(paramName,"OMX.google.android.index.getAndroidNativeBufferUsage", strlen("OMX.google.android.index.getAndroidNativeBufferUsage") + 1)) {
+    else if(!strncmp(paramName,"OMX.google.android.index.getAndroidNativeBufferUsage", sizeof("OMX.google.android.index.getAndroidNativeBufferUsage") - 1)) {
         *indexType = (OMX_INDEXTYPE)OMX_GoogleAndroidIndexGetAndroidNativeBufferUsage;
     }
     else if (!strncmp(paramName,"OMX.google.android.index.prepareForAdaptivePlayback",
-            strlen("OMX.google.android.index.prepareForAdaptivePlayback") + 1)) {
+            sizeof("OMX.google.android.index.prepareForAdaptivePlayback") - 1)) {
         *indexType = (OMX_INDEXTYPE)OMX_QcomIndexParamVideoAdaptivePlaybackMode;
     }
 #endif
@@ -4396,8 +4414,9 @@ OMX_ERRORTYPE  omx_vdec::use_buffer(
   }
   if(port == OMX_CORE_INPUT_PORT_INDEX)
     error = use_input_heap_buffers(hComp, bufferHdr, port, appData, bytes, buffer);
-  else if(port == OMX_CORE_OUTPUT_PORT_INDEX)
-    error = use_output_buffer(hComp,bufferHdr,port,appData,bytes,buffer); //not tested
+  else if(port == OMX_CORE_OUTPUT_PORT_INDEX) {
+    error = client_buffers.use_output_buffer(hComp,bufferHdr,port,appData,bytes,buffer);
+  }
   else
   {
     DEBUG_PRINT_ERROR("Error: Invalid Port Index received %d\n",(int)port);
@@ -7990,13 +8009,9 @@ OMX_ERRORTYPE omx_vdec::update_portdef(OMX_PARAM_PORTDEFINITIONTYPE *portDefn)
   }
   portDefn->format.video.nFrameHeight =  drv_ctx.video_resolution.frame_height;
   portDefn->format.video.nFrameWidth  =  drv_ctx.video_resolution.frame_width;
-  portDefn->format.video.nStride = drv_ctx.video_resolution.stride;
-  portDefn->format.video.nSliceHeight = drv_ctx.video_resolution.scan_lines;
-  if ((portDefn->format.video.eColorFormat == OMX_COLOR_FormatYUV420Planar) ||
-      (portDefn->format.video.eColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)) {
-      portDefn->format.video.nStride = drv_ctx.video_resolution.frame_width;
-      portDefn->format.video.nSliceHeight = drv_ctx.video_resolution.frame_height;
-  }
+  portDefn->format.video.nStride = client_buffers.get_output_stride();
+  portDefn->format.video.nSliceHeight = client_buffers.get_output_scanlines();
+
   DEBUG_PRINT_LOW("update_portdef Width = %d Height = %d Stride = %u"
     "SliceHeight = %u \n", portDefn->format.video.nFrameHeight,
     portDefn->format.video.nFrameWidth,
@@ -9043,6 +9058,7 @@ OMX_ERRORTYPE omx_vdec::createDivxDrmContext()
 omx_vdec::allocate_color_convert_buf::allocate_color_convert_buf()
 {
   enabled = false;
+  m_native_buffers_enabled = false;
   omx = NULL;
   init_members();
   ColorFormat = OMX_COLOR_FormatMax;
@@ -9093,8 +9109,8 @@ bool omx_vdec::allocate_color_convert_buf::update_buffer_req()
   pthread_mutex_lock(&omx->c_lock);
   c2d.close();
   status = c2d.open(omx->drv_ctx.video_resolution.frame_height,
-                    omx->drv_ctx.video_resolution.frame_width,
-                    YCbCr420Tile, dest_format);
+                omx->drv_ctx.video_resolution.frame_width,
+                YCbCr420Tile, dest_format);
   if (status) {
     status = c2d.get_buffer_size(C2D_INPUT,src_size);
     if (status)
@@ -9198,6 +9214,21 @@ OMX_BUFFERHEADERTYPE* omx_vdec::allocate_color_convert_buf::get_il_buf_hdr
       status = c2d.convert(omx->drv_ctx.ptr_outputbuffer[index].pmem_fd,
                   bufadd->pBuffer, bufadd->pBuffer, pmem_fd[index],
                   pmem_baseaddress[index], pmem_baseaddress[index]);
+// DEBUG: dump converted output
+#if 0
+      {
+          int w = get_output_stride();
+          int h = get_output_scanlines();
+          char fileName[128] = {0};
+          sprintf(fileName,"/data/misc/media/out_%d_%d.yuv",w,h);
+          FILE* fp = fopen(fileName,"ab");
+          if (fp) {
+              ALOGI("c2d: dumped: %s",fileName);
+              fwrite(pmem_baseaddress[index], (w * h * 3)/2, 1, fp);
+              fclose(fp);
+          }
+      }
+#endif
       pthread_mutex_unlock(&omx->c_lock);
       m_out_mem_ptr_client[index].nFilledLen = buffer_size_req;
       if (!status){
@@ -9250,6 +9281,31 @@ bool omx_vdec::allocate_color_convert_buf::get_buffer_req
 	  buffer_alignment_req = omx->drv_ctx.op_buf.alignment;
     return true;
 }
+
+OMX_U32 omx_vdec::allocate_color_convert_buf::get_output_stride() {
+  // If Converting to Planar/SemiPlanar in bytebuffer mode, stride/slice-height
+  //  are not aligned per hardware restrictions.
+  if (enabled &&
+          (ColorFormat == OMX_COLOR_FormatYUV420Planar ||
+          ColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)) {
+      return ALIGN(omx->drv_ctx.video_resolution.frame_width, ALIGN16);
+  } else {
+      return omx->drv_ctx.video_resolution.stride;
+  }
+}
+
+OMX_U32 omx_vdec::allocate_color_convert_buf::get_output_scanlines() {
+  // If Converting to Planar/SemiPlanar in bytebuffer mode, stride/slice-height
+  //  are not aligned per hardware restrictions.
+  if (enabled &&
+          (ColorFormat == OMX_COLOR_FormatYUV420Planar ||
+          ColorFormat == OMX_COLOR_FormatYUV420SemiPlanar)) {
+      return omx->drv_ctx.video_resolution.frame_height;
+  } else {
+      return omx->drv_ctx.video_resolution.scan_lines;
+  }
+}
+
 OMX_ERRORTYPE omx_vdec::allocate_color_convert_buf::free_output_buffer(
   OMX_BUFFERHEADERTYPE *bufhdr) {
   unsigned int index = 0;
@@ -9267,12 +9323,33 @@ OMX_ERRORTYPE omx_vdec::allocate_color_convert_buf::free_output_buffer(
     DEBUG_PRINT_ERROR("\n Incorrect index color convert free_output_buffer");
     return OMX_ErrorBadParameter;
   }
-  if (pmem_fd[index] > 0) {
-    munmap(pmem_baseaddress[index], buffer_size_req);
-    close(pmem_fd[index]);
+  if (m_native_buffers_enabled) {
+      // unmap client's fd
+      if (pmem_fd[index] > 0 && pmem_baseaddress[index]) {
+          munmap(pmem_baseaddress[index], buffer_size_req);
+          pmem_baseaddress[index] = 0;
+      }
+      // free from internal set
+      // Do this explicitly as omx->free_output_buffer() does not free
+      //  the memory when native-buffers are enabled
+      if (omx->drv_ctx.ptr_outputbuffer[index].pmem_fd > 0) {
+          DEBUG_PRINT_LOW("free_buffer(conversion): free ion mem[%d] fd=%d size=%d",
+                  index, omx->drv_ctx.ptr_outputbuffer[index].pmem_fd,
+                  omx->drv_ctx.ptr_outputbuffer[index].mmaped_size);
+          munmap (omx->drv_ctx.ptr_outputbuffer[index].bufferaddr,
+                  omx->drv_ctx.ptr_outputbuffer[index].mmaped_size);
+          omx->free_ion_memory(&(omx->drv_ctx.op_buf_ion_info[index]));
+          close (omx->drv_ctx.ptr_outputbuffer[index].pmem_fd);
+          omx->drv_ctx.ptr_outputbuffer[index].pmem_fd = -1;
+      }
+  } else {
+      if (pmem_fd[index] > 0) {
+        munmap(pmem_baseaddress[index], buffer_size_req);
+        close(pmem_fd[index]);
+      }
+      pmem_fd[index] = -1;
+      omx->free_ion_memory(&op_buf_ion_info[index]);
   }
-  pmem_fd[index] = -1;
-  omx->free_ion_memory(&op_buf_ion_info[index]);
   m_heap_ptr[index].video_heap_ptr = NULL;
   if (allocated_count > 0)
     allocated_count--;
@@ -9366,6 +9443,85 @@ OMX_ERRORTYPE omx_vdec::allocate_color_convert_buf::allocate_buffers_color_conve
   DEBUG_PRINT_ERROR("\n IL client buffer header %p", *bufferHdr);
   allocated_count++;
   return eRet;
+}
+
+OMX_ERRORTYPE omx_vdec::allocate_color_convert_buf::use_output_buffer(OMX_HANDLETYPE hComp,
+        OMX_BUFFERHEADERTYPE **bufferHdr, OMX_U32 port, OMX_PTR appData,
+        OMX_U32 bytes, OMX_U8 *buffer)
+{
+    OMX_ERRORTYPE eRet = OMX_ErrorNone;
+    const char *func = "use_buf(conversion)";
+
+    if (!enabled) {
+        return omx->use_output_buffer(hComp, bufferHdr, port, appData, bytes, buffer);
+    }
+    // assert native-buffer-mode is enabled
+    if (!m_native_buffers_enabled) {
+        DEBUG_PRINT_ERROR("%s: use_buffer called in non-surface mode", func);
+        return OMX_ErrorUnsupportedSetting;
+    }
+    if (omx->is_component_secure()) {
+        DEBUG_PRINT_ERROR("%s: Cannot color-convert secure buffers", func);
+        return OMX_ErrorUnsupportedSetting;
+    }
+    if (!bufferHdr || bytes > buffer_size_req) {
+        DEBUG_PRINT_ERROR("%s: Invalid params hdr=%p requested-size=%d passed-size=%d",
+                func, bufferHdr, buffer_size_req, bytes);
+        return OMX_ErrorBadParameter;
+    }
+    if (allocated_count >= omx->drv_ctx.op_buf.actualcount) {
+        DEBUG_PRINT_ERROR("%s: all buffers (%d) already allocated", func, allocated_count);
+        return OMX_ErrorInsufficientResources;
+    }
+
+    // Allocate pixel buffer for the decoder
+    OMX_BUFFERHEADERTYPE *temp_bufferHdr = NULL;
+    eRet = omx->allocate_output_buffer(hComp, &temp_bufferHdr,
+             port, appData, omx->drv_ctx.op_buf.buffer_size);
+    if (eRet != OMX_ErrorNone || !temp_bufferHdr){
+        DEBUG_PRINT_ERROR("%s: decoder's o/p allocation failed", func);
+        return eRet;
+    }
+    if ((temp_bufferHdr - omx->m_out_mem_ptr) >= omx->drv_ctx.op_buf.actualcount) {
+        DEBUG_PRINT_ERROR("%s: Invalid header index %d",
+                func, (temp_bufferHdr - omx->m_out_mem_ptr));
+        return OMX_ErrorUndefined;
+    }
+    unsigned int i = allocated_count;
+    private_handle_t *handle = (private_handle_t *)buffer;
+
+    pmem_fd[i] = handle->fd;
+    pmem_baseaddress[i] = (OMX_U8*)mmap(0, handle->size,
+            PROT_READ|PROT_WRITE, MAP_SHARED, handle->fd, 0);
+    if (pmem_baseaddress[i] == MAP_FAILED) {
+        DEBUG_PRINT_ERROR("%s: Failed to map native handle fd=%d size=%d",
+               func, handle->fd, handle->size);
+        return OMX_ErrorInsufficientResources;
+    }
+    m_heap_ptr[i].video_heap_ptr = NULL; //not used
+    m_pmem_info_client[i].pmem_fd = handle->fd;
+    m_pmem_info_client[i].offset = 0;
+    m_platform_entry_client[i].entry = (void *)&m_pmem_info_client[i];
+    m_platform_entry_client[i].type = OMX_QCOM_PLATFORM_PRIVATE_PMEM;
+    m_platform_list_client[i].nEntries = 1;
+    m_platform_list_client[i].entryList = &m_platform_entry_client[i];
+    m_out_mem_ptr_client[i].pOutputPortPrivate = NULL;
+    m_out_mem_ptr_client[i].nAllocLen = handle->size;
+    m_out_mem_ptr_client[i].nFilledLen = 0;
+    m_out_mem_ptr_client[i].nFlags = 0;
+    m_out_mem_ptr_client[i].nOutputPortIndex = OMX_CORE_OUTPUT_PORT_INDEX;
+    m_out_mem_ptr_client[i].nSize = sizeof(OMX_BUFFERHEADERTYPE);
+    m_out_mem_ptr_client[i].nVersion.nVersion = OMX_SPEC_VERSION;
+    m_out_mem_ptr_client[i].pPlatformPrivate = &m_platform_list_client[i];
+
+    m_out_mem_ptr_client[i].pBuffer = buffer;
+    m_out_mem_ptr_client[i].pAppPrivate = appData;
+
+    *bufferHdr = &m_out_mem_ptr_client[i];
+    DEBUG_PRINT_LOW("%s: allocated header[%d]=%p for native handle[fd=%d size=%d]",
+            func, i, *bufferHdr, handle->fd, handle->size);
+    allocated_count++;
+    return eRet;
 }
 
 bool omx_vdec::is_component_secure()

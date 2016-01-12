@@ -101,14 +101,15 @@ bool CopyBit::canUseCopybitForRGB(hwc_context_t *ctx,
         unsigned int renderArea = getRGBRenderingArea(list);
             ALOGD_IF (DEBUG_COPYBIT, "%s:renderArea %u, fbArea %u",
                                   __FUNCTION__, renderArea, fbArea);
-        if (renderArea < (mDynThreshold * fbArea))
+        if (renderArea < (mDynThreshold * fbArea)) {
             return true;
+        }
     } else if ((compositionType & qdutils::COMPOSITION_TYPE_MDP)) {
-        // MDP composition, use COPYBIT always
-        return true;
+      // MDP composition, use COPYBIT always
+      return true;
     } else if ((compositionType & qdutils::COMPOSITION_TYPE_C2D)) {
-        // C2D composition, use COPYBIT
-        return true;
+      // C2D composition, use COPYBIT
+      return true;
     }
     return false;
 }
@@ -134,7 +135,8 @@ unsigned int CopyBit::getRGBRenderingArea
     return renderArea;
 }
 
-bool CopyBit::prepare(hwc_context_t *ctx, hwc_display_contents_1_t *list, int dpy) {
+bool CopyBit::prepare(hwc_context_t *ctx, hwc_display_contents_1_t *list,
+                                                            int dpy) {
 
     if(mEngine == NULL) {
         // No copybit device found - cannot use copybit
@@ -173,6 +175,8 @@ bool CopyBit::prepare(hwc_context_t *ctx, hwc_display_contents_1_t *list, int dp
     size_t fbLayerIndex = ctx->listStats[dpy].fbLayerIndex;
     hwc_layer_1_t *fbLayer = &list->hwLayers[fbLayerIndex];
     private_handle_t *fbHnd = (private_handle_t *)fbLayer->handle;
+
+
 
     //Allocate render buffers if they're not allocated
     if (useCopybitForYUV || useCopybitForRGB) {

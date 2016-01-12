@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Copyright (c) 2010-2012, Code Aurora Forum. All rights reserved.
+Copyright (c) 2010-2012, 2015 Code Aurora Forum. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -223,7 +223,9 @@ PARAMETERS
 RETURN VALUE
   None.
 ========================================================================== */
-omx_video::omx_video(): m_state(OMX_StateInvalid),
+omx_video::omx_video(): msg_thread_id(0),
+                        async_thread_id(0),
+                        m_state(OMX_StateInvalid),
                         m_app_data(NULL),
                         m_inp_mem_ptr(NULL),
                         m_out_mem_ptr(NULL),
@@ -247,6 +249,8 @@ omx_video::omx_video(): m_state(OMX_StateInvalid),
                         m_use_output_pmem(OMX_FALSE),
                         m_etb_count(0),
                         m_fbd_count(0),
+                        m_pipe_in(-1),
+                        m_pipe_out(-1),
                         m_error_propogated(false),
                         m_input_msg_id(OMX_COMPONENT_GENERATE_ETB),
                         psource_frame(NULL),
@@ -279,12 +283,16 @@ RETURN VALUE
 omx_video::~omx_video()
 {
   DEBUG_PRINT_HIGH("\n ~omx_video(): Inside Destructor()");
-  if(m_pipe_in) close(m_pipe_in);
-  if(m_pipe_out) close(m_pipe_out);
+  if(m_pipe_in >= 0) close(m_pipe_in);
+  if(m_pipe_out >= 0) close(m_pipe_out);
   DEBUG_PRINT_HIGH("omx_video: Waiting on Msg Thread exit\n");
-  pthread_join(msg_thread_id,NULL);
+  if (msg_thread_id != 0) {
+    pthread_join(msg_thread_id,NULL);
+  }
   DEBUG_PRINT_HIGH("omx_video: Waiting on Async Thread exit\n");
-  pthread_join(async_thread_id,NULL);
+  if (async_thread_id != 0) {
+    pthread_join(async_thread_id,NULL);
+  }
   pthread_mutex_destroy(&m_lock);
   sem_destroy(&m_cmd_lock);
   DEBUG_PRINT_HIGH("\n m_etb_count = %u, m_fbd_count = %u\n", m_etb_count,
@@ -1691,15 +1699,7 @@ OMX_ERRORTYPE  omx_video::get_parameter(OMX_IN OMX_HANDLETYPE     hComp,
       comp_role->nSize = sizeof(*comp_role);
 
       DEBUG_PRINT_LOW("Getparameter: OMX_IndexParamStandardComponentRole %d\n",paramIndex);
-      if(NULL != comp_role->cRole)
-      {
-        strlcpy((char*)comp_role->cRole,(const char*)m_cRole,OMX_MAX_STRINGNAME_SIZE);
-      }
-      else
-      {
-        DEBUG_PRINT_ERROR("ERROR: Getparameter: OMX_IndexParamStandardComponentRole %d is passed with NULL parameter for role\n",paramIndex);
-        eRet =OMX_ErrorBadParameter;
-      }
+      strlcpy((char*)comp_role->cRole,(const char*)m_cRole,OMX_MAX_STRINGNAME_SIZE);
       break;
     }
     /* Added for parameter test */
@@ -4057,7 +4057,7 @@ OMX_ERRORTYPE omx_video::empty_buffer_done(OMX_HANDLETYPE         hComp,
 
   pending_input_buffers--;
 
-  if(mUseProxyColorFormat && (buffer_index < m_sInPortDef.nBufferCountActual)) {
+  if(mUseProxyColorFormat && ((OMX_U32)buffer_index < m_sInPortDef.nBufferCountActual)) {
     if(!pdest_frame) {
       pdest_frame = buffer;
       DEBUG_PRINT_LOW("\n empty_buffer_done pdest_frame address is %p",pdest_frame);
@@ -4067,6 +4067,7 @@ OMX_ERRORTYPE omx_video::empty_buffer_done(OMX_HANDLETYPE         hComp,
       DEBUG_PRINT_LOW("\n empty_buffer_done insert address is %p",buffer);
       if (!m_opq_pmem_q.insert_entry((unsigned int)buffer, 0, 0)) {
         DEBUG_PRINT_ERROR("\n empty_buffer_done: pmem queue is full");
+        m_pCallbacks.EmptyBufferDone(hComp, m_app_data, buffer);
         return OMX_ErrorBadParameter;
       }
     }
@@ -4591,13 +4592,10 @@ OMX_ERRORTYPE  omx_video::empty_this_buffer_opaque(OMX_IN OMX_HANDLETYPE hComp,
     ret = push_input_buffer(hComp);
   } else {
     if (!m_opq_meta_q.insert_entry((unsigned)buffer,0,0)) {
+      m_pCallbacks.EmptyBufferDone(hComp, m_app_data, buffer);
       DEBUG_PRINT_ERROR("\nERROR: ETBProxy: Queue is full");
       ret = OMX_ErrorBadParameter;
     }
-  }
-  if(ret != OMX_ErrorNone) {
-    m_pCallbacks.EmptyBufferDone(hComp,m_app_data,buffer);
-    DEBUG_PRINT_LOW("\nERROR: ETBOpaque failed:");
   }
   return ret;
 }
@@ -4630,6 +4628,9 @@ OMX_ERRORTYPE omx_video::queue_meta_buffer(OMX_HANDLETYPE hComp,
       m_opq_meta_q.pop_entry(&address,&p2,&id);
       psource_frame = (OMX_BUFFERHEADERTYPE* ) address;
     }
+  } else {
+    // there has been an error and source frame has been scheduled for an EBD
+    psource_frame = NULL;
   }
   return ret;
 }
@@ -4717,6 +4718,9 @@ OMX_ERRORTYPE omx_video::convert_queue_buffer(OMX_HANDLETYPE hComp,
         pdest_frame = (OMX_BUFFERHEADERTYPE* ) address;
         DEBUG_PRINT_LOW("\n pdest_frame pop address is %p",pdest_frame);
       }
+    } else {
+      // there has been an error and source frame has been scheduled for an EBD
+      psource_frame = NULL;
     }
     return ret;
 }
