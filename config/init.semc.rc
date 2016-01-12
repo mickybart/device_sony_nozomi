@@ -25,32 +25,12 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import init.sony.rc
-
-on init
-    # Set permissions for persist partition
-    mkdir /persist 0771 system system
-
-    # create mountpoints
-    export EXTERNAL_STORAGE /storage/sdcard0
-    export MEDIA_STORAGE /mnt/media_rw/sdcard0
-    mkdir /storage 0050 system sdcard_r
-    mkdir /mnt/media_rw/sdcard0 0700 media_rw media_rw
-    mkdir /storage/sdcard0 0700 root root
-    mkdir /mnt/media_rw/usbdisk 0700 media_rw media_rw
-    mkdir /storage/usbdisk 0700 root root
-
-    # for backwards compatibility
-    symlink /storage/sdcard0 /sdcard
-    symlink /storage/sdcard0 /mnt/sdcard
-    symlink /storage/usbdisk /usbdisk
-    symlink /storage/usbdisk /mnt/usbdisk
-
-on early-boot
-    # set RLIMIT_MEMLOCK to 64MB
-    setrlimit 8 67108864 67108864
+import init.sony-platform.rc
 
 on early-init
+    mount debugfs debugfs /sys/kernel/debug
+    chown system system /sys/kernel/debug/kgsl/proc
+
     # use legacy virtual address layout, our camera blobs relyon it
     write /proc/sys/vm/legacy_va_layout 1
 
@@ -67,6 +47,20 @@ on early-init
     # This causes smd_tty_open() in arch/arm/mach-msm/smd_tty.c to load
     # the modem firmware early.
     exec - root root -- /system/bin/dd if=/dev/smd0 of=/dev/null bs=1 count=1 skip=1
+
+on init
+    # Set permissions for persist partition
+    mkdir /persist 0771 system system
+
+    # Support legacy paths
+    symlink /sdcard /mnt/sdcard
+    symlink /sdcard /storage/sdcard0
+
+    mkdir /idd 0755 idd idd
+
+on early-boot
+    # set RLIMIT_MEMLOCK to 64MB
+    setrlimit 8 67108864 67108864
 
 on boot
     #Create QMUX deamon socket area
@@ -118,18 +112,6 @@ on boot
     write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
 
     # To prevent out of order acknowledgements from making
     # connection tracking to treat them as not belonging to
@@ -144,9 +126,20 @@ on boot
     chown system system /sys/devices/platform/sony_ssm/set_late_resume_notifications
     chown system system /sys/devices/platform/sony_ssm/set_request_next_suspend_prepare_notification
 
+on post-fs
+    # Change to socket location on libkeyctrl/suntory for /data encryption
+    mkdir /dev/socket/suntory 0755 system system
 
 # msm specific files that need to be created on /data
 on post-fs-data
+    symlink /idd /data/idd
+    chown idd idd /data/idd
+    chmod 0755 /data/idd
+
+    # Subsytem Ramdump collection
+    mkdir /data/tombstones/ramdump 0777 system system
+    write /sys/module/subsystem_restart/parameters/enable_ramdumps 1
+
     # Create directory used by audio subsystem
     mkdir /data/misc/audio 0770 audio audio
 
@@ -186,6 +179,13 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
+    mkdir /data/radio 0770 radio radio
+
+    mkdir /data/camera 0771 root camera
+
+    exec - root root -- /system/bin/rm -r /data/lost+found
+    mkdir /data/lost+found 0700 root root
+
     #Wake Gesture (touchscreen)
     chown system system /sys/android_touch/wake_gestures
     chown system system /sys/android_touch/wakeup
@@ -207,6 +207,8 @@ on post-fs-data
     #/data/etc (used by nvimport, bluetooth, hostapd, wpa)
     mkdir /data/etc 0755
     chown system system /data/etc
+
+    setprop vold.post_fs_data_done 1
 
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
@@ -349,14 +351,6 @@ service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     oneshot
     seclabel u:r:init:s0
 
-on property:crypto.driver.load=1
-     insmod /system/lib/modules/qce.ko
-     insmod /system/lib/modules/qcedev.ko
-
-on property:crypto.driver.load=0
-     exec - root root -- /system/bin/rmmod qcedev.ko
-     exec - root root -- /system/bin/rmmod qce.ko
-
 service drmdiag /system/bin/drmdiagapp
     class late_start
      user root
@@ -389,7 +383,7 @@ on property:sys.boot_completed=1
 service atfwd /system/bin/ATFWD-daemon
     class late_start
     user system
-    group system radio
+    group system radio qcom_diag
 
 service hdmid /system/bin/hdmid
     class late_start
@@ -459,14 +453,14 @@ service profiler_daemon /system/bin/profiler_daemon
     group root
     disabled
 
-# FUSE sdcard daemon for rich permissions (runs as media_rw)
-service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
-    class late_start
-    disabled
-
-service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
-    class late_start
-    disabled
+## FUSE sdcard daemon for rich permissions (runs as media_rw)
+#service fuse_sdcard0 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard0 /storage/sdcard0
+#    class late_start
+#    disabled
+#
+#service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
+#    class late_start
+#    disabled
 
 service hcidump /system/bin/sh /system/etc/hcidump.sh
     user bluetooth
@@ -496,6 +490,41 @@ service qosmgrd /system/bin/qosmgr /system/etc/qosmgr_rules.xml
 service qrngd /system/bin/qrngd -f
     class late_start
     user root
+
+service iddd /system/bin/iddd
+    class main
+    user idd
+    group idd log
+
+# Set the startup flag to boot complete, run on property change
+service setssflagbc /system/bin/startupflag bootcomplete
+    user root
+    oneshot
+    disabled
+
+on property:dev.bootcomplete=1
+    start setssflagbc
+
+# Start suntrold
+service suntrold /system/bin/suntrold
+    class main
+    user system
+    group system
+    oneshot
+
+# Fast Dormancy
+service fast-dormancy /system/bin/fast-dormancy
+    class main
+    user root
+    group root inet net_raw net_admin
+
+on property:ro.semc.enable.fast_dormancy=false
+    stop fast-dormancy
+
+service secchan /system/bin/secchand
+    class main
+    user system
+    group system
 
 on property:sys.radio.shutdown=true
    exec - root root -- /system/bin/sh /system/etc/init.qcom.efs.sync.sh

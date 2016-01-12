@@ -111,7 +111,7 @@ persist.audio.fluence.voicerec=false
 persist.audio.fluence.speaker=true
 
 # System prop to select audio resampler quality
-af.resampler.quality=3
+af.resampler.quality=7
 
 # NFC
 ro.nfc.on.default=false
@@ -133,7 +133,7 @@ ro.hwui.text_cache_width=2048
 #
 # Simulate sdcard on /data/media
 #
-persist.fuse_sdcard=false
+#persist.fuse_sdcard=false
 
 # Properties controlling Qcom performance patches
 net.webkit.setpri=1

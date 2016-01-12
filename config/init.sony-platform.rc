@@ -11,53 +11,25 @@ on fs
     # mount mmc partitions
     mount_all fstab.semc
 
-    setprop ro.crypto.fuse_sdcard true
-
     setprop ro.emmc 1
 
     # SEMC, TA Daemon
     class_start trimarea
     exec - root root -- /system/bin/wait4tad
-    exec - root root -- /sbin/mr
-    exec - root root -- /sbin/checkabortedflash
-
-on post-fs
-    mkdir /data/radio 0770 radio radio
-
-    # Camera
-    mkdir /data/camera 0771 root camera
-
-    exec - root root -- /system/bin/rm -r /data/lost+found
-    mkdir /data/lost+found 0700 root root
-
-on post-fs-data
-    # Clear dalvik cache
-    exec - root root -- /init.clrdex.sh
-
-    # USB related initialization
-    chown system system /sys/devices/platform/msm_hsusb/gadget/lun1/file
-    chmod 0660 /sys/devices/platform/msm_hsusb/gadget/lun1/file
-    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
-    write /sys/class/android_usb/f_rndis/manufacturer ${ro.product.manufacturer}
-    write /sys/class/android_usb/f_rndis/vendorID 0fce
-    write /sys/class/android_usb/f_rndis/wceis 1
-    write /sys/class/android_usb/f_mass_storage/inquiry_string "SONY    Mass Storage    0100"
-    write /sys/class/android_usb/f_cdrom/cdrom_inquiry_string "SONY    CD-ROM          0100"
-    write /sys/class/android_usb/f_mass_storage/serial_number ${ro.serialno}
-    write /sys/class/android_usb/f_mass_storage/eui64_id 000AD90000000000
-    write /sys/devices/platform/msm_hsusb/gadget/lun0/nofua 1
-    write /sys/devices/platform/msm_hsusb/gadget/lun1/nofua 1
-
-    setprop vold.post_fs_data_done 1
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
 
+    # USB related initialization
+    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+    write /sys/class/android_usb/f_rndis/manufacturer ${ro.product.manufacturer}
+    write /sys/class/android_usb/f_rndis/vendorID 0fce
+    write /sys/class/android_usb/f_rndis/wceis 1
+    write /sys/devices/platform/msm_hsusb/gadget/lun0/nofua 1
+
     #Run pre_hw_config.sh before entering charge only mode.
     exec - root root -- /system/bin/sh /system/etc/pre_hw_config.sh
-
-
 
     #Start secchan daemon service before entering charge only mode.
     start secchan
@@ -188,23 +160,9 @@ on boot
 
     exec - root root -- /system/bin/usbeng
 
-
-    # Disable C_A_D
-    exec - root root -- system/bin/ctrlaltdel soft
-
     # USB Host support
     mkdir /dev/bus 0711 system system
     mkdir /dev/bus/usb 0711 system system
-
-    setprop ro.wifi.wps_enable true
-    # Enable Wi-Fi EAP SIM
-    setprop ro.wifi.eap_sim_enabled true
-
-    # To use non-Google assistance server
-    setprop ro.gps.agps_provider customized
-
-    write /proc/sys/kernel/sysrq 0
-    write /proc/sys/kernel/watchdog_thresh 5
 
     exec - root root -- /system/bin/cal_data_manager
 
@@ -252,9 +210,15 @@ on property:sys.usb.config=rndis,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
+on property:sys.usb.config=midi
+    exec - root root -- /init.usbmode.sh
+    stop adbd
+    setprop sys.usb.state ${sys.usb.config}
 
-
-
+on property:sys.usb.config=midi,adb
+    exec - root root -- /init.usbmode.sh
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
 
 # SEMC, TA Daemon
 service tad /system/bin/tad /dev/block/mmcblk0p1 0,16,256
@@ -400,12 +364,6 @@ on early-boot
    # Permissions for AKM897x sensor
    chown system system /data/misc/akm_set.txt
 
-on post-fs-data
-    mkdir /data/idd 0755 idd idd
-    mount ext4 /dev/block/platform/msm_sdcc.1/by-num/p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
-    chown idd idd /data/idd
-    chmod 0755 /data/idd
-
 service rmt_storage /system/bin/rmt_storage
     user root
     disabled
@@ -418,8 +376,3 @@ service nvcustomizer /system/bin/nvcustomizer
 on property:ro.nvcust=1
     start nvcustomizer
 
-on property:vold.decrypt=trigger_post_fs_data
-    mkdir /data/idd 0755 idd idd
-    mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
-    chown idd idd /data/idd
-    chmod 0755 /data/idd

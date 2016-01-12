@@ -55,6 +55,14 @@ get_pid_prefix()
       PID_PREFIX=8
       ;;
 
+    "midi")
+      PID_PREFIX=A
+      ;;
+
+    "midi,adb")
+      PID_PREFIX=B
+      ;;
+
     *)
       /system/bin/log -t ${TAG} -p e "unsupported composition: $1"
       return 1

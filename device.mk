@@ -18,26 +18,13 @@
 TARGET_NO_SUPERUSER := true
 TARGET_RECOVERY_TWRP := false
 
-# define build target(normal/native/loop)
-BUILD_TARGET := normal
-
-# define build fs
-ifeq ($(BUILD_TARGET),loop)
-BUILD_FS := loop
-else
-# (ext4,f2fs,dynamic)
-BUILD_FS := dynamic
-endif
-
 # overlay
 DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
 
-# This device is xhdpi.  However the platform doesn't
-# currently contain all of the bitmaps at xhdpi density so
-# we do this little trick to fall back to the hdpi version
-# if the xhdpi doesn't exist.
-PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
+PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
+
+#PRODUCT_CHARACTERISTICS := nosdcard
 
 # kernel
 PRODUCT_PACKAGES += \
@@ -79,7 +66,9 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing
 
 # Stlport for proprietary Adreno OpenGL lib
-PRODUCT_PACKAGES +=  libstlport
+PRODUCT_PACKAGES +=  \
+    libstlport \
+    libCrypto
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
@@ -90,6 +79,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/config/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/config/mixer_paths.xml:system/etc/mixer_paths.xml
+
+# Reduce client buffer size for fast audio output tracks
+PRODUCT_PROPERTY_OVERRIDES += \
+    af.fast_track_multiplier=1
 
 # NFC
 PRODUCT_PACKAGES += \
@@ -145,19 +138,20 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.ethernet.xml:system/etc/permissions/android.hardware.ethernet.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
-    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
     frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
     frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
+    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
-    frameworks/native/data/etc/android.software.print.xml:system/etc/permissions/android.software.print.xml \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
+    frameworks/native/data/etc/android.software.print.xml:system/etc/permissions/android.software.print.xml \
+    frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
     frameworks/native/data/etc/com.nxp.mifare.xml:system/etc/permissions/com.nxp.mifare.xml
@@ -186,13 +180,11 @@ PRODUCT_COPY_FILES += \
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.semc.rc:root/init.semc.rc \
-    $(LOCAL_PATH)/config/init.sony.rc:root/init.sony.rc \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
-# Normal/Native/Loop
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/fstab.$(BUILD_FS).semc:root/fstab.semc \
-    $(LOCAL_PATH)/config/init.sony-platform.$(BUILD_TARGET).rc:root/init.sony-platform.rc
+    $(LOCAL_PATH)/config/fstab.dynamic.semc:root/fstab.semc \
+    $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
 
 # Recovery: Custom init for twrp
 ifeq ($(TARGET_RECOVERY_TWRP),true)
@@ -273,6 +265,11 @@ PRODUCT_PACKAGES += \
 # Wake Up
 PRODUCT_PACKAGES += \
     WakeUp
+
+# Live Wallpapers
+PRODUCT_PACKAGES += \
+    LiveWallpapersPicker \
+    librs_jni
 
 # Thermal management
 PRODUCT_PACKAGES += \
