@@ -750,7 +750,7 @@ __attribute__ ((visibility ("default")))
 audio_effect_library_t AUDIO_EFFECT_LIBRARY_INFO_SYM = {
     .tag = AUDIO_EFFECT_LIBRARY_TAG,
     .version = EFFECT_LIBRARY_API_VERSION,
-    .name = "MSM8660 Audio Preprocessing Library",
+    .name = "MSM8960 Audio Preprocessing Library",
     .implementor = "The Android Open Source Project",
     .create_effect = lib_create,
     .release_effect = lib_release,
