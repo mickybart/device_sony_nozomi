@@ -16,7 +16,7 @@
 
 # Local variables (can be duplicate from BoardConfig.mk)
 TARGET_NO_SUPERUSER := true
-TARGET_RECOVERY_TWRP := false
+TARGET_RECOVERY_TWRP := true
 
 # overlay
 DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
