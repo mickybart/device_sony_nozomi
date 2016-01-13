@@ -7,23 +7,17 @@
 #<src>                                    <mnt_point>       <type>  <mnt_flags and options>                                       <fs_mgr_flags>
 /dev/block/platform/msm_sdcc.1/by-num/p12  /system           ext4    ro,barrier=1                                                  wait
 
-/dev/block/platform/msm_sdcc.1/by-num/p10  /idd              ext4    nosuid,nodev,noatime,barrier=0,context=u:object_r:idd_data_file:s0  wait,check
+/dev/block/platform/msm_sdcc.1/by-num/p10  /idd              ext4    noatime,nosuid,nodev,barrier=0,context=u:object_r:idd_data_file:s0  wait,check
 
 #cache-ext4
-#/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            ext4    nosuid,nodev,noatime,barrier=1,data=ordered                   wait,check
+#/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            ext4    noatime,nosuid,nodev,barrier=1,data=ordered,nomblk_io_submit,errors=panic  wait,check
 #data-ext4
-#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             ext4    nosuid,nodev,noatime,barrier=1,data=ordered,noauto_da_alloc   wait,check,encryptable=footer
+#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             ext4    noatime,nosuid,nodev,barrier=1,data=ordered,nomblk_io_submit,errors=panic  wait,check,formattable,encryptable=footer,length=-16384
 
 #cache-f2fs
 #/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check
 #data-f2fs
-#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,encryptable=footer
+#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_data,inline_xattr,errors=recover     wait,check,formattable,encryptable=footer,length=-16384
 
-#sdcard0-vfat
-#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              vfat    defaults                                 voldmanaged=sdcard0:15,nonremovable,noemulatedsd
-#sdcard0-ext4
-#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              ext4    defaults,context=u:object_r:sdcard_posix:s0                                 voldmanaged=sdcard0:15,nonremovable,noemulatedsd
-#sdcard0-f2fs
-#/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              f2fs    discard,inline_xattr,errors=recover,context=u:object_r:sdcard_posix:s0      voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+/devices/platform/msm_hsusb_host.0         auto              auto    defaults                                                      voldmanaged=usb:auto
 
-/devices/platform/msm_hsusb_host.0         auto              vfat    defaults                                                      voldmanaged=usbdisk:auto
