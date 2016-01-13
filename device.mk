@@ -258,7 +258,8 @@ PRODUCT_PACKAGES += \
     e2fsck \
     fsck_msdos \
     fsck.f2fs \
-    mkfs.f2fs
+    mkfs.f2fs \
+    make_f2fs
 
 # Wake Up
 PRODUCT_PACKAGES += \
