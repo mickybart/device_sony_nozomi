@@ -183,7 +183,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/fstab.dynamic.semc:root/fstab.semc \
+    $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc \
     $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
 
 # Recovery: Custom init for twrp
