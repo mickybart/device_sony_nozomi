@@ -7,6 +7,8 @@ init_daemon_domain(ta_rmt_service)
 
 allow ta_rmt_service self:capability dac_override;
 allow ta_rmt_service self:process execmem;
+allow ta_rmt_service ta_rmt_service_exec:file execmod;
+allow ta_rmt_service system_file:file execmod;
 allow ta_rmt_service shared_log_device:chr_file { read write ioctl open };
 
 allow ta_rmt_service tad:unix_stream_socket connectto;

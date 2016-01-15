@@ -13,6 +13,10 @@ allow nvimport shared_log_device:chr_file rw_file_perms;
 unix_socket_connect(nvimport, property, init)
 allow nvimport default_prop:property_service set;
 allow nvimport sysfs_chargalg:file rw_file_perms;
+allow nvimport nvimport_exec:file execmod;
+
+#/system/lib/libnv.so
+allow nvimport system_file:file execmod;
 
 #/data/etc
 allow nvimport etc_data_file:dir create_dir_perms;

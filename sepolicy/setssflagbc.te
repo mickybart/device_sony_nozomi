@@ -7,6 +7,10 @@ init_daemon_domain(setssflagbc)
 
 allow setssflagbc self:capability dac_override;
 allow setssflagbc self:process execmem;
+allow setssflagbc setssflagbc_exec:file execmod;
+
+#/system/lib/libmiscta.so
+allow setssflagbc system_file:file execmod;
 
 allow setssflagbc tad:unix_stream_socket connectto;
 allow setssflagbc tad_socket:sock_file { read write };

@@ -1,9 +1,18 @@
 allow init wpa_socket:unix_dgram_socket { bind create };
 allow init self:process execmem;
 
+#TODO: review to avoid execute_no_trans
 allow init shell_exec:file execute_no_trans;
+allow init rootfs:file execute_no_trans;
+allow init system_file:file execute_no_trans;
 
 #mount mmcblk0p10 with idd context
 allow init idd_data_file:filesystem { relabelfrom relabelto mount };
 allow idd_data_file self:filesystem associate;
+
+#TODO: review (requested with M)
+allow init sysfs_wake_lock:file getattr;
+allow init system_file:file { execmod };
+allow init tad:unix_stream_socket connectto;
+allow init tad_socket:sock_file write;
 

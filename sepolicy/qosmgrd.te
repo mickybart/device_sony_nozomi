@@ -6,4 +6,4 @@ type qosmgrd_exec, exec_type, file_type;
 init_daemon_domain(qosmgrd)
 
 allow qosmgrd self:process execmem;
-
+allow qosmgrd qosmgrd_exec:file execmod;

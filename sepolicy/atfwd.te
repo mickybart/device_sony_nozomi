@@ -10,3 +10,7 @@ binder_call(atfwd,servicemanager)
 allow atfwd self:process execmem;
 unix_socket_connect(atfwd, property, init)
 allow atfwd ctl_default_prop:property_service set;
+allow atfwd atfwd_exec:file execmod;
+
+#/system/lib/libqmi.so
+allow atfwd system_file:file execmod;

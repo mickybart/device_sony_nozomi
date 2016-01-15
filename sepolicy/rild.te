@@ -2,3 +2,7 @@
 qmux_socket(rild)
 
 allow rild self:process execmem;
+allow rild rild_exec:file execmod;
+
+#/system/lib/libril*.so
+allow rild system_file:file execmod;

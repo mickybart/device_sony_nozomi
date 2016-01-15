@@ -6,5 +6,11 @@ type tad_exec, exec_type, file_type;
 init_daemon_domain(tad)
 
 allow tad self:process execmem;
+allow tad tad_exec:file execmod;
 allow tad block_device:dir search;
 allow tad tad_block_device:blk_file rw_file_perms;
+
+allow tad self:capability dac_override;
+allow tad tad_socket:sock_file { read write };
+#/system/lib/libmiscta.so
+allow tad system_file:file execmod;

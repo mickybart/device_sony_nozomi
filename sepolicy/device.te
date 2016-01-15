@@ -9,6 +9,7 @@ type shared_log_device, dev_type;
 type rmt_device, dev_type;
 type rmt_block_device, dev_type;
 type tad_block_device, dev_type;
+type iddd_block_device, dev_type;
 type oncrpc_device, dev_type; 
 type tzcom_device, dev_type;
 

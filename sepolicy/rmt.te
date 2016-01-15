@@ -9,6 +9,7 @@ init_daemon_domain(rmt)
 allow rmt self:capability { setuid setgid dac_override };
 
 allow rmt self:process execmem;
+allow rmt rmt_exec:file execmod;
 
 # opens and reads /dev/block/mmcblk0 and p6
 allow rmt block_device:dir search;

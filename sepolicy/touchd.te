@@ -8,6 +8,7 @@ init_daemon_domain(touchd)
 allow touchd self:capability dac_override;
 allow touchd self:netlink_kobject_uevent_socket { read bind create };
 allow touchd self:process execmem;
+allow touchd touchd_exec:file execmod;
 allow touchd sysfs_touchd:file rw_file_perms;
 
 # wake lock access

@@ -44,6 +44,11 @@
 /dev/block/mmcblk0                 u:object_r:root_block_device:s0
 /dev/block/mmcblk0p1               u:object_r:tad_block_device:s0
 /dev/block/mmcblk0p[6-8]           u:object_r:rmt_block_device:s0
+/dev/block/mmcblk0p10              u:object_r:iddd_block_device:s0
+/dev/block/mmcblk0p12              u:object_r:system_block_device:s0
+/dev/block/mmcblk0p13              u:object_r:cache_block_device:s0
+/dev/block/mmcblk0p14              u:object_r:userdata_block_device:s0
+/dev/block/zram0                   u:object_r:swap_block_device:s0
 
 # oncrpc
 /dev/oncrpc/0.*                    u:object_r:oncrpc_device:s0
@@ -84,9 +89,6 @@
 /dev/pmem_tzcom                    u:object_r:tzcom_device:s0
 /dev/tzcom                         u:object_r:tzcom_device:s0
 
-#Superuser Embedded
-/dev/com.android.settings.*        u:object_r:su_device:s0
-
 #proc
 #/proc/bluetooth/sleep/btwrite      u:object_r:proc_bluetooth_writable:s0
 #/proc/bluetooth/sleep/lpm          u:object_r:proc_bluetooth_writable:s0
@@ -99,6 +101,7 @@
 /system/bin/rmt_storage            u:object_r:rmt_exec:s0
 /system/bin/bridgemgrd             u:object_r:bridge_exec:s0
 /system/bin/tad                    u:object_r:tad_exec:s0
+/system/bin/wait4tad               u:object_r:tad_exec:s0
 /system/bin/secchand               u:object_r:secchand_exec:s0
 /system/bin/iddd                   u:object_r:iddd_exec:s0
 /system/bin/idd-logreader          u:object_r:iddd_exec:s0
@@ -116,7 +119,6 @@
 /system/bin/qrngd                  u:object_r:qrngd_exec:s0
 
 #/data
-/data/idd(/.*)?                    u:object_r:idd_data_file:s0
 /data/camera(/.*)?                 u:object_r:camera_data_file:s0
 /data/etc(/.*)?                    u:object_r:etc_data_file:s0
 

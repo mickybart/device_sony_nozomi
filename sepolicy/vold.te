@@ -1,2 +1,0 @@
-allow vold labeledfs:filesystem relabelfrom;
-allow vold sdcard_posix:filesystem { relabelfrom relabelto };

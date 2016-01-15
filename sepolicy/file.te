@@ -19,6 +19,3 @@ type sysfs_fastcharge, fs_type, sysfs_type;
 type idd_data_file, file_type, data_file_type;
 type etc_data_file, file_type, data_file_type;
 
-# sdcard ext4/f2fs
-type sdcard_posix, sdcard_type, fs_type, mlstrustedobject;
-

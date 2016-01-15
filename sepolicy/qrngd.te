@@ -8,4 +8,5 @@ init_daemon_domain(qrngd)
 allow qrngd hw_random_device:chr_file { read open };
 allow qrngd self:capability { setuid setgid sys_admin };
 allow qrngd self:process execmem;
+allow qrngd qrngd_exec:file execmod;
 

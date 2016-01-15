@@ -47,10 +47,6 @@ on init
     # Set permissions for persist partition
     mkdir /persist 0771 system system
 
-    # Support legacy paths
-    symlink /sdcard /mnt/sdcard
-    symlink /sdcard /storage/sdcard0
-
     mkdir /idd 0755 idd idd
 
 on early-boot
@@ -528,7 +524,7 @@ service swap-sh /system/bin/sh /init.swap.sh
     class late_start
     user root
     oneshot
-    seclabel u:r:init:s0
+    seclabel u:r:swap:s0
 
 on property:persist.ksm.enable=true
     write /sys/kernel/mm/ksm/pages_to_scan ${persist.ksm.pages_to_scan}

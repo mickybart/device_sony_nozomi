@@ -6,6 +6,10 @@ type qmux_exec, exec_type, file_type;
 init_daemon_domain(qmux)
 
 allow qmux self:process execmem;
+allow qmux qmux_exec:file execmod;
+
+#/system/lib/libdiag.so
+allow qmux system_file:file execmod;
 
 # Create sockets under each /dev/socket/qmux_* directory.
 allow qmux qmuxd_socket:dir w_dir_perms;
