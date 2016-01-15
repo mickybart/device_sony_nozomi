@@ -277,6 +277,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/thermanager.xml:system/etc/thermanager.xml
 
+# Terminal
+PRODUCT_PACKAGES += \
+    Terminal
+
 # Dalvik
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false
