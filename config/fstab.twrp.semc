@@ -3,4 +3,3 @@
 /system         ext4    /dev/block/mmcblk0p12
 /cache          f2fs    /dev/block/mmcblk0p13
 /data           f2fs    /dev/block/mmcblk0p14   flags=encryptable=footer;length=-16384
-/sdcard         auto    /dev/block/mmcblk0p15   flags=display="Internal SDcard";storage;wipeingui
