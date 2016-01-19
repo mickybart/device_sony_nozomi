@@ -27,8 +27,8 @@ persist.sys.lightbar_flash=1
 persist.screen.doze_brightness=0
 persist.screen.doze_invert=true
 screen.color_isday=true
-persist.screen.color_day="255 255 255"
-persist.screen.color_night="255 197 143"
+persist.screen.color_day=255 255 255
+persist.screen.color_night=255 197 143
 
 # Layers Manager
 ro.layers.noIcon=noIcon
