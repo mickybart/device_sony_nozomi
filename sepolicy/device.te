@@ -13,3 +13,5 @@ type iddd_block_device, dev_type;
 type oncrpc_device, dev_type; 
 type tzcom_device, dev_type;
 
+#Superuser Embedded
+type su_device, dev_type;

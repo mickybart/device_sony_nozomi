@@ -1,10 +1,9 @@
 #TODO: review init to avoid those permissions
+unix_socket_connect(toolbox, property, init)
 allow toolbox ctl_console_prop:property_service set;
 allow toolbox ctl_default_prop:property_service set;
 allow toolbox default_prop:property_service set;
 allow toolbox init:fifo_file { write getattr };
-allow toolbox init:unix_stream_socket connectto;
-allow toolbox property_socket:sock_file write;
 allow toolbox self:capability { chown fsetid dac_override };
 allow toolbox sysfs_devices_system_cpu:file setattr;
 allow toolbox system_data_file:dir { write read open rmdir remove_name };

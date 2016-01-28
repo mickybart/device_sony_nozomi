@@ -1,0 +1,7 @@
+unix_socket_connect(platform_app, property, init)
+allow platform_app default_prop:property_service set;
+allow platform_app property_socket:sock_file write;
+
+allow platform_app sysfs_fastcharge:file { write read open getattr};
+allow platform_app sysfs_mdp:file { write read open getattr };
+

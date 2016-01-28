@@ -1,2 +1,7 @@
 #/data/local/tmp
 allow appdomain shell_data_file:dir search;
+
+#Superuser Embedded
+allow appdomain su_device:dir r_dir_perms;
+allow appdomain su_device:sock_file write;
+allow appdomain su_exec:file rx_file_perms;
