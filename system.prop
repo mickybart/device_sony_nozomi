@@ -128,6 +128,17 @@ ro.nfc.se.smx.enable=true
 ro.nfc.icon.enable=true
 ro.nfc.vendor.name=nxp
 
+# Bluetooth profiles
+ro.qualcomm.bluetooth.opp=true
+ro.qualcomm.bluetooth.hfp=true
+ro.qualcomm.bluetooth.hsp=true
+ro.qualcomm.bluetooth.pbap=true
+ro.qualcomm.bluetooth.ftp=false
+ro.qualcomm.bluetooth.map=false
+ro.qualcomm.bluetooth.nap=true
+ro.qualcomm.bluetooth.sap=false
+ro.qualcomm.bluetooth.dun=false
+
 #
 # System prop for sending transmit power request to RIL during WiFi hotspot on/off
 #

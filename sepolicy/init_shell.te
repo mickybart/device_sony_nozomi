@@ -1,0 +1,14 @@
+# init_shell
+type init_shell, domain;
+type init_shell_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(init_shell)
+
+allow init_shell self:capability dac_override;
+allow init_shell shell_exec:file { read entrypoint };
+allow init_shell system_file:file { execmod execute_no_trans };
+allow init_shell tad:unix_stream_socket connectto;
+allow init_shell tad_socket:sock_file write;
+allow init_shell toolbox_exec:file entrypoint;
+allow init_shell sysfs:file write;

@@ -164,27 +164,19 @@ PRODUCT_COPY_FILES += \
 
 # Common Qualcomm / Sony scripts
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/init.usbmode.sh:root/init.usbmode.sh \
-    $(LOCAL_PATH)/config/init.qcom.sh:root/init.qcom.sh \
-    $(LOCAL_PATH)/config/init.qcom.class_core.sh:root/init.qcom.class_core.sh \
-    $(LOCAL_PATH)/config/init.qcom.class_main.sh:root/init.qcom.class_main.sh \
     $(LOCAL_PATH)/config/init.netconfig.sh:system/etc/init.netconfig.sh \
-    $(LOCAL_PATH)/config/init.qcom.efs.sync.sh:system/etc/init.qcom.efs.sync.sh \
-    $(LOCAL_PATH)/config/init.qcom.fm.sh:system/etc/init.qcom.fm.sh \
-    $(LOCAL_PATH)/config/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
     $(LOCAL_PATH)/config/init.swap.sh:root/init.swap.sh \
-    $(LOCAL_PATH)/config/pre_hw_config.sh:system/etc/pre_hw_config.sh \
     $(LOCAL_PATH)/config/hw_config.sh:system/etc/hw_config.sh \
     $(LOCAL_PATH)/config/clearpad_fwloader.sh:system/etc/clearpad_fwloader.sh
 
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.semc.rc:root/init.semc.rc \
-    $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
+    $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc \
+    $(LOCAL_PATH)/config/init.nozomi.usb.rc:root/init.nozomi.usb.rc
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc \
-    $(LOCAL_PATH)/config/init.sony-platform.rc:root/init.sony-platform.rc
+    $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc
 
 # Recovery: Custom init for twrp
 ifeq ($(TARGET_RECOVERY_TWRP),true)

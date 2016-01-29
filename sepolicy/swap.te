@@ -9,3 +9,4 @@ allow swap swap_block_device:blk_file { read write getattr open };
 allow swap shell_exec:file { read entrypoint };
 allow swap sysfs:file write;
 allow swap system_file:file execute_no_trans;
+allow swap self:capability sys_admin;

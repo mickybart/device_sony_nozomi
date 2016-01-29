@@ -1,11 +1,6 @@
 allow init wpa_socket:unix_dgram_socket { bind create };
 allow init self:process execmem;
 
-#TODO: review to avoid execute_no_trans
-allow init shell_exec:file execute_no_trans;
-allow init rootfs:file execute_no_trans;
-allow init system_file:file execute_no_trans;
-
 #mount mmcblk0p10 with idd context
 allow init idd_data_file:filesystem { relabelfrom relabelto mount };
 allow idd_data_file self:filesystem associate;
@@ -18,7 +13,8 @@ allow init tad_socket:sock_file write;
 
 #Superuser Embedded
 allow init su:process { siginh transition rlimitinh noatsecure };
-allow init su_exec:file rx_file_perms;
+#allow init su_exec:file rx_file_perms;
+allow init su_exec:file { read getattr open execute };
 allow init su_device:sock_file relabelto;
 allow init su_device:dir relabelto;
 allow init device:dir relabelfrom; #/init.superuser.rc

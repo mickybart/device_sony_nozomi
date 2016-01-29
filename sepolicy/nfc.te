@@ -1,0 +1,2 @@
+#/system/vendor/firmware/libpn544_fw_c2.so
+allow nfc system_file:file execmod;
