@@ -12,8 +12,8 @@ type sysfs_radio, fs_type, sysfs_type;
 type sysfs_touchd, fs_type, sysfs_type;
 type sysfs_wakeup, fs_type, sysfs_type;
 type sysfs_chargalg, fs_type, sysfs_type;
-type sysfs_mdp, fs_type, sysfs_type;
-type sysfs_fastcharge, fs_type, sysfs_type;
+type sysfs_mdp, fs_type, sysfs_type, mlstrustedobject;
+type sysfs_fastcharge, fs_type, sysfs_type, mlstrustedobject;
 
 # data_file
 type idd_data_file, file_type, data_file_type;
