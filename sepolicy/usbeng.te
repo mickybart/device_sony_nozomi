@@ -1,0 +1,12 @@
+# usbeng
+type usbeng, domain;
+type usbeng_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(usbeng)
+
+allow usbeng self:capability dac_override;
+allow usbeng system_file:file execmod;
+allow usbeng tad:unix_stream_socket connectto;
+allow usbeng tad_socket:sock_file write;
+allow usbeng usbeng_exec:file execmod;

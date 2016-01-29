@@ -120,6 +120,9 @@
 /system/bin/startupflag            u:object_r:setssflagbc_exec:s0
 /system/bin/qosmgr                 u:object_r:qosmgrd_exec:s0
 /system/bin/qrngd                  u:object_r:qrngd_exec:s0
+/system/bin/chargemon              u:object_r:chargemon_exec:s0
+/system/bin/usbeng                 u:object_r:usbeng_exec:s0
+/system/bin/cal_data_manager       u:object_r:cal_data_manager_exec:s0
 
 #/data
 /data/camera(/.*)?                 u:object_r:camera_data_file:s0
