@@ -62,9 +62,6 @@ on fs
     # mount mmc partitions
     mount_all fstab.semc
 
-    # swap
-    exec u:r:swap:s0 root root -- /system/bin/sh /init.swap.sh
-
     setprop ro.emmc 1
 
     # SEMC, TA Daemon
@@ -676,6 +673,12 @@ on property:persist.ksm.enable=false
 
 on property:sys.radio.shutdown=true
    exec u:r:init_shell:s0 root root -- /system/bin/cat /sys/devices/platform/rs300000a7.65536/force_sync 
+
+service swap-sh /system/bin/sh /init.swap.sh
+    class late_start
+    user root
+    oneshot
+    seclabel u:r:swap:s0
 
 # SEMC, TA Daemon
 service tad /system/bin/tad /dev/block/mmcblk0p1 0,16,256
