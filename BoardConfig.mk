@@ -95,15 +95,15 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 # charger/healthd
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
-## Enable dex-preoptimization to speed up first boot sequence
-#ifeq ($(HOST_OS),linux)
-#  ifeq ($(TARGET_BUILD_VARIANT),user)
-#    ifeq ($(WITH_DEXPREOPT),)
-#      WITH_DEXPREOPT := true
-#    endif
-#  endif
-#endif
-#DONT_DEXPREOPT_PREBUILTS := true
+# Enable dex-preoptimization to speed up first boot sequence
+ifeq ($(HOST_OS),linux)
+  ifeq ($(TARGET_BUILD_VARIANT),user)
+    ifeq ($(WITH_DEXPREOPT),)
+      WITH_DEXPREOPT := true
+    endif
+  endif
+endif
+DONT_DEXPREOPT_PREBUILTS := true
 
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RECOVERY := false
