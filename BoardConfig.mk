@@ -92,6 +92,9 @@ TARGET_BOOTLOADER_BOARD_NAME := fuji
 TARGET_VENDOR_PLATFORM := fuji
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 
+# charger/healthd
+BOARD_CHARGER_ENABLE_SUSPEND := true
+
 ## Enable dex-preoptimization to speed up first boot sequence
 #ifeq ($(HOST_OS),linux)
 #  ifeq ($(TARGET_BUILD_VARIANT),user)
