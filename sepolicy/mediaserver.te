@@ -12,8 +12,8 @@ allow mediaserver system_server:unix_stream_socket { read write };
 allow mediaserver camera_device:dir search;
 allow mediaserver camera_data_file:dir rw_dir_perms;
 allow mediaserver camera_data_file:file create_file_perms;
-
-#allow mediaserver mediaserver_tmpfs:file execute;
+allow mediaserver shell_data_file:dir search;
+allow mediaserver mediaserver_tmpfs:file execute;
 
 # Permit mediaserver to create sockets with no specific SELinux class.
 # TODO: Investigate the specific type of socket.
@@ -23,4 +23,3 @@ allow mediaserver self:socket create_socket_perms;
 #/system/lib/libacdbloader.so
 allow mediaserver system_file:file execmod;
 
-allow mediaserver mediaserver_tmpfs:file execute;

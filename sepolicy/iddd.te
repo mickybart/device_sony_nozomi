@@ -16,3 +16,4 @@ allow iddd system_file:file execmod;
 
 # idd-logreader
 allow iddd log_device:chr_file { read open };
+allow iddd log_device:dir search;

@@ -10,3 +10,7 @@ allow cal_data_manager self:capability dac_override;
 allow cal_data_manager system_file:file execmod;
 allow cal_data_manager tad:unix_stream_socket connectto;
 allow cal_data_manager tad_socket:sock_file write;
+
+# for /data/cal.bin
+allow cal_data_manager system_data_file:dir rw_dir_perms;
+allow cal_data_manager system_data_file:file create_file_perms;

@@ -11,3 +11,14 @@ allow chargemon sysfs_wake_lock:file { write getattr open };
 allow chargemon system_file:file execmod;
 allow chargemon tad:unix_stream_socket connectto;
 allow chargemon tad_socket:sock_file write;
+allow chargemon graphics_device:chr_file { read write ioctl open };
+allow chargemon input_device:chr_file { ioctl open };
+allow chargemon self:capability sys_tty_config;
+allow chargemon sysfs:file write;
+allow chargemon sysfs_devices_system_cpu:file write;
+allow chargemon tty_device:chr_file { read write ioctl open };
+allow chargemon usbaccessory_device:chr_file { read write ioctl open };
+
+unix_socket_connect(chargemon, property, init)
+allow chargemon property_socket:sock_file write;
+allow chargemon default_prop:property_service set;
