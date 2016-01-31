@@ -36,6 +36,9 @@ ro.layers.noIcon=noIcon
 # Fake signature (Mainly for microg/NoGapps)
 persist.sys.fake-signature=false
 
+# Auto Power Modes (config_enableAutoPowerModes)
+persist.sys.autopower=true
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
