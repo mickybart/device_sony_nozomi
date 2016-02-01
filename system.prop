@@ -142,10 +142,16 @@ ro.qualcomm.bluetooth.nap=true
 ro.qualcomm.bluetooth.sap=false
 ro.qualcomm.bluetooth.dun=false
 
+# Bluetooth address programming
+ro.bt.bdaddr_path=data/etc/bluetooth_bdaddr
+
 #
 # System prop for sending transmit power request to RIL during WiFi hotspot on/off
 #
 ro.ril.transmitpower=true
+
+# Do not power down SIM in flight mode (required for Wi-Fi EAP-SIM)
+persist.radio.apm_sim_not_pwdn=0
 
 # hwui
 ro.hwui.text_cache_width=2048
@@ -175,6 +181,10 @@ net.nw.cache.prioadvstep=86400000
 net.nw.cache.weightadvstep=3600000
 net.nw.cache.orderby=weight
 stathub.enabled=0
+
+# Default tcp buffersizes for hsdpa
+net.tcp.buffersize.hsdpa=4094,87380,1220608,4096,16384,1220608
+net.tcp.buffersize.hspa=4094,87380,1220608,4096,16384,1220608
 
 #
 # ADDITIONAL_BUILD_PROPERTIES
