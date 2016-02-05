@@ -71,11 +71,14 @@ on early-boot
     write /sys/class/leds/green/max_current 2000
     write /sys/class/leds/blue/max_current 2000
 
-    #Start secchan daemon service before entering charge only mode.
-    start secchan
-
     # Start the offline charging (This blocks booting further in some cases)
+    write /sys/power/autosleep mem
+    setprop persist.chargemon.active 1
     exec - root root -- /system/bin/chargemon
+    write /sys/power/autosleep off
+
+    #Start secchan daemon service.
+    start secchan
 
 on boot
     #Create QMUX deamon socket area
