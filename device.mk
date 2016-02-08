@@ -245,6 +245,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 endif
 
+# SuperSU 2.65+ support
+PRODUCT_COPY_FILES += \
+    device/sony/nozomi/recovery/supersu:system/.supersu
+
 # Filesystem tools
 PRODUCT_PACKAGES += \
     e2fsck \
