@@ -8,7 +8,7 @@
 /dev/block/mmcblk0p3                       /boot             emmc    defaults                recoveryonly
 /dev/block/platform/msm_sdcc.1/by-num/p12  /system           ext4    ro,barrier=1            wait
 /dev/block/platform/msm_sdcc.1/by-num/p13  /cache            auto    defaults                wait,check
-/dev/block/platform/msm_sdcc.1/by-num/p14  /data             auto    defaults                wait,check,encryptable=footer
+/dev/block/platform/msm_sdcc.1/by-num/p14  /data             auto    defaults                wait,check,encryptable=footer,length=-16384
 /devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              auto    defaults                voldmanaged=sdcard0:15,nonremovable,noemulatedsd
 /devices/platform/msm_hsusb_host.0         auto              vfat    defaults                voldmanaged=usbdisk:auto
 

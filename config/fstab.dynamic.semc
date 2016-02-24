@@ -10,12 +10,12 @@
 #cache-ext4
 #/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            ext4    nosuid,nodev,noatime,barrier=1,data=ordered                   wait,check
 #data-ext4
-#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             ext4    nosuid,nodev,noatime,barrier=1,data=ordered,noauto_da_alloc   wait,check,encryptable=footer
+#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             ext4    nosuid,nodev,noatime,barrier=1,data=ordered,noauto_da_alloc   wait,check,encryptable=footer,length=-16384
 
 #cache-f2fs
 #/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check
 #data-f2fs
-#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,encryptable=footer
+#/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,encryptable=footer,length=-16384
 
 #sdcard0-vfat
 #/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              vfat    defaults                                 voldmanaged=sdcard0:15,nonremovable,noemulatedsd
