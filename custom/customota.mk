@@ -4,7 +4,7 @@ name := nAOSProm-5.1
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
-name := $(name)-bxx
+name := $(name)-b$(ROM_BUILD_NUM)
 
 INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 
