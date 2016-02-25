@@ -4,7 +4,7 @@
 ccf72777f84a23854ecb3e542ae22768 c42f72f08ff0e7a6c42208d229d80011 ./build/target/product/generic_no_telephony.mk
 6d8b2beadcdf61823d3983d843daeb5b d163e7565ee60f811f381fc903dbe47e ./build/target/product/sdk_base.mk
 d1578798dbd83f0071a2960c06f96e63 107b7fb67d57a6ff7ecdd6ea034b3b1c ./build/tools/releasetools/common.py
-e6afb537eacb738b1e99426252907765 435f04a99c10f7cf4a563525199cd53d ./build/tools/releasetools/ota_from_target_files
+e6afb537eacb738b1e99426252907765 2b4e725949f055d7532819a300d77fb2 ./build/tools/releasetools/ota_from_target_files
 8a571ce47588215bf644f79ee64f7fdc 9dcb8ec66dc4a7cbb85a446c1a5ea43a ./external/bluetooth/bluedroid/btif/include/btif_api.h
 bc5a0735be42ae2c90fa5d02953b66d9 2982dcec2245677a4bf8bb1b3bf4987a ./external/bluetooth/bluedroid/btif/src/bluetooth.c
 f7608712f5a0a4e98dc77feba3731968 9e8e2a294686893260b5cd99cd281288 ./external/bluetooth/bluedroid/btif/src/btif_core.c

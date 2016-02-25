@@ -580,6 +580,30 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   system_items = ItemSet("system", "META/filesystem_config.txt")
   script.ShowProgress(system_progress, 0)
 
+  script.Print('**************************')
+  script.Print('***     nAOSP ROM      ***')
+  script.Print('**************************')
+
+  # Backup Theme files if available
+  script.Print('*** Backup Theme       ***')
+  script.Mount("/system", recovery_mount_options)
+  common.ZipWriteStr(output_zip, "overlay.sh", '''#!/sbin/sh
+
+case "$1" in
+    backup)
+        [ -d /system/vendor/overlay ] && tar -cf /tmp/overlay.tar /system/vendor/overlay/ 2> /dev/null
+        ;;
+    restore)
+        [ -f /tmp/overlay.tar ] && tar xf /tmp/overlay.tar -C /
+        ;;
+esac''')
+
+  script.AppendExtra('package_extract_file("overlay.sh", "/tmp/overlay.sh");')
+  script.AppendExtra('run_program("/sbin/sh", "/tmp/overlay.sh", "backup");')
+  script.Unmount("/system")
+
+  script.Print('*** Flashing nAOSP ROM ***')
+
   if block_based:
     # Full OTA is done as an "incremental" against an empty source
     # image.  This has the effect of writing new data from the package
@@ -598,6 +622,21 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
     symlinks = CopyPartitionFiles(system_items, input_zip, output_zip)
     script.MakeSymlinks(symlinks)
+
+  # Mount /system
+  script.Mount("/system", recovery_mount_options)
+
+  # .supersu
+  script.Print('*** /system/.supersu   ***')
+  common.ZipWriteStr(output_zip, ".supersu", "SYSTEMLESS=false")
+  script.AppendExtra('package_extract_file(".supersu", "/system/.supersu");')
+
+  # Restore Theme files if available
+  script.Print('*** Restore Theme      ***')
+  script.AppendExtra('run_program("/sbin/sh", "/tmp/overlay.sh", "restore");')
+
+  # Unmount /system
+  script.Unmount("/system")
 
   if OPTIONS.multiple_boot is None:
     boot_img = common.GetBootableImage("boot.img", "boot.img",
@@ -644,13 +683,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
                                          OPTIONS.input_tmp, "BOOT")
       common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
       common.ZipWriteStr(output_zip, boot_file, boot_img.data)
-
-  if OPTIONS.no_separate_recovery:
-    recovery_file = "recovery.img"
-    recovery_img = common.GetBootableImage(recovery_file, recovery_file,
-                                       OPTIONS.input_tmp, "BOOT")
-    common.ZipWriteStr(output_zip, recovery_file, recovery_img.data)
- 
+      
   script.ShowProgress(0.05, 5)
   
   if OPTIONS.multiple_boot is None:
@@ -659,6 +692,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     if OPTIONS.multiple_boot_scripts is not None:
       script.AppendExtra(open(OPTIONS.multiple_boot_scripts + "/customota.boot").read())
       common.ZipWriteStr(output_zip, "install-prep.sh", open(OPTIONS.multiple_boot_scripts + "/customota.prep").read())
+
+  if OPTIONS.no_separate_recovery:
+    recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
+                                         OPTIONS.input_tmp, "RECOVERY")
+    common.ZipWriteStr(output_zip, "recovery.img", recovery_img.data)
+    #script.Print('*** Flashing Recovery  ***')
+    #script.AppendExtra('package_extract_file("recovery.img", "/dev/block/mmcblk0p11");')
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
