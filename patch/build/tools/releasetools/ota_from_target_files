@@ -697,8 +697,8 @@ esac''')
     recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
                                          OPTIONS.input_tmp, "RECOVERY")
     common.ZipWriteStr(output_zip, "recovery.img", recovery_img.data)
-    #script.Print('*** Flashing Recovery  ***')
-    #script.AppendExtra('package_extract_file("recovery.img", "/dev/block/mmcblk0p11");')
+    script.Print('*** Flashing Recovery  ***')
+    script.AppendExtra('package_extract_file("recovery.img", "/dev/block/mmcblk0p11");')
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
