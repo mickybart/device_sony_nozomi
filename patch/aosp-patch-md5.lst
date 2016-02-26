@@ -14,7 +14,7 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 1b473409d92d3506e4699898ea7b71c3 fa6d9c70498f436ac83bb82d078c481f ./external/libnfc-nxp/src/phHal4Nfc.c
 2befbc91a15c3b23510fae03cda36263 944f0993f2b2a3cc8dd1b0ce8be223fb ./external/libnfc-nxp/src/phLibNfc.c
 07929bf98f69fb6c243b2bc8c37c0f81 3fa2c0991465d7668f15ce73ba533125 ./external/libnfc-nxp/src/phLibNfc.h
-4409b4a843da4c319043ad3b400e2bde 9f8836d8701b1cbd907b2098c484be9e ./external/sepolicy/app.te
+4409b4a843da4c319043ad3b400e2bde deea6660f93e042d9f7237439efc3b42 ./external/sepolicy/app.te
 88a8289350b537b31de93f9ea78fb9f1 15604a051b6b646d11034f636d5f0e9a ./external/sepolicy/domain.te
 2d023a793116c315ad19f9cf4848c621 e07dba6986df22343eccf32aef2ff389 ./frameworks/native/include/gui/SurfaceComposerClient.h
 2ef010bf10354f3a899f74e8a7083530 f3038da7e801325ca81df0f2fb094cc1 ./frameworks/native/libs/gui/SurfaceComposerClient.cpp

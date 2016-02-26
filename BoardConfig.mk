@@ -183,6 +183,7 @@ BOARD_SEPOLICY_UNION += \
     mediaserver.te \
     netmgrd.te \
     nvimport.te \
+    platform_app.te \
     ppd.te \
     property.te \
     property_contexts \
