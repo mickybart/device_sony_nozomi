@@ -288,7 +288,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.updater=nAOSProm-5.1-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://www.dropbox.com/s/zfhk26j2tiz6fdu/updates51.txt?dl=1
+    persist.rom.updater.uri=https://www.dropbox.com/s/kdrig695c8tfu7q/updates51-noemulated.txt?dl=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false
