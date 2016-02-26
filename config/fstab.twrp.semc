@@ -1,6 +1,6 @@
 # mount point   fstype  device                  [device2] fstype2
 /boot           emmc    /dev/block/mmcblk0p3
-/fota           emmc    /dev/block/mmcblk0p11   flags=display="Fota";backup=1
+/fota           emmc    /dev/block/mmcblk0p11   flags=display="Fota";backup=1;flashimg
 /system         ext4    /dev/block/mmcblk0p12
 /cache          f2fs    /dev/block/mmcblk0p13
 /data           f2fs    /dev/block/mmcblk0p14   flags=encryptable=footer;length=-16384
