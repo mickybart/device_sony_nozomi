@@ -26,7 +26,9 @@ persist.sys.lightbar_flash=1
 # screen (doze, color, auto brightness)
 persist.screen.doze_brightness=0
 persist.screen.doze_invert=true
-persist.screen.color_control="255 255 255"
+screen.color_isday=true
+persist.screen.color_day=255 255 255
+persist.screen.color_night=255 197 143
 persist.screen.auto_lux=
 persist.screen.auto_brightness=
 
