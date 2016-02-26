@@ -138,12 +138,8 @@ DEVICE_RESOLUTION := 720x1280
 TW_THEME := portrait_hdpi
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 BOARD_HAS_NO_REAL_SDCARD := true
-RECOVERY_SDCARD_ON_DATA := true
 TW_NO_USB_STORAGE := true
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/platform/msm_adc/msm_therm"
-TW_INCLUDE_CRYPTO := true
-TW_CUSTOM_BATTERY_CAPACITY_PATH := /sys/class/power_supply/bq27520/capacity
-TW_CUSTOM_BATTERY_STATUS_PATH := /sys/class/power_supply/bq24185/status
 endif #TARGET_RECOVERY_TWRP
 endif #TARGET_NO_RECOVERY
 
