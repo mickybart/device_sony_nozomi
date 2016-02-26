@@ -25,7 +25,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import init.nozomi.usb.rc
+import init.semc.usb.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug

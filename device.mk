@@ -173,7 +173,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.semc.rc:root/init.semc.rc \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc \
-    $(LOCAL_PATH)/config/init.nozomi.usb.rc:root/init.nozomi.usb.rc
+    $(LOCAL_PATH)/config/init.semc.usb.rc:root/init.semc.usb.rc
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc
