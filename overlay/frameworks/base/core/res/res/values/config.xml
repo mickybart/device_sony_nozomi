@@ -246,7 +246,7 @@
     <bool name="config_speed_up_audio_on_mt_calls">true</bool>
 
     <!-- MMS user agent string -->
-    <string name="config_mms_user_agent" translatable="false">Xperia S</string>
+    <string name="config_mms_user_agent" translatable="false">Xperia Acro S</string>
 
     <string-array name="config_locationProviderPackageNames" translatable="false"> 
         <!-- The Google provider --> 

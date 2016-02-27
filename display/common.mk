@@ -1,11 +1,11 @@
 #Common headers
-common_includes := device/sony/nozomi/display/libgralloc
-common_includes += device/sony/nozomi/display/liboverlay
-common_includes += device/sony/nozomi/display/libcopybit
-common_includes += device/sony/nozomi/display/libqdutils
-common_includes += device/sony/nozomi/display/libhwcomposer
-common_includes += device/sony/nozomi/display/libexternal
-common_includes += device/sony/nozomi/display/libqservice
+common_includes := device/sony/hikari/display/libgralloc
+common_includes += device/sony/hikari/display/liboverlay
+common_includes += device/sony/hikari/display/libcopybit
+common_includes += device/sony/hikari/display/libqdutils
+common_includes += device/sony/hikari/display/libhwcomposer
+common_includes += device/sony/hikari/display/libexternal
+common_includes += device/sony/hikari/display/libqservice
 
 common_header_export_path := qcom/display
 

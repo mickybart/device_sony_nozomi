@@ -17,4 +17,6 @@
 #data-f2fs
 #/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,encryptable=footer,length=-16384
 
+/devices/platform/msm_sdcc.3/mmc_host      auto              vfat    defaults                                                      voldmanaged=sdcard1:auto
+
 /devices/platform/msm_hsusb_host.0         auto              vfat    defaults                                                      voldmanaged=usbdisk:auto

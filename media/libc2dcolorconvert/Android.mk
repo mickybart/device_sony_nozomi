@@ -8,7 +8,7 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES := \
     $(TOP)/frameworks/av/include/media/stagefright \
     $(TOP)/frameworks/native/include/media/openmax \
-    $(TOP)/device/sony/nozomi/display/libcopybit
+    $(TOP)/device/sony/hikari/display/libcopybit
 
 LOCAL_SHARED_LIBRARIES := liblog libdl
 

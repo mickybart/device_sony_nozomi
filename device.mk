@@ -30,7 +30,7 @@ BUILD_FS := dynamic
 endif
 
 # overlay
-DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
+DEVICE_PACKAGE_OVERLAYS += device/sony/hikari/overlay
 
 # This device is xhdpi.  However the platform doesn't
 # currently contain all of the bitmaps at xhdpi density so
@@ -287,8 +287,8 @@ PRODUCT_PACKAGES += \
     ROMUpdater
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.version.updater=nAOSProm-5.1-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://www.dropbox.com/s/zfhk26j2tiz6fdu/updates51.txt?dl=1
+    ro.build.version.updater=nAOSProm-5.1-$(TARGET_DEVICE)-b$(ROM_BUILD_NUM) \
+    persist.rom.updater.uri=https://localhost
 
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false

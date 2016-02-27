@@ -19,10 +19,10 @@ e50637f6428ebe1ba502b6726eaea4ca bad7433a89d6b7b47ed3261a766df1f1 ./external/f2f
 2d023a793116c315ad19f9cf4848c621 e07dba6986df22343eccf32aef2ff389 ./frameworks/native/include/gui/SurfaceComposerClient.h
 2ef010bf10354f3a899f74e8a7083530 f3038da7e801325ca81df0f2fb094cc1 ./frameworks/native/libs/gui/SurfaceComposerClient.cpp
 229187f074c3169280a8a79cd82757dc 1248875dffb2a16d065e2cf80b422036 ./frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
-034b69b80a40470a5eeec0830cf68dd3 95f7e7d5b1397341d934a90264a56d0e ./hardware/broadcom/libbt/Android.mk
--------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/nozomi/Android.mk
--------------------------------- 75ea406d59e96bdda5fc580c2870cb69 ./hardware/broadcom/libbt/conf/sony/nozomi/bt_vendor.conf
--------------------------------- 944dfa963b34f6d274eedf4fa24f30d5 ./hardware/broadcom/libbt/include/vnd_nozomi.txt
+034b69b80a40470a5eeec0830cf68dd3 083716876917f8c62433621189fbe8f0 ./hardware/broadcom/libbt/Android.mk
+-------------------------------- 6449296a0cedf743d76295b1ebe5eb9c ./hardware/broadcom/libbt/conf/sony/hikari/Android.mk
+-------------------------------- 75ea406d59e96bdda5fc580c2870cb69 ./hardware/broadcom/libbt/conf/sony/hikari/bt_vendor.conf
+-------------------------------- 944dfa963b34f6d274eedf4fa24f30d5 ./hardware/broadcom/libbt/include/vnd_hikari.txt
 -------------------------------- 2f20f20c2d1dfddb2c38200ea2a91526 ./hardware/libhardware/include/hardware/fmradio.h
 4bd7a2a4169692fdbe932f4c667bd859 21c15a74f56fa807d245a25898baa8d7 ./packages/apps/Bluetooth/Android.mk
 -------------------------------- f3020276e9c2f8704838b04544ac5dfb ./packages/apps/Bluetooth/fmradio/AndroidManifest.xml
