@@ -15,6 +15,7 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	$(hide) MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
 	   ./build/tools/releasetools/ota_from_target_files -v \
 	   --block \
+	   -n \
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
 	   --no_separate_recovery=true \
