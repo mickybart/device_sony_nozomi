@@ -43,8 +43,11 @@ endif
 ifeq ($(TARGET_PRODUCT), full_wingray)
     include $(LOCAL_PATH)/conf/moto/wingray/Android.mk
 endif
+ifeq ($(TARGET_DEVICE), nozomi)  
+    include $(LOCAL_PATH)/conf/sony/nozomi/Android.mk  
+endif  
 ifeq ($(TARGET_DEVICE), hikari)  
     include $(LOCAL_PATH)/conf/sony/hikari/Android.mk  
-endif  
+endif
 
 endif # BOARD_HAVE_BLUETOOTH_BCM
