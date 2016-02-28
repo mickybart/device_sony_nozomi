@@ -57,7 +57,7 @@ VIPER4ANDROID_MODE := NEON
 # bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/sony/nozomi/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/sony/hikari/bluetooth
 
 # sensor
 BOARD_USES_GENERIC_INVENSENSE := false
@@ -94,7 +94,7 @@ BOARD_HAVE_FMRADIO_BCM := true
 
 # kernel
 BOARD_KERNEL_MSM := true
-KERNEL_DEFCONFIG := fuji_nozomi_defconfig
+KERNEL_DEFCONFIG := fuji_hikari_defconfig
 
 # power
 TARGET_HAS_LEGACY_SHUTDOWN := true
@@ -140,7 +140,7 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 15728640
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 
 # Recovery
-TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.recovery.semc
+TARGET_RECOVERY_FSTAB := device/sony/hikari/config/fstab.recovery.semc
 RECOVERY_FSTAB_VERSION := 2
 
 # twrp
@@ -148,7 +148,7 @@ ifeq ($(TARGET_NO_RECOVERY),false)
 TARGET_RECOVERY_TWRP := true
 
 ifeq ($(TARGET_RECOVERY_TWRP),true)
-TWRP_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.twrp.semc
+TWRP_RECOVERY_FSTAB := device/sony/hikari/config/fstab.twrp.semc
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 DEVICE_RESOLUTION := 720x1280
 TW_THEME := portrait_hdpi
@@ -165,19 +165,19 @@ endif #TARGET_RECOVERY_TWRP
 endif #TARGET_NO_RECOVERY
 
 # OTA
-TARGET_OTA_ASSERT_DEVICE := LT26i,nozomi
+TARGET_OTA_ASSERT_DEVICE := LT26i,hikari
 
 # custom boot
-BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := device/sony/hikari/custom/custombootimg.mk
 
 # custom ota
-BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
+BOARD_CUSTOM_OTA_MK := device/sony/hikari/custom/customota.mk
 
 # SELinux
 BOARD_SEPOLICY_DIRS += \
-    device/sony/nozomi/sepolicy
+    device/sony/hikari/sepolicy
 
--include vendor/sony/nozomi/BoardConfigVendor.mk
+-include vendor/sony/hikari/BoardConfigVendor.mk
 
 # Include an expanded selection of fonts
 EXTENDED_FONT_FOOTPRINT := true
