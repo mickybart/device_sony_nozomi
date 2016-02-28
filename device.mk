@@ -288,7 +288,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.updater=nAOSProm-5.1-$(TARGET_DEVICE)-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://localhost
+    persist.rom.updater.uri=https://www.dropbox.com/s/e2127yttb5krkpt/updates51-hikari.txt?dl=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false
