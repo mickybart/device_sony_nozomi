@@ -18,16 +18,16 @@
 PRODUCT_COPY_FILES += device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
 
 # Override the audio_effects.conf
-PRODUCT_COPY_FILES += device/sony/nozomi/config/audio_effects.conf:system/etc/audio_effects.conf
+PRODUCT_COPY_FILES += device/sony/hikari/config/audio_effects.conf:system/etc/audio_effects.conf
 
 # Inherit from the common Open Source product configuration
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
 
 # Discard inherited values and use our own instead.
-PRODUCT_NAME := full_nozomi
-PRODUCT_DEVICE := nozomi
+PRODUCT_NAME := full_hikari
+PRODUCT_DEVICE := hikari
 PRODUCT_BRAND := Sony
-PRODUCT_MODEL := Xperia S
+PRODUCT_MODEL := Xperia Acro S
 PRODUCT_MANUFACTURER := Sony
 PRODUCT_RESTRICT_VENDOR_FILES := false
 
@@ -36,5 +36,5 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.com.android.dataroaming=false
 
 # Inherit from hardware-specific part of the product configuration
-$(call inherit-product, device/sony/nozomi/device.mk)
-$(call inherit-product-if-exists, vendor/sony/nozomi/device-vendor.mk)
+$(call inherit-product, device/sony/hikari/device.mk)
+$(call inherit-product-if-exists, vendor/sony/hikari/device-vendor.mk)

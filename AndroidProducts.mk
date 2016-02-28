@@ -15,5 +15,5 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/aosp_nozomi.mk \
-    $(LOCAL_DIR)/full_nozomi.mk
+    $(LOCAL_DIR)/aosp_hikari.mk \
+    $(LOCAL_DIR)/full_hikari.mk

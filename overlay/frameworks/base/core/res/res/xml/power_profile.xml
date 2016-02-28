@@ -102,5 +102,5 @@
     <item name="cpu.idle">3.5</item>
 
     <!-- This is the battery capacity in mAh -->
-    <item name="battery.capacity">1750</item>
+    <item name="battery.capacity">1910</item>
 </device>

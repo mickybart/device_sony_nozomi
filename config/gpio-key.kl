@@ -1,4 +1,4 @@
-# this corresponds to kernel/arch/arm/mach-msm/keypad-fuji_nozomi.c
+# this corresponds to kernel/arch/arm/mach-msm/keypad-fuji_hikari.c
 #
 # defines for values are in frameworks/base/include/ui/KeycodeLabels.h
 

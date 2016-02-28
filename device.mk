@@ -19,7 +19,7 @@ TARGET_NO_SUPERUSER := false
 TARGET_RECOVERY_TWRP := true
 
 # overlay
-DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
+DEVICE_PACKAGE_OVERLAYS += device/sony/hikari/overlay
 
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
@@ -289,7 +289,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.updater=nAOSProm-7.1.1-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://www.dropbox.com/s/6ijn6ctk2l1pz4j/updates71-nozomi.txt?dl=1
+    persist.rom.updater.uri=https://localhost
 
 # Dalvik
 PRODUCT_PROPERTY_OVERRIDES += \
