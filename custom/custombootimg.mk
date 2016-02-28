@@ -17,8 +17,8 @@
 
 LOCAL_PATH := $(call my-dir)
 
-MKELF := device/sony/nozomi/tools/mkelf.py
-RPMBIN := vendor/sony/nozomi/proprietary/boot/RPM.bin
+MKELF := device/sony/hikari/tools/mkelf.py
+RPMBIN := vendor/sony/hikari/proprietary/boot/RPM.bin
 
 $(INSTALLED_BOOTIMAGE_TARGET): $(PRODUCT_OUT)/kernel $(INSTALLED_RAMDISK_TARGET) $(MKBOOTIMG) $(MINIGZIP) $(INTERNAL_BOOTIMAGE_FILES)
 	$(call pretty,"Boot image: $@")

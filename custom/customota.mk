@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-name := nAOSProm-6.0
+name := nAOSProm-6.0-$(TARGET_DEVICE)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif

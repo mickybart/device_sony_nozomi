@@ -17,6 +17,6 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 
-#define BTM_DEF_LOCAL_NAME   "Xperia S"
+#define BTM_DEF_LOCAL_NAME   "Xperia Acro S"
 
 #endif

@@ -11,5 +11,7 @@
 /dev/block/platform/msm_sdcc.1/by-num/p13  /cache            f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check
 /dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,formattable,encryptable=footer,length=-16384
 
-/devices/platform/msm_hsusb_host*         auto              auto    defaults                                                      voldmanaged=usb:auto
+/devices/platform/msm_sdcc.3/mmc_host*     auto              auto    defaults                                                      voldmanaged=sdcard1:auto,encryptable=userdata
+
+/devices/platform/msm_hsusb_host*          auto              auto    defaults                                                      voldmanaged=usb:auto
 

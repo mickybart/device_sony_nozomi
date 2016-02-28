@@ -19,7 +19,7 @@ TARGET_NO_SUPERUSER := false
 TARGET_RECOVERY_TWRP := true
 
 # overlay
-DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
+DEVICE_PACKAGE_OVERLAYS += device/sony/hikari/overlay
 
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
@@ -247,7 +247,7 @@ endif
 
 # SuperSU 2.65+ support
 PRODUCT_COPY_FILES += \
-    device/sony/nozomi/recovery/supersu:system/.supersu
+    device/sony/hikari/recovery/supersu:system/.supersu
 
 # Filesystem tools
 PRODUCT_PACKAGES += \
@@ -286,8 +286,8 @@ PRODUCT_PACKAGES += \
     ROMUpdater
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.version.updater=nAOSProm-6.0-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://www.dropbox.com/s/b17y0lrcsqsp2an/updates2.txt?dl=1
+    ro.build.version.updater=nAOSProm-6.0-$(TARGET_DEVICE)-b$(ROM_BUILD_NUM) \
+    persist.rom.updater.uri=https://localhost
 
 # Dalvik
 PRODUCT_PROPERTY_OVERRIDES += \
