@@ -287,7 +287,7 @@ PRODUCT_PACKAGES += \
     ROMUpdater
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.version.updater=nAOSProm-5.1-$(TARGET_DEVICE)-b$(ROM_BUILD_NUM) \
+    ro.build.version.updater=nAOSProm-5.1-b$(ROM_BUILD_NUM) \
     persist.rom.updater.uri=https://www.dropbox.com/s/e2127yttb5krkpt/updates51-hikari.txt?dl=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
