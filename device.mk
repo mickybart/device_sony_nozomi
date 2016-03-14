@@ -226,7 +226,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.qemu.hw.mainkeys=1 \
     persist.qemu.hw.mainkeys_layout=1 \
-    persist.qemu.hw.mainkeys_music=1
+    persist.qemu.hw.mainkeys_music=1 \
+    persist.qemu.hw.camerakey=1
 
 # Recovery
 PRODUCT_PACKAGES += \
