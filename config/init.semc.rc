@@ -227,13 +227,11 @@ service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     class core
     user root
     oneshot
-    seclabel u:r:init:s0
 
 service qcom-c_main-sh /system/bin/sh /init.qcom.class_main.sh
     class main
     user root
     oneshot
-    seclabel u:r:init:s0
 
 on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
@@ -345,7 +343,6 @@ service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     group system qcom_oncrpc
     disabled
     oneshot
-    seclabel u:r:init:s0
 
 on property:crypto.driver.load=1
      insmod /system/lib/modules/qce.ko
@@ -371,14 +368,12 @@ service qcom-sh /system/bin/sh /init.qcom.sh
     class late_start
     user root
     oneshot
-    seclabel u:r:init:s0
 
 service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
     class late_start
     user root
     disabled
     oneshot
-    seclabel u:r:init:s0
 
 on property:sys.boot_completed=1
     start qcom-post-boot
@@ -501,7 +496,6 @@ service swap-sh /system/bin/sh /init.swap.sh
     class late_start
     user root
     oneshot
-    seclabel u:r:init:s0
 
 on property:persist.ksm.enable=true
     write /sys/kernel/mm/ksm/pages_to_scan ${persist.ksm.pages_to_scan}
