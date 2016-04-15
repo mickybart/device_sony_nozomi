@@ -402,7 +402,7 @@ on early-boot
 
 on post-fs-data
     mkdir /data/idd 0755 idd idd
-    mount ext4 /dev/block/platform/msm_sdcc.1/by-num/p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
+    mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
     chown idd idd /data/idd
     chmod 0755 /data/idd
 
