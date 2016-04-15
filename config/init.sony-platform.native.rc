@@ -212,46 +212,46 @@ on boot
     setprop persist.radio.apm_sim_not_pwdn 0
     
 
-on property:sys.usb.config=mass_storage
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mass_storage,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,cdrom
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,cdrom,adb
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=rndis
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=rndis,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
+#on property:sys.usb.config=mass_storage
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mass_storage,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,cdrom
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,cdrom,adb
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=rndis
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=rndis,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
 
 
 
