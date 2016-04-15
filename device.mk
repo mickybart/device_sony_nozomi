@@ -290,6 +290,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.updater=nAOSProm-5.1-b$(ROM_BUILD_NUM) \
     persist.rom.updater.uri=https://www.dropbox.com/s/zfhk26j2tiz6fdu/updates51.txt?dl=1
 
+# hybris
+PRODUCT_PACKAGE += \
+    libsf_compat_layer \
+    libui_compat_layer
+
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false
 

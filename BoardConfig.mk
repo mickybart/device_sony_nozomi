@@ -162,6 +162,10 @@ ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
 endif
 
+# Hybris
+BOARD_HYBRIS_RAMDISK_INIT_PROFILE := device/sony/nozomi/config/init.profile
+#BOARD_HYBRIS_RAMDISK_EXTRA_FILES := 
+
 # SELinux
 BOARD_SEPOLICY_DIRS += \
     device/sony/nozomi/sepolicy

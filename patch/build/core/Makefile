@@ -443,6 +443,7 @@ endif
 
 # -----------------------------------------------------------------
 # the ramdisk
+ifeq ("false",)
 INTERNAL_RAMDISK_FILES := $(filter $(TARGET_ROOT_OUT)/%, \
 	$(ALL_PREBUILT) \
 	$(ALL_COPIED_HEADERS) \
@@ -461,6 +462,9 @@ $(INSTALLED_RAMDISK_TARGET): $(MKBOOTFS) $(INTERNAL_RAMDISK_FILES) | $(MINIGZIP)
 ramdisk-nodeps: $(MKBOOTFS) | $(MINIGZIP)
 	@echo "make $@: ignoring dependencies"
 	$(hide) $(MKBOOTFS) $(TARGET_ROOT_OUT) | $(MINIGZIP) > $(INSTALLED_RAMDISK_TARGET)
+else
+include hybris/ramdisk/hybris-ramdisk.mk
+endif
 
 ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 
