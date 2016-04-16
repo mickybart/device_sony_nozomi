@@ -291,7 +291,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.rom.updater.uri=https://www.dropbox.com/s/zfhk26j2tiz6fdu/updates51.txt?dl=1
 
 # hybris
-PRODUCT_PACKAGE += \
+PRODUCT_PACKAGES += \
     libsf_compat_layer \
     libui_compat_layer
 

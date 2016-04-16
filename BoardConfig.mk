@@ -164,7 +164,8 @@ endif
 
 # Hybris
 BOARD_HYBRIS_RAMDISK_INIT_PROFILE := device/sony/nozomi/config/init.profile
-#BOARD_HYBRIS_RAMDISK_EXTRA_FILES := 
+BOARD_HYBRIS_RAMDISK_EXTRA_FILES := vendor/sony/nozomi/proprietary/logo.rle \
+    device/sony/nozomi/recovery/init.sh \
 
 # SELinux
 BOARD_SEPOLICY_DIRS += \
