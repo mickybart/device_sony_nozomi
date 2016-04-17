@@ -2,10 +2,10 @@
 # USB
 # Those information can be found into /init.<hardware>.usb.rc file
 
-PROFILE_IDVENDOR=0fce
-PROFILE_IDPRODUCT=7169
-PROFILE_IPRODUCT="Xperia S"
-PROFILE_ISERIAL="CB511W1UFR"
+USB_IDVENDOR=0fce
+USB_IDPRODUCT=7169
+USB_IPRODUCT="Xperia S"
+USB_ISERIAL="CB511W1UFR"
 
 ####
 # /Data
@@ -34,7 +34,7 @@ DATA_DEVICE="mmcblk0p14"
 # Brightness file of the red notification led.
 # Will be used if the boot failed.
 # This is NOT mandatory.
-PROFILE_RED_LEDS=/sys/class/leds/red/brightness
+NOTIFICATION_RED_LEDS=/sys/class/leds/red/brightness
 
 ####
 # Possible override but should not be used
@@ -50,6 +50,6 @@ PROFILE_RED_LEDS=/sys/class/leds/red/brightness
 #DATA_ROOTFS=/data/media/_gnulinux/
 #
 #USB Manufacturer during early boot
-#PROFILE_IMANUFACTURER="GNU/Linux Device"
+#USB_IMANUFACTURER="GNU/Linux Device"
 #
 # see /init script for more details
