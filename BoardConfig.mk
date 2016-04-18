@@ -155,6 +155,7 @@ BOARD_CUSTOM_BOOTIMG_MK := device/sony/nozomi/custom/custombootimg.mk
 
 # custom ota
 BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
+BOARD_CUSTOM_GNULINUX_OTA_MK := device/sony/nozomi/custom/customgnulinuxota.mk
 
 # Superuser
 TARGET_NO_SUPERUSER := false

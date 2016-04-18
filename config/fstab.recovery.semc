@@ -7,8 +7,7 @@
 #<src>                                    <mnt_point>       <type>  <mnt_flags and options>  <fs_mgr_flags>
 /dev/block/mmcblk0p3                       /boot             emmc    defaults                recoveryonly
 /dev/block/mmcblk0p12  /system           ext4    ro,barrier=1            wait
-/dev/block/mmcblk0p13  /cache            auto    defaults                wait,check
-/dev/block/mmcblk0p14  /data             auto    defaults                wait,check,encryptable=footer,length=-16384
-/devices/platform/msm_sdcc.1/mmc_host/mmc0 auto              auto    defaults                voldmanaged=sdcard0:15,nonremovable,noemulatedsd
+/dev/block/mmcblk0p13  /cache            f2fs    defaults                wait,check
+/dev/block/mmcblk0p14  /data             f2fs    defaults                wait,check,encryptable=footer,length=-16384
 /devices/platform/msm_hsusb_host.0         auto              vfat    defaults                voldmanaged=usbdisk:auto
 

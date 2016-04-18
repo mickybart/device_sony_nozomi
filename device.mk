@@ -26,7 +26,7 @@ ifeq ($(BUILD_TARGET),loop)
 BUILD_FS := loop
 else
 # (ext4,f2fs,dynamic)
-BUILD_FS := dynamic
+BUILD_FS := f2fs
 endif
 
 # overlay

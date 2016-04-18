@@ -1476,6 +1476,7 @@ ifneq ($(recovery_fstab),)
 # -----------------------------------------------------------------
 # OTA update package
 
+ifeq ("false",)
 ifndef BOARD_CUSTOM_OTA_MK
 name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
@@ -1498,6 +1499,9 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 else
 include $(BOARD_CUSTOM_OTA_MK)
+endif
+else
+include hybris/packaging/ota.mk
 endif
 
 .PHONY: otapackage

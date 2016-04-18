@@ -86,11 +86,29 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
       Do not generate recovery image. For devices which do not have a truly
       separate recovery partition.
 
+  --fota_recovery <block device>
+      Extract recovery image to fota partition for specific device.
+      Need --no_separate_recovery=true
+
   --multiple_boot <list>
       List of boot.img files separated by comma
 
   --multiple_boot_scripts <path>      flash
       Path to customota.boot and customota.prep to handle multiple boot
+
+  --gnulinux
+      Request to create GNU/Linux OTA.
+      Android OTA will NOT be created if you use this flag
+ 
+  --gnulinux_os <os>
+      Class os requested (eg: archlinux, debian, ubuntu, etc).
+      See under hybris/packaging/ path
+
+  --gnulinux_image <path>
+      Path of the GNU/Linux image file downloaded
+
+  --gnulinux_chroot <path>
+      Path to the chroot archive needed to run chroot installation script
 
 """
 
@@ -140,8 +158,13 @@ OPTIONS.oem_source = None
 OPTIONS.fallback_to_full = True
 OPTIONS.override_device = 'auto'
 OPTIONS.no_separate_recovery = False
+OPTIONS.fota_recovery = None
 OPTIONS.multiple_boot = None
 OPTIONS.multiple_boot_scripts = None
+OPTIONS.gnulinux = False
+OPTIONS.gnulinux_os = None
+OPTIONS.gnulinux_image = None
+OPTIONS.gnulinux_chroot = None
 
 def MostPopularKey(d, default):
   """Given a dict, return the key corresponding to the largest
@@ -581,7 +604,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.ShowProgress(system_progress, 0)
 
   script.Print('**************************')
-  script.Print('***     nAOSP ROM      ***')
+  script.Print('***    Android ROM     ***')
   script.Print('**************************')
 
   # Backup Theme files if available
@@ -602,7 +625,7 @@ esac''')
   script.AppendExtra('run_program("/sbin/sh", "/tmp/overlay.sh", "backup");')
   script.Unmount("/system")
 
-  script.Print('*** Flashing nAOSP ROM ***')
+  script.Print('*** Flashing ROM       ***')
 
   if block_based:
     # Full OTA is done as an "incremental" against an empty source
@@ -693,12 +716,12 @@ esac''')
       script.AppendExtra(open(OPTIONS.multiple_boot_scripts + "/customota.boot").read())
       common.ZipWriteStr(output_zip, "install-prep.sh", open(OPTIONS.multiple_boot_scripts + "/customota.prep").read())
 
-  if OPTIONS.no_separate_recovery:
+  if OPTIONS.no_separate_recovery and OPTIONS.fota_recovery is not None:
     recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
                                          OPTIONS.input_tmp, "RECOVERY")
     common.ZipWriteStr(output_zip, "recovery.img", recovery_img.data)
     script.Print('*** Flashing Recovery  ***')
-    script.AppendExtra('package_extract_file("recovery.img", "/dev/block/mmcblk0p11");')
+    script.AppendExtra('package_extract_file("recovery.img", "' + OPTIONS.fota_recovery + '");')
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
@@ -711,6 +734,189 @@ esac''')
   if OPTIONS.wipe_user_data:
     script.ShowProgress(0.1, 10)
     script.FormatPartition("/data")
+
+  if OPTIONS.two_step:
+    script.AppendExtra("""
+set_stage("%(bcb_dev)s", "");
+""" % bcb_dev)
+    script.AppendExtra("else\n")
+    script.WriteRawImage("/boot", "recovery.img")
+    script.AppendExtra("""
+set_stage("%(bcb_dev)s", "2/3");
+reboot_now("%(bcb_dev)s", "");
+endif;
+endif;
+""" % bcb_dev)
+  script.AddToZip(input_zip, output_zip, input_path=OPTIONS.updater_binary)
+  WriteMetadata(metadata, output_zip)
+
+def WriteFullGNULinuxOTAPackage(input_zip, output_zip):
+  # TODO: how to determine this?  We don't know what version it will
+  # be installed on top of.  For now, we expect the API just won't
+  # change very often.
+  script = edify_generator.EdifyGenerator(3, OPTIONS.info_dict)
+
+  oem_props = OPTIONS.info_dict.get("oem_fingerprint_properties")
+  recovery_mount_options = OPTIONS.info_dict.get("recovery_mount_options")
+  oem_dict = None
+  if oem_props is not None and len(oem_props) > 0:
+    if OPTIONS.oem_source is None:
+      raise common.ExternalError("OEM source required for this build")
+    script.Mount("/oem", recovery_mount_options)
+    oem_dict = common.LoadDictionaryFromLines(open(OPTIONS.oem_source).readlines())
+
+  metadata = {"post-build": CalculateFingerprint(
+                               oem_props, oem_dict, OPTIONS.info_dict),
+              "pre-device": GetOemProperty("ro.product.device", oem_props, oem_dict,
+                                         OPTIONS.info_dict),
+              "post-timestamp": GetBuildProp("ro.build.date.utc",
+                                             OPTIONS.info_dict),
+              }
+
+  device_specific = common.DeviceSpecificParams(
+      input_zip=input_zip,
+      input_version=OPTIONS.info_dict["recovery_api_version"],
+      output_zip=output_zip,
+      script=script,
+      input_tmp=OPTIONS.input_tmp,
+      metadata=metadata,
+      info_dict=OPTIONS.info_dict)
+
+  has_recovery_patch = HasRecoveryPatch(input_zip)
+  block_based = OPTIONS.block_based and has_recovery_patch
+
+  if not OPTIONS.omit_prereq:
+    ts = GetBuildProp("ro.build.date.utc", OPTIONS.info_dict)
+    ts_text = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+    script.AssertOlderBuild(ts, ts_text)
+
+  AppendAssertions(script, OPTIONS.info_dict, oem_dict)
+  device_specific.FullOTA_Assertions()
+
+  # Two-step package strategy (in chronological order, which is *not*
+  # the order in which the generated script has things):
+  #
+  # if stage is not "2/3" or "3/3":
+  #    write recovery image to boot partition
+  #    set stage to "2/3"
+  #    reboot to boot partition and restart recovery
+  # else if stage is "2/3":
+  #    write recovery image to recovery partition
+  #    set stage to "3/3"
+  #    reboot to recovery partition and restart recovery
+  # else:
+  #    (stage must be "3/3")
+  #    set stage to ""
+  #    do normal full package installation:
+  #       wipe and install system, boot image, etc.
+  #       set up system to update recovery partition on first boot
+  #    complete script normally (allow recovery to mark itself finished and reboot)
+
+  if not OPTIONS.no_separate_recovery:  
+    recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
+                                         OPTIONS.input_tmp, "RECOVERY")
+  if OPTIONS.two_step:
+    if not OPTIONS.info_dict.get("multistage_support", None):
+      assert False, "two-step packages not supported by this build"
+    fs = OPTIONS.info_dict["fstab"]["/misc"]
+    assert fs.fs_type.upper() == "EMMC", \
+        "two-step packages only supported on devices with EMMC /misc partitions"
+    bcb_dev = {"bcb_dev": fs.device}
+    common.ZipWriteStr(output_zip, "recovery.img", recovery_img.data)
+    script.AppendExtra("""
+if get_stage("%(bcb_dev)s") == "2/3" then
+""" % bcb_dev)
+    script.WriteRawImage("/recovery", "recovery.img")
+    script.AppendExtra("""
+set_stage("%(bcb_dev)s", "3/3");
+reboot_now("%(bcb_dev)s", "recovery");
+else if get_stage("%(bcb_dev)s") == "3/3" then
+""" % bcb_dev)
+
+  device_specific.FullOTA_InstallBegin()
+
+  system_progress = 0.55
+
+  recovery_mount_options = OPTIONS.info_dict.get("recovery_mount_options")
+
+  system_items = ItemSet("system", "META/filesystem_config.txt")
+  script.ShowProgress(system_progress, 0)
+
+  script.Print('**************************')
+  script.Print('***     GNU/Linux      ***')
+  script.Print('**************************')
+
+  script.Print('*** Extracting files   ***')
+  script.Mount("/data", recovery_mount_options)
+
+  common.ZipWriteStr(output_zip, "extract.sh", open("./hybris/packaging/extract.sh").read())
+  common.ZipWriteStr(output_zip, "gnulinux.tgz", open(OPTIONS.gnulinux_image).read())
+
+  script.AppendExtra('package_extract_file("gnulinux.tgz", "/data/gnulinux.tgz");')
+  script.AppendExtra('package_extract_file("extract.sh", "/tmp/extract.sh");')
+  script.Print('*** Possible previous installation will be moved under /data/media/_gnulinux-<date>')
+  script.AppendExtra('run_program("/sbin/sh", "/tmp/extract.sh") == "0" || abort("Failed to extract filesystem!");')
+
+  script.Print('*** Chroot install     ***')
+
+  common.ZipWriteStr(output_zip, "chroot.sh", open("./hybris/packaging/chroot.sh").read())
+  common.ZipWriteStr(output_zip, "gnulinux-chroot.tgz", open(OPTIONS.gnulinux_chroot).read())
+  
+  script.AppendExtra('package_extract_file("gnulinux-chroot.tgz", "/tmp/gnulinux-chroot.tgz");')
+  script.AppendExtra('package_extract_file("chroot.sh", "/tmp/chroot.sh");')
+  script.AppendExtra('run_program("/sbin/sh", "/tmp/chroot.sh") == "0" || abort("Failed to execute chroot installation!");')
+
+  script.Unmount("/data")
+
+  if OPTIONS.multiple_boot is None:
+    boot_img = common.GetBootableImage("boot.img", "boot.img",
+                                       OPTIONS.input_tmp, "BOOT")
+
+  if not block_based:
+    def output_sink(fn, data):
+      common.ZipWriteStr(output_zip, "recovery/" + fn, data)
+
+    if not OPTIONS.no_separate_recovery and OPTIONS.multiple_boot is None:
+      common.MakeRecoveryPatch(OPTIONS.input_tmp, output_sink,
+                             recovery_img, boot_img)
+
+  if OPTIONS.multiple_boot is None:
+    common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
+    common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
+  else:
+    for boot_file in OPTIONS.multiple_boot:
+      boot_img = common.GetBootableImage(boot_file, boot_file,
+                                         OPTIONS.input_tmp, "BOOT")
+      common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
+      common.ZipWriteStr(output_zip, boot_file, boot_img.data)
+      
+  script.ShowProgress(0.05, 5)
+  
+  if OPTIONS.multiple_boot is None:
+    script.WriteRawImage("/boot", "boot.img")
+  else:
+    if OPTIONS.multiple_boot_scripts is not None:
+      script.AppendExtra(open(OPTIONS.multiple_boot_scripts + "/customota.boot").read())
+      common.ZipWriteStr(output_zip, "install-prep.sh", open(OPTIONS.multiple_boot_scripts + "/customota.prep").read())
+
+  if OPTIONS.no_separate_recovery and OPTIONS.fota_recovery is not None:
+    recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
+                                         OPTIONS.input_tmp, "RECOVERY")
+    common.ZipWriteStr(output_zip, "recovery.img", recovery_img.data)
+    script.Print('*** Flashing Recovery  ***')
+    script.AppendExtra('package_extract_file("recovery.img", "' + OPTIONS.fota_recovery + '");')
+
+  script.ShowProgress(0.2, 10)
+  device_specific.FullOTA_InstallEnd()
+
+  if OPTIONS.extra_script is not None:
+    script.AppendExtra(OPTIONS.extra_script)
+
+  script.UnmountAll()
+
+#  if OPTIONS.wipe_user_data:
+#    script.ShowProgress(0.1, 10)
+#    script.FormatPartition("/data")
 
   if OPTIONS.two_step:
     script.AppendExtra("""
@@ -1514,10 +1720,20 @@ def main(argv):
       OPTIONS.override_device = a
     elif o in ("--no_separate_recovery"):
       OPTIONS.no_separate_recovery = bool(a.lower() == 'true')
+    elif o in ("--fota_recovery"):
+      OPTIONS.fota_recovery = a
     elif o in ("--multiple_boot"):
       OPTIONS.multiple_boot = a.split(',')
     elif o in ("--multiple_boot_scripts"):
       OPTIONS.multiple_boot_scripts = a
+    elif o in ("--gnulinux"):
+      OPTIONS.gnulinux = True
+    elif o in ("--gnulinux_os"):
+      OPTIONS.gnulinux_os = a
+    elif o in ("--gnulinux_image"):
+      OPTIONS.gnulinux_image = a
+    elif o in ("--gnulinux_chroot"):
+      OPTIONS.gnulinux_chroot = a
     else:
       return False
     return True
@@ -1541,8 +1757,13 @@ def main(argv):
                                               "no_fallback_to_full",
                                               "override_device=",
                                               "no_separate_recovery=",
+                                              "fota_recovery=",
                                               "multiple_boot=",
                                               "multiple_boot_scripts=",
+                                              "gnulinux",
+                                              "gnulinux_os=",
+                                              "gnulinux_image=",
+                                              "gnulinux_chroot=",
                                               ],
                              extra_option_handler=option_handler)
 
@@ -1598,6 +1819,14 @@ def main(argv):
       temp_zip_file = tempfile.NamedTemporaryFile()
       output_zip = zipfile.ZipFile(temp_zip_file, "w",
                                    compression=zipfile.ZIP_DEFLATED)
+
+    if OPTIONS.gnulinux:
+      WriteFullGNULinuxOTAPackage(input_zip, output_zip)
+      if OPTIONS.package_key is None:
+        OPTIONS.package_key = OPTIONS.info_dict.get(
+            "default_system_dev_certificate",
+            "build/target/product/security/testkey")
+      break
 
     if OPTIONS.incremental_source is None:
       WriteFullOTAPackage(input_zip, output_zip)
