@@ -1,5 +1,5 @@
 #
-# Copyright 2008 The Android Open Source Project
+# Copyright 2013 The Android Open-Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
 # limitations under the License.
 #
 
-# This file is executed by build/envsetup.sh, and can use anything
-# defined in envsetup.sh.
-#
-# In particular, you can add lunch options with the add_lunch_combo
-# function: add_lunch_combo generic-eng
+GNULINUX_SUPPORT := true
+GNULINUX_OTA_OS := archlinux
+GNULINUX_OTA_ARCH := armv7
 
-add_lunch_combo aosp_nozomi-userdebug
-add_lunch_combo gnulinux_nozomi-userdebug
+$(call inherit-product, device/sony/nozomi/aosp_nozomi.mk)
+
+PRODUCT_NAME := gnulinux_nozomi
+

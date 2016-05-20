@@ -29,6 +29,12 @@ else
 BUILD_FS := dynamic
 endif
 
+# override if GNULINUX_SUPPORT requested
+ifeq ($(GNULINUX_SUPPORT),true)
+BUILD_FS := f2fs.gls
+BUILD_TARGET := gls
+endif
+
 # overlay
 DEVICE_PACKAGE_OVERLAYS += device/sony/nozomi/overlay
 
@@ -185,7 +191,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.sony.rc:root/init.sony.rc \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
-# Normal/Native/Loop
+# Normal/Native/Loop/GNULinux
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/fstab.$(BUILD_FS).semc:root/fstab.semc \
     $(LOCAL_PATH)/config/init.sony-platform.$(BUILD_TARGET).rc:root/init.sony-platform.rc
