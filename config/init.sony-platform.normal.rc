@@ -423,3 +423,10 @@ on property:vold.decrypt=trigger_post_fs_data
     mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
     chown idd idd /data/idd
     chmod 0755 /data/idd
+
+service swap-sh /system/bin/sh /init.swap.sh
+    class late_start
+    user root
+    oneshot
+    seclabel u:r:init:s0
+

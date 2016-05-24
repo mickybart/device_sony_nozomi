@@ -497,12 +497,6 @@ service qrngd /system/bin/qrngd -f
 on property:sys.radio.shutdown=true
    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh
 
-service swap-sh /system/bin/sh /init.swap.sh
-    class late_start
-    user root
-    oneshot
-    seclabel u:r:init:s0
-
 on property:persist.ksm.enable=true
     write /sys/kernel/mm/ksm/pages_to_scan ${persist.ksm.pages_to_scan}
     write /sys/kernel/mm/ksm/sleep_millisecs ${persist.ksm.sleep_millisecs}

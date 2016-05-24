@@ -85,7 +85,11 @@ BOARD_HAVE_FMRADIO_BCM := true
 
 # kernel
 BOARD_KERNEL_MSM := true
+ifeq ($(GNULINUX_SUPPORT),true)
+KERNEL_DEFCONFIG := fuji_nozomi_gls_defconfig
+else
 KERNEL_DEFCONFIG := fuji_nozomi_defconfig
+endif
 
 # board
 TARGET_BOARD_PLATFORM := msm8660
@@ -124,7 +128,11 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 15728640
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 
 # Recovery
+ifeq ($(GNULINUX_SUPPORT),true)
+TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.recovery.f2fs.gls.semc
+else
 TARGET_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.recovery.semc
+endif
 RECOVERY_FSTAB_VERSION := 2
 
 # twrp
@@ -160,6 +168,15 @@ BOARD_CUSTOM_OTA_MK := device/sony/nozomi/custom/customota.mk
 TARGET_NO_SUPERUSER := false
 ifneq ($(TARGET_NO_SUPERUSER),true)
 SUPERUSER_EMBEDDED := true
+endif
+
+# GNU/Linux support
+ifeq ($(GNULINUX_SUPPORT),true)
+BOARD_HYBRIS_RAMDISK_INIT_PROFILE := device/sony/nozomi/config/init.profile
+BOARD_HYBRIS_RAMDISK_EXTRA_FILES := vendor/sony/nozomi/proprietary/logo.rle \
+
+# custom ota
+BOARD_CUSTOM_GNULINUX_OTA_MK := device/sony/nozomi/custom/customgnulinuxota.mk
 endif
 
 # SELinux

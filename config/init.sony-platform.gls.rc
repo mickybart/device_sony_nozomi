@@ -62,8 +62,8 @@ on early-boot
     #Start secchan daemon service before entering charge only mode.
     start secchan
 
-    # Start the offline charging (This blocks booting further in some cases)
-    exec /system/bin/chargemon
+    ## Start the offline charging (This blocks booting further in some cases)
+    #exec /system/bin/chargemon
 
     # Touch firmware update
     exec /system/bin/sh /system/etc/clearpad_fwloader.sh
@@ -212,46 +212,46 @@ on boot
     setprop persist.radio.apm_sim_not_pwdn 0
 
 
-on property:sys.usb.config=mass_storage
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mass_storage,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,cdrom
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=mtp,cdrom,adb
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=rndis
-    exec /init.usbmode.sh
-    stop adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=rndis,adb
-    exec /init.usbmode.sh
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
+#on property:sys.usb.config=mass_storage
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mass_storage,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,cdrom
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=mtp,cdrom,adb
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=rndis
+#    exec /init.usbmode.sh
+#    stop adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
+#on property:sys.usb.config=rndis,adb
+#    exec /init.usbmode.sh
+#    start adbd
+#    setprop sys.usb.state ${sys.usb.config}
+#
 
 
 
@@ -402,7 +402,7 @@ on early-boot
 
 on post-fs-data
     mkdir /data/idd 0755 idd idd
-    mount ext4 /dev/block/platform/msm_sdcc.1/by-num/p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
+    mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0
     chown idd idd /data/idd
     chmod 0755 /data/idd
 
@@ -420,6 +420,14 @@ on property:ro.nvcust=1
 
 on property:vold.decrypt=trigger_post_fs_data
     mkdir /data/idd 0755 idd idd
-    mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0,context=u:object_r:idd_data_file:s0
+    mount ext4 /dev/block/mmcblk0p10 /data/idd nosuid nodev noatime barrier=0
     chown idd idd /data/idd
     chmod 0755 /data/idd
+
+service swap-sh /system/bin/sh /init.swap.sh
+    class late_start
+    user root
+    oneshot
+    seclabel u:r:init:s0
+    disabled
+
