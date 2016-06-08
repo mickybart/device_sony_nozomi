@@ -187,12 +187,12 @@ PRODUCT_COPY_FILES += \
 
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/init.semc.rc:root/init.semc.rc \
-    $(LOCAL_PATH)/config/init.sony.rc:root/init.sony.rc \
     $(LOCAL_PATH)/config/ueventd.semc.rc:root/ueventd.semc.rc
 
 # Normal/Native/Loop/GNULinux
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/config/init.semc.${BUILD_TARGET}.rc:root/init.semc.rc \
+    $(LOCAL_PATH)/config/init.sony.${BUILD_TARGET}.rc:root/init.sony.rc \
     $(LOCAL_PATH)/config/fstab.$(BUILD_FS).semc:root/fstab.semc \
     $(LOCAL_PATH)/config/init.sony-platform.$(BUILD_TARGET).rc:root/init.sony-platform.rc
 
