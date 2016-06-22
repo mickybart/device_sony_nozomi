@@ -23,6 +23,10 @@ persist.ksm.enable=false
 persist.sys.lightbar_mode=0
 persist.sys.lightbar_flash=0
 
+# sensors
+persist.sensors.slope=1 10
+persist.sensors.high_g=0 50 0
+
 # screen (doze, color, auto brightness)
 persist.screen.doze_brightness=0
 persist.screen.doze_invert=true

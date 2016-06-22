@@ -52,9 +52,6 @@ bq275xx_fwloader
 # bma250 motion (pickup, significant motion, ...)
 dev=/sys/class/input/input7
 ## pickup
-echo 0 50 0 > $dev/high_g_param
+getprop persist.sensors.high_g "0 50 0" > $dev/high_g_param
 ## significant motion
-##  (standard)
-echo 1 10 > $dev/slope_param
-##  (really sensitive)
-#echo 1 5 > $dev/slope_param
+getprop persist.sensors.slope "1 10" > $dev/slope_param
