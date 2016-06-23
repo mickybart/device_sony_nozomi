@@ -153,8 +153,9 @@
 /sys/devices/platform/chargalg/power_supply/chargalg/disable_usbhost  --  u:object_r:sysfs_chargalg:s0
 
 # mdp
-/sys/devices/platform/mdp.458753/kcal  --  u:object_r:sysfs_mdp:s0
-/sys/devices/platform/mdp.524288/kcal  --  u:object_r:sysfs_mdp:s0
+/sys/devices/platform/kcal_ctrl.0/kcal  --  u:object_r:sysfs_mdp:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_min  --  u:object_r:sysfs_mdp:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_enable  --  u:object_r:sysfs_mdp:s0
 
 # bluetooth
 #/sys/class/rfkill/rfkill0/type  --  u:object_r:sysfs_bluetooth_writable:s0
