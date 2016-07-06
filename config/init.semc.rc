@@ -344,6 +344,9 @@ on post-fs-data
     mkdir /data/etc 0755
     chown system system /data/etc
 
+    # mpdecision
+    mkdir /dev/socket/mpdecision 2770 root system
+
     # Enable Power modes and set the CPU Freq Sampling rates
     write /sys/module/rpm_resources/enable_low_power/L2_cache 1
     write /sys/module/rpm_resources/enable_low_power/pxo 1
@@ -587,7 +590,6 @@ on property:service.adb.root=1
 service mpdecision /system/bin/mpdecision --no_sleep --avg_comp
     class late_start
     user root
-    disabled
 
 service qosmgrd /system/bin/qosmgr /system/etc/qosmgr_rules.xml
     class manual
