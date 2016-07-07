@@ -26,6 +26,9 @@ persist.sys.lightbar_flash=1
 # sensors
 persist.sensors.slope=1 10
 persist.sensors.high_g=0 50 0
+persist.sensors.accelerometer=1
+persist.sensors.pickup=0
+persist.sensors.significant=0
 
 # screen (doze, color, auto brightness)
 persist.screen.doze_brightness=0
