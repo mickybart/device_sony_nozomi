@@ -15,3 +15,5 @@ allow platform_app sysfs_fastcharge:file { write read open getattr};
 #QS ScreenColor
 allow platform_app sysfs_mdp:file { write read open getattr };
 
+#Allow NFC service to be found
+allow platform_app nfc_service:service_manager find;
