@@ -8,8 +8,8 @@
 
 /dev/block/platform/msm_sdcc.1/by-num/p10  /idd              ext4    noatime,nosuid,nodev,barrier=0,context=u:object_r:idd_data_file:s0  wait,check
 
-/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check
-/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,check,formattable,encryptable=footer,length=-16384
+/dev/block/platform/msm_sdcc.1/by-num/p13  /cache            f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait
+/dev/block/platform/msm_sdcc.1/by-num/p14  /data             f2fs    noatime,nosuid,nodev,discard,nodiratime,inline_xattr,errors=recover     wait,formattable,encryptable=footer,length=-16384
 
 /devices/platform/msm_hsusb_host*         auto              auto    defaults                                                      voldmanaged=usb:auto
 
