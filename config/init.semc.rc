@@ -254,6 +254,9 @@ on boot
     mkdir /dev/bus 0711 system system
     mkdir /dev/bus/usb 0711 system system
 
+    # cmdline (used by TelephonyManager)
+    chmod 0444 /proc/cmdline
+
 on post-fs
     # Change to socket location on libkeyctrl/suntory for /data encryption
     mkdir /dev/socket/suntory 0755 system system
