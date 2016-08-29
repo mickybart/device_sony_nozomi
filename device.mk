@@ -283,8 +283,8 @@ PRODUCT_PACKAGES += \
     ROMUpdater
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.version.updater=nAOSProm-6.0-b$(ROM_BUILD_NUM) \
-    persist.rom.updater.uri=https://www.dropbox.com/s/b17y0lrcsqsp2an/updates2.txt?dl=1
+    ro.build.version.updater=nAOSProm-7.0-b$(ROM_BUILD_NUM) \
+    persist.rom.updater.uri=https://www.dropbox.com/s/nfss605uc2c2exf/updates70-nozomi.txt?dl=1
 
 # Dalvik
 PRODUCT_PROPERTY_OVERRIDES += \
