@@ -34,6 +34,9 @@ TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 COMMON_GLOBAL_CFLAGS += -DLEGACY_BLOB_COMPATIBLE
 
+# malloc
+MALLOC_SVELTE := true
+
 # Jack
 ifeq ($(ANDROID_JACK_VM_ARGS),)
 ANDROID_JACK_VM_ARGS := -Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m
