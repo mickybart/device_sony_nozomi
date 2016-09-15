@@ -34,6 +34,9 @@ TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 COMMON_GLOBAL_CFLAGS += -DLEGACY_BLOB_COMPATIBLE
 
+# malloc
+MALLOC_IMPL := dlmalloc
+
 # display
 USE_OPENGL_RENDERER := true
 TARGET_USES_ION := true
