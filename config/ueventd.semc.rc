@@ -120,17 +120,16 @@
 
 ### end from CAF
 
-/dev/oncrpc/30000017:*    0660   radio      radio
-/dev/oncrpc/30000000:*    0660   radio      radio
-/dev/oncrpc/30000016:*    0660   radio      radio
-/dev/oncrpc/3000003c:*    0660   radio      radio
-/dev/oncrpc/30000019:*    0660   radio      radio
-/dev/oncrpc/3000000e:*    0660   radio      radio
-/dev/oncrpc/30000012:*    0660   radio      radio
-/dev/oncrpc/30000003:*    0660   radio      radio
-/dev/oncrpc/3000001b:*    0660   radio      radio
-/dev/oncrpc/30eeeeee:*    0660   root       system
-/dev/oncrpc/3000006b:*    0660   root       system
+/dev/oncrpc/3*            0660   system     qcom_oncrpc
+/dev/oncrpc/30000017:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/30000000:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/30000016:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/3000003c:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/30000019:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/3000000e:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/30000012:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/30000003:*    0660   radio      qcom_oncrpc
+/dev/oncrpc/3000001b:*    0660   radio      qcom_oncrpc
 
 # NFC device permission
 /dev/pn544                0600   nfc        nfc
