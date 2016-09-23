@@ -471,7 +471,7 @@ service bt-sap /system/bin/sapd 15
 service bridgemgrd /system/bin/bridgemgrd
     class late_start
     user radio
-    group radio wakelock
+    group radio wakelock qcom_diag
 
 service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
     class late_start
@@ -482,14 +482,14 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
 service qmiproxy /system/bin/qmiproxy
     class main
     user radio
-    group radio wakelock
+    group radio wakelock qcom_diag
     disabled
 
 # QMUX must be in multiple groups to support external process connections
 service qmuxd /system/bin/qmuxd
     class main
     user radio
-    group radio audio bluetooth wakelock gps
+    group radio audio bluetooth wakelock gps qcom_diag
 
 service netmgrd /system/bin/netmgrd
     class main
@@ -518,7 +518,7 @@ on property:sys.boot_completed=1
 service atfwd /system/bin/ATFWD-daemon
     class late_start
     user system
-    group system radio wakelock
+    group system radio wakelock qcom_diag
 
 service hdmid /system/bin/hdmid
     class late_start
@@ -575,7 +575,7 @@ service ril-daemon1 /system/bin/rild -c 1
     socket rild-debug1 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag wakelock log
+    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag wakelock qcom_diag log
 
 service charger /sbin/healthd -c
     class charger
