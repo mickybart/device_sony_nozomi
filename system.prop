@@ -73,16 +73,9 @@ keyguard.no_require_sim=1
 
 telephony.lteOnCdmaDevice=0
 
-
-debug.sf.hw=1
+# hwui
+persist.sys.ui.hw=true
 persist.hwc.mdpcomp.enable=1
-debug.composition.type=dyn
-debug.mdpcomp.maxpermixer=4
-debug.mdpcomp.idletime=-1
-debug.hwc.dynThreshold=1.9
-
-dev.pm.dyn_samplingrate=1
-
 hw.hdmi.limit_to_720p=1
 hw.hdmi.resolution=-1
 
