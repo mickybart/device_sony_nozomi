@@ -44,12 +44,12 @@ endif
 
 # display
 USE_OPENGL_RENDERER := true
-BOARD_EGL_CFG := device/sony/hikari/config/egl.cfg
 
 TARGET_USES_ION := true
 TARGET_USES_OVERLAY := true
 TARGET_USES_SF_BYBASS := true
 TARGET_USES_C2D_COMPOSITION := true
+HAVE_ADRENO_SOURCE := false
 
 # audio
 BOARD_USES_ALSA_AUDIO := true
@@ -58,7 +58,7 @@ VIPER4ANDROID_MODE := NEON
 # bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR ?= device/sony/hikari/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/sony/hikari/bluetooth
 
 # sensor
 BOARD_USES_GENERIC_INVENSENSE := false
