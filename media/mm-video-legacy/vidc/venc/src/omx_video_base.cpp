@@ -1929,6 +1929,13 @@ OMX_ERRORTYPE  omx_video::get_config(OMX_IN OMX_HANDLETYPE      hComp,
       memcpy(pParam, &m_sIntraperiod, sizeof(m_sIntraperiod));
       break;
     }
+  case OMX_IndexConfigAndroidIntraRefresh:
+    {
+      OMX_VIDEO_CONFIG_ANDROID_INTRAREFRESHTYPE* pParam = reinterpret_cast<OMX_VIDEO_CONFIG_ANDROID_INTRAREFRESHTYPE*>(configData);
+      DEBUG_PRINT_LOW("get_config: OMX_IndexConfigAndroidIntraRefresh");
+      memcpy(pParam, &m_sConfigIntraRefresh, sizeof(m_sConfigIntraRefresh));
+      break;
+    }
   default:
     DEBUG_PRINT_ERROR("ERROR: unsupported index %d", (int) configIndex);
     return OMX_ErrorUnsupportedIndex;
@@ -2618,7 +2625,7 @@ OMX_ERRORTYPE omx_video::allocate_input_meta_buffer(
                     OMX_U32              bytes)
 {
   unsigned index = 0;
-  if(!bufferHdr || bytes != sizeof(encoder_media_buffer_type))
+  if(!bufferHdr || bytes < sizeof(encoder_media_buffer_type))
   {
     DEBUG_PRINT_ERROR("wrong params allocate_input_meta_buffer Hdr %p len %d",
                      bufferHdr,bytes);
