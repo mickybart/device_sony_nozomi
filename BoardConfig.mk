@@ -85,6 +85,7 @@ WIFI_DRIVER_FW_PATH_P2P     := "/system/vendor/firmware/fw_bcmdhd.bin"
 # camera
 BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
 USE_DEVICE_SPECIFIC_CAMERA := true
+TARGET_NEEDS_METADATA_CAMERA_SOURCE := true
 
 # fm radio
 BOARD_HAVE_FMRADIO := true
