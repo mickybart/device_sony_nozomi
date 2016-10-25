@@ -36,3 +36,5 @@ allow netmgrd system_file:file rx_file_perms;
 allow netmgrd netmgrd_exec:file execmod;
 #/system/lib/libdsutils.so
 allow netmgrd system_file:file execmod;
+
+allow netmgrd toolbox_exec:file { execute execute_no_trans getattr open read };

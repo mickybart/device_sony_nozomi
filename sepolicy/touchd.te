@@ -13,3 +13,9 @@ allow touchd sysfs_touchd:file rw_file_perms;
 
 # wake lock access
 wakelock_use(touchd)
+
+#power_supply and /sys/devices/platform/msm_ssbi.0/pm8058-core/pm8xxx-pwrkey/input/input0/
+#to improve
+allow touchd sysfs:dir { open read };
+allow touchd sysfs:file { getattr open read };
+

@@ -7,7 +7,10 @@ init_daemon_domain(swap)
 
 allow swap block_device:dir search;
 allow swap swap_block_device:blk_file { read write getattr open };
-allow swap shell_exec:file { read entrypoint };
-allow swap sysfs:file write;
-allow swap system_file:file execute_no_trans;
+allow swap shell_exec:file { read entrypoint getattr };
 allow swap self:capability sys_admin;
+allow swap rootfs:file { open read };
+allow swap sysfs_zram:dir search;
+allow swap sysfs_zram:file rw_file_perms;
+allow swap toolbox_exec:file { execute execute_no_trans getattr open read };
+allow swap system_file:file execute_no_trans;

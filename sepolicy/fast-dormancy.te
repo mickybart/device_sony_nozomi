@@ -25,3 +25,6 @@ allow fast-dormancy system_data_file:fifo_file create_file_perms;
 
 qmux_socket(fast-dormancy)
 
+#power_supply
+allow fast-dormancy sysfs:dir { open read };
+allow fast-dormancy sysfs:file { open read };

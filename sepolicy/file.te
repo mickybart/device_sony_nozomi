@@ -16,6 +16,7 @@ type sysfs_chargalg, fs_type, sysfs_type;
 type sysfs_mdp, fs_type, sysfs_type, mlstrustedobject;
 type sysfs_fastcharge, fs_type, sysfs_type, mlstrustedobject;
 type sysfs_mpdecision, fs_type, sysfs_type;
+type sysfs_camera, fs_type, sysfs_type;
 
 # data_file
 type idd_data_file, file_type, data_file_type;

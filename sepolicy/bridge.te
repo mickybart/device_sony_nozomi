@@ -18,3 +18,6 @@ allow bridge sysfs_rmnet:file { open read write getattr };
 allow bridge bridge_exec:file execmod;
 allow bridge radio_device:chr_file { read write ioctl open };
 allow bridge system_file:file execmod;
+
+#usb_state
+allow bridge sysfs:file { open read };

@@ -23,6 +23,7 @@ allow chargemon usbaccessory_device:chr_file { read write ioctl open };
 allow chargemon graphics_device:dir search;
 allow chargemon self:capability sys_boot;
 allow chargemon shell_exec:file execute;
+allow chargemon proc:file { getattr open read };
 
 unix_socket_connect(chargemon, property, init)
 allow chargemon property_socket:sock_file write;

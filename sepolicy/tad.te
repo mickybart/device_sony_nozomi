@@ -14,3 +14,5 @@ allow tad self:capability dac_override;
 allow tad tad_socket:sock_file { read write };
 #/system/lib/libmiscta.so
 allow tad system_file:file execmod;
+
+allow tad proc:file { open read };
