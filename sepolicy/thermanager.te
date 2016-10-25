@@ -9,4 +9,4 @@ allow thermanager self:capability dac_override;
 allow thermanager sysfs_devices_system_cpu:file rw_file_perms;
 
 #need improvement
-allow thermanager sysfs:file write;
+allow thermanager sysfs:file rw_file_perms;

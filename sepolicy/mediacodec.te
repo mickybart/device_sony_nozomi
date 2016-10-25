@@ -1,0 +1,2 @@
+#/dev/msm_vidc_enc
+allow mediacodec audio_device:chr_file { ioctl open read write };

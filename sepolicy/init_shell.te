@@ -6,9 +6,11 @@ type init_shell_exec, exec_type, file_type;
 init_daemon_domain(init_shell)
 
 allow init_shell self:capability dac_override;
-allow init_shell shell_exec:file { read entrypoint };
+allow init_shell shell_exec:file { read entrypoint getattr };
 allow init_shell system_file:file { execmod execute_no_trans };
 allow init_shell tad:unix_stream_socket connectto;
 allow init_shell tad_socket:sock_file write;
-allow init_shell toolbox_exec:file entrypoint;
-allow init_shell sysfs:file write;
+allow init_shell sysfs:file { getattr open read write };
+allow init_shell sysfs:dir { open read };
+allow init_shell proc_net:file { open read };
+allow init_shell toolbox_exec:file { execute execute_no_trans getattr open read entrypoint };
