@@ -178,3 +178,6 @@
 /sys/devices/i2c-3/3-0053/torch_.*      u:object_r:sysfs_camera:s0
 /sys/devices/i2c-3/3-0053/status    --  u:object_r:sysfs_camera:s0
 
+# jack detection
+/sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_.*  u:object_r:sysfs_jack:s0
+
