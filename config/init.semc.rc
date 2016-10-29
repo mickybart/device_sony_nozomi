@@ -344,6 +344,14 @@ on post-fs-data
     chmod 0666 /sys/devices/platform/kcal_ctrl.0/kcal_min
     chmod 0666 /sys/devices/platform/kcal_ctrl.0/kcal_enable
 
+    #Jack detection broken
+    chown system system /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_broken
+    chown system system /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_force
+    chown system system /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_type
+    chmod 0666 /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_broken
+    chmod 0666 /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_force
+    chmod 0666 /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_type
+
     #/data/etc (used by nvimport, bluetooth, hostapd, wpa)
     mkdir /data/etc 0775
     chown system system /data/etc
@@ -763,4 +771,11 @@ service nvcustomizer /system/bin/nvcustomizer
 
 on property:ro.nvcust=1
     start nvcustomizer
+
+#Jack detection broken
+on property:persist.sys.jack_broken=false
+    write /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_broken 0
+
+on property:persist.sys.jack_broken=true
+    write /sys/devices/platform/msm_ssbi.0/pm8058-core/simple_remote_pf/simple_remote/det_broken 1
 

@@ -48,8 +48,9 @@ persist.sys.autopower=true
 # Lockscreen
 persist.lock.force_phone=false
 
-# Other (QuickSettings)
+# Other
 persist.sys.qs_onefinger=true
+persist.sys.jack_broken=false
 
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false

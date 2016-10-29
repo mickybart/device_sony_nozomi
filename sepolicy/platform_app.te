@@ -17,3 +17,7 @@ allow platform_app sysfs_mdp:file { write read open getattr };
 
 #Allow NFC service to be found
 allow platform_app nfc_service:service_manager find;
+
+#QS Jack Detection Force
+allow platform_app sysfs_jack:file { write read open getattr};
+
