@@ -238,7 +238,9 @@ PRODUCT_PACKAGES += \
 ifneq ($(TARGET_NO_SUPERUSER),true)
 
 PRODUCT_PACKAGES += \
-    su
+    su \
+    supolicy \
+    libsupol
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.root_access=3
