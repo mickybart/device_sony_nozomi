@@ -299,3 +299,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.dun.override=0
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+
+# Backup Tool
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/custom/backuptool/backuptool.sh:install/bin/backuptool.sh \
+    $(LOCAL_PATH)/custom/backuptool/backuptool.functions:install/bin/backuptool.functions \
+    $(LOCAL_PATH)/custom/backuptool/50-base.sh:system/addon.d/50-base.sh
