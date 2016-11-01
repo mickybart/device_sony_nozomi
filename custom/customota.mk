@@ -19,5 +19,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
 	   --no_separate_recovery=true \
+	   --backup=true \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
