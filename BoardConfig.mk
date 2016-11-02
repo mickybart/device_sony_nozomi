@@ -142,7 +142,7 @@ RECOVERY_FSTAB_VERSION := 2
 
 # twrp
 ifeq ($(TARGET_NO_RECOVERY),false)
-TARGET_RECOVERY_TWRP := true
+TARGET_RECOVERY_TWRP := false
 
 ifeq ($(TARGET_RECOVERY_TWRP),true)
 TWRP_RECOVERY_FSTAB := device/sony/nozomi/config/fstab.twrp.semc
