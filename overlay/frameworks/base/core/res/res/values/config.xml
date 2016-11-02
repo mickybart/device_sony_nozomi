@@ -294,4 +294,7 @@
          2 - The device DOES NOT have a permanent menu key; ignore autodetection. -->
     <integer name="config_overrideHasPermanentMenuKey">2</integer>
 
+    <!-- Night Mode -->
+    <bool name="config_nightDisplayAvailable">true</bool>
+
 </resources>

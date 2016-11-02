@@ -8,3 +8,6 @@ allow system_server oncrpc_device:chr_file rw_file_perms;
 allow system_server system_file:file execmod;
 allow system_server etc_data_file:file r_file_perms;
 allow system_server etc_data_file:dir search;
+
+#Night Display with Kcal
+allow system_server sysfs_mdp:file { write read open getattr };
