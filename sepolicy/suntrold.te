@@ -20,3 +20,5 @@ allow suntrold socket_device:dir { add_name write };
 allow suntrold socket_device:sock_file { create setattr };
 
 allow suntrold tzcom_device:chr_file { ioctl open read write };
+
+allow suntrold system_data_file:dir create_dir_perms;
