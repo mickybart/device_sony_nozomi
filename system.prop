@@ -36,8 +36,9 @@ screen.color_isday=true
 persist.screen.color_day=255 255 255
 persist.screen.color_night=255 197 143
 
-# Layers Manager
+# Layers Manager / Substratum
 ro.layers.noIcon=noIcon
+ro.substratum.verified=true
 
 # Fake signature (Mainly for microg/NoGapps)
 persist.sys.fake-signature=false
