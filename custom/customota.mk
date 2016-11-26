@@ -20,5 +20,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   -k $(KEY_CERT_PAIR) \
 	   --no_separate_recovery=true \
 	   --backup=true \
+	   --no_preserve_themes \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
