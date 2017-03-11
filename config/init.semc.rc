@@ -373,32 +373,17 @@ on post-fs-data
     write /sys/module/pm_8x60/modes/cpu1/power_collapse/idle_enabled 1
     write /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled 1
     write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled 1
-    
-    # smartmax version
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "smartmax"
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "smartmax"
 
-    # ondemand version
-    #write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemand"
-    #write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "ondemand"
-    #write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 50000
-    #write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold 90
-    #write /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy 1
-    #write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 4
-    #write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 384000
-    #write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 384000
-    #chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-    #chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-    #chown system system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
-
+    # Governor set by PowerHAL
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chown system system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-    chown system system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
     chown root system /sys/devices/system/cpu/mfreq
     chmod 220 /sys/devices/system/cpu/mfreq
     chown root system /sys/devices/system/cpu/cpu1/online
     chmod 664 /sys/devices/system/cpu/cpu1/online
+    chown system system /sys/devices/system/cpu/cpufreq
 
     # Change adj level and min_free_kbytes setting for lowmemory killer to kick in
     start qosmgrd
@@ -599,6 +584,7 @@ on property:service.adb.root=1
 service mpdecision /system/bin/mpdecision --no_sleep --avg_comp
     class late_start
     user root
+    disabled
 
 service qosmgrd /system/bin/qosmgr /system/etc/qosmgr_rules.xml
     class manual

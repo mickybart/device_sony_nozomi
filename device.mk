@@ -42,6 +42,10 @@ PRODUCT_PACKAGES += \
     memtrack.msm8660 \
     copybit.msm8660
 
+# Power
+PRODUCT_PACKAGES += \
+    power.msm8660
+
 # Media
 PRODUCT_PACKAGES += \
     libdivxdrmdecrypt \
