@@ -22,6 +22,7 @@ persist.ksm.enable=false
 # lightbar
 persist.sys.lightbar_mode=1
 persist.sys.lightbar_flash=1
+persist.sys.lightbar_lp=1
 
 # sensors
 persist.sensors.slope=1 10

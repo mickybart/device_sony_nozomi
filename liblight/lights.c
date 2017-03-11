@@ -3,6 +3,7 @@
  * Copyright (C) 2011 Diogo Ferreira <defer@cyanogenmod.com>
  * Copyright (C) 2012 Andreas Makris <andreas.makris@gmail.com>
  * Copyright (C) 2012 The CyanogenMod Project <http://www.cyanogenmod.com>
+ * Copyright (C) 2015 nAOSP ROM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +45,17 @@ static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 
 /* Buttons-backlight state machine */
+#define DIM_BRIGHTNESS 5
+#define DIM_BRIGHTNESS_MAX_DROP 4
+#define MAX_BUTTONS_BRIGHTNESS 15
 static int g_buttons_notification_support = 1;
+static int g_buttons_force_off_after = MAX_BUTTONS_BRIGHTNESS;
 static struct light_state_t g_buttons;
+static struct light_state_t g_buttons_before_dim;
 static struct light_state_t g_buttons_notification;
+
+/* low power */
+static int g_low_power = 1;
 
 static int read_int (const char *path) {
 	int fd;
@@ -145,8 +154,11 @@ static void set_shared_buttons_locked (struct light_device_t *dev, struct light_
 	} else {
 		write_string (BUTTON_BACKLIGHT_FILE_TRIGGER, "none");
 	}
-	
-	write_int (BUTTON_BACKLIGHT_FILE, brightness);
+
+	if (g_low_power && brightness > g_buttons_force_off_after)
+		write_int (BUTTON_BACKLIGHT_FILE, 0);
+	else
+		write_int (BUTTON_BACKLIGHT_FILE, brightness);
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
@@ -206,7 +218,19 @@ static void handle_shared_buttons_locked (struct light_device_t *dev) {
 
 static int set_light_buttons (struct light_device_t *dev, struct light_state_t const* state) {
 	pthread_mutex_lock(&g_lock);
-	g_buttons = *state;
+	int brightness = rgb_to_brightness(&g_buttons);
+	int new_brightness = rgb_to_brightness(state);
+	if (new_brightness == DIM_BRIGHTNESS && brightness > (DIM_BRIGHTNESS + DIM_BRIGHTNESS_MAX_DROP)) {
+		//Seems to go in DIM state
+		g_buttons = *state;
+	} else if (new_brightness < DIM_BRIGHTNESS) {
+		//from DIM to Off
+		g_buttons = *state;
+	} else {
+		//keep up to date
+		g_buttons_before_dim = *state;
+		g_buttons = *state;
+	}
 	handle_shared_buttons_locked(dev);
 	pthread_mutex_unlock(&g_lock);
 	return 0;
@@ -222,10 +246,17 @@ static int set_light_battery (struct light_device_t *dev, struct light_state_t c
 
 static int set_light_notifications (struct light_device_t *dev, struct light_state_t const* state) {
 	pthread_mutex_lock (&g_lock);
+
 	g_notification = *state;
 	g_buttons_notification = *state;
-	if (is_lit (&g_buttons_notification))
-		g_buttons_notification.color = 255;
+	if (is_lit (&g_notification)) {
+		if (g_low_power)
+			//use the known brightness before DIM state (buttons brightness linked with backlight brightness into nAOSP ROM)
+			g_buttons_notification.color = g_buttons_before_dim.color;
+		else
+			g_buttons_notification.color = 255;
+	}
+
 	handle_shared_battery_locked(dev);
 	handle_shared_buttons_locked(dev);
 	pthread_mutex_unlock (&g_lock);
@@ -244,6 +275,8 @@ void init_globals () {
 	g_battery.flashMode = LIGHT_FLASH_NONE;
 	g_buttons.color = 0;
 	g_buttons.flashMode = LIGHT_FLASH_NONE;
+	g_buttons_before_dim.color = 0;
+	g_buttons_before_dim.flashMode = LIGHT_FLASH_NONE;
 	g_buttons_notification.color = 0;
 	g_buttons_notification.flashMode = LIGHT_FLASH_NONE;
 	
@@ -251,6 +284,8 @@ void init_globals () {
 	char value[PROPERTY_VALUE_MAX];
 	property_get("persist.sys.lightbar_flash", value, "1");
 	g_buttons_notification_support = atoi(value);
+	property_get("persist.sys.lightbar_lp", value, "1");
+	g_low_power = atoi(value);
 }
 
 /* Glueing boilerplate */
