@@ -268,6 +268,10 @@ PRODUCT_PACKAGES += \
     LiveWallpapersPicker \
     librs_jni
 
+# Wallpaper Picker
+PRODUCT_PACKAGES += \
+    WallpaperPicker
+
 # Thermal management
 PRODUCT_PACKAGES += \
     thermanager
