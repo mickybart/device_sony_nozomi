@@ -29,10 +29,8 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_ARCH_VARIANT_CPU := cortex-a8
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
-# compile flag
-TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
-COMMON_GLOBAL_CFLAGS += -DLEGACY_BLOB_COMPATIBLE
+# legacy
+TARGET_LEGACY_BLOB_COMPATIBLE := true
 
 # malloc
 MALLOC_SVELTE := true
