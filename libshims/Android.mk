@@ -44,6 +44,7 @@ LOCAL_C_INCLUDES := \
     system/core/libutils
 
 LOCAL_SHARED_LIBRARIES := \
+    libbinder \
     libcutils \
     libgui \
     libsensor \
