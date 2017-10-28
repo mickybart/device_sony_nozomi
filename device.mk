@@ -63,11 +63,11 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     libaudio-resampler
 
-# Audio Effects
-PRODUCT_PACKAGES += \
-    ViPER4Android \
-    libv4a_fx_ics \
-    libqcomvoiceprocessing
+## Audio Effects
+#PRODUCT_PACKAGES += \
+#    ViPER4Android \
+#    libv4a_fx_ics \
+#    libqcomvoiceprocessing
 
 # Stlport for proprietary Adreno OpenGL lib
 PRODUCT_PACKAGES +=  \
