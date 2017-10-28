@@ -40,6 +40,8 @@ on early-init
     write /proc/sys/vm/swappiness 100
 
 on init
+    export LD_SHIM_LIBS "/system/lib/libcald_pal.so|libshim_cald.so:/system/lib/hw/camera.msm8660.so|libshim_camera.so:/system/bin/ATFWD-daemon|libshim_ATFWD.so"
+
     # Set permissions for persist partition
     mkdir /persist 0771 system system
 
