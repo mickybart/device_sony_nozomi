@@ -1,8 +1,0 @@
-#mbhc.bin
-allow audioserver audio_data_file:dir remove_name;
-
-#/system/lib/libacdbloader.so
-allow audioserver system_file:file execmod;
-
-#ViPER4Android
-allow audioserver audioserver_tmpfs:file execute;

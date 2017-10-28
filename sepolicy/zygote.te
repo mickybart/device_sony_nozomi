@@ -1,3 +1,0 @@
-#need to read /dev/input/event0
-allow zygote input_device:chr_file { read write ioctl open };
-allow zygote input_device:dir r_dir_perms;

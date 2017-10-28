@@ -1,6 +1,0 @@
-#Twrp
-recovery_only(`
-  allow recovery kernel:security setenforce;
-  allow recovery selinuxfs:file write;
-')
-
