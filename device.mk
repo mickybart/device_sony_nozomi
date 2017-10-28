@@ -138,6 +138,27 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
      $(LOCAL_PATH)/config/gps.conf:system/etc/gps.conf
 
+# HIDL
+PRODUCT_PACKAGES += \
+    android.hardware.bluetooth@1.0-impl \
+    android.hardware.nfc@1.0-impl \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.memtrack@1.0-impl \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.wifi@1.0-service \
+    android.hardware.gnss@1.0-impl \
+    android.hardware.light@2.0-impl \
+    android.hardware.usb@1.0-service \
+    android.hardware.sensors@1.0-impl \
+    android.hardware.power@1.0-impl \
+    android.hardware.camera.provider@2.4-impl \
+    camera.device@1.0-impl
+
+DEVICE_MANIFEST_FILE := device/sony/nozomi/manifest.xml
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
