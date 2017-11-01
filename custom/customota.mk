@@ -1,5 +1,3 @@
-LOCAL_PATH := $(call my-dir)
-
 name := nAOSProm-8.0.0
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
@@ -10,18 +8,16 @@ INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
-$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
+$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
+                build/tools/releasetools/ota_from_target_files
 	@echo "Package OTA: $@"
-	$(hide) MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
+	PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
 	   ./build/tools/releasetools/ota_from_target_files -v \
 	   --block \
-	   -n \
+	   --extracted_input_target_files $(patsubst %.zip,%,$(BUILT_TARGET_FILES_PACKAGE)) \
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
 	   --no_separate_recovery=true \
-	   --custom_recovery_partition=/dev/block/mmcblk0p11 \
-	   --backup=true \
-	   --no_preserve_themes \
 	   --resize_system=true \
+	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
-
