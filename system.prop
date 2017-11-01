@@ -118,7 +118,9 @@ media.stagefright.enable-aac=true
 media.stagefright.enable-qcp=true
 media.stagefright.enable-scan=true
 media.stagefright.legacyencoder=true
+media.stagefright.less-secure=true
 encoder.video.profile=high
+persist.media.treble_omx=false
 # New added in msm8660_surf
 mmp.enable.3g2=true
 
