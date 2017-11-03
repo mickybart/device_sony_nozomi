@@ -1,0 +1,7 @@
+# cal_data_manager
+type cal_data_manager, domain;
+type cal_data_manager_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(cal_data_manager)
+

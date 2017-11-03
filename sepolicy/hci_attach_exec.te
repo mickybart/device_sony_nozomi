@@ -1,0 +1,7 @@
+# hci_attach_exec
+type hci_attach, domain;
+type hci_attach_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(hci_attach)
+

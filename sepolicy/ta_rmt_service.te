@@ -1,0 +1,7 @@
+# ta_rmt_service
+type ta_rmt_service, domain;
+type ta_rmt_service_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(ta_rmt_service)
+

@@ -1,0 +1,7 @@
+# time_daemon
+type time_daemon, domain;
+type time_daemon_exec, exec_type, file_type;
+
+# Started by init
+init_daemon_domain(time_daemon)
+
