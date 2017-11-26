@@ -154,6 +154,7 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service \
     android.hardware.sensors@1.0-impl \
     android.hardware.power@1.0-impl \
+    android.hardware.keymaster@3.0-impl \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl
 
