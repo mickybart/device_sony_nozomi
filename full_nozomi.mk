@@ -35,6 +35,9 @@ PRODUCT_RESTRICT_VENDOR_FILES := false
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.com.android.dataroaming=false
 
+# Inherit common Android Go configurations
+$(call inherit-product, build/target/product/go_defaults.mk)
+
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/sony/nozomi/device.mk)
 $(call inherit-product-if-exists, vendor/sony/nozomi/device-vendor.mk)
