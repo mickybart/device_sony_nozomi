@@ -1,4 +1,4 @@
-name := nAOSProm-8.0.0
+name := nAOSProm-8.1.0
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif

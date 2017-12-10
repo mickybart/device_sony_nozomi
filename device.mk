@@ -321,7 +321,7 @@ PRODUCT_PACKAGES += \
     ROMUpdater
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.version.updater=nAOSProm-8.0.0-b$(ROM_BUILD_NUM) \
+    ro.build.version.updater=nAOSProm-8.1.0-b$(ROM_BUILD_NUM) \
     persist.rom.updater.uri=
 
 # Dalvik
