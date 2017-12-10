@@ -62,6 +62,7 @@ libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libqservice
 libmm-vdec-inc          += $(LOCAL_PATH)/../../../display/libqdutils
 libmm-vdec-inc          += frameworks/native/include/media/openmax
 libmm-vdec-inc          += frameworks/native/include/media/hardware
+libmm-vdec-inc          += frameworks/native/libs/nativebase/include
 libmm-vdec-inc          += $(LOCAL_PATH)/../../libc2dcolorconvert
 libmm-vdec-inc          += frameworks/av/include/media/stagefright
 
