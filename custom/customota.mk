@@ -19,5 +19,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	   -k $(KEY_CERT_PAIR) \
 	   --no_separate_recovery=true \
 	   --resize_system=true \
+	   --backup=true \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
