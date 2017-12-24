@@ -82,7 +82,8 @@ PRODUCT_PACKAGES +=  \
 PRODUCT_PACKAGES += \
     libshim_cald \
     libshim_camera \
-    libshim_ATFWD
+    libshim_ATFWD \
+    libshim_suntrold
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \

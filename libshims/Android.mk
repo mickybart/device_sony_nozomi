@@ -86,3 +86,16 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 
 include $(BUILD_SHARED_LIBRARY)
+
+# libshim_suntrold
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+    bionic/md5.c
+
+LOCAL_MODULE := libshim_suntrold
+
+LOCAL_MODULE_TAGS := optimal
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+
+include $(BUILD_SHARED_LIBRARY)

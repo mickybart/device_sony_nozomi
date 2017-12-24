@@ -40,7 +40,7 @@ on early-init
     write /proc/sys/vm/swappiness 100
 
 on init
-    export LD_SHIM_LIBS "/system/lib/libcald_pal.so|libshim_cald.so:/system/lib/libMPU3050.so|libshim_cald.so:/system/lib/hw/camera.msm8660.so|libshim_camera.so:/system/bin/ATFWD-daemon|libshim_ATFWD.so"
+    export LD_SHIM_LIBS "/system/lib/libcald_pal.so|libshim_cald.so:/system/lib/libMPU3050.so|libshim_cald.so:/system/lib/hw/camera.msm8660.so|libshim_camera.so"
 
     # Set permissions for persist partition
     mkdir /persist 0771 system system
@@ -516,6 +516,7 @@ on property:drmdiag.load=0
 #    write /sys/devices/platform/kcal_ctrl.0/kcal ${persist.screen.color_day}
 
 service atfwd /system/bin/ATFWD-daemon
+    setenv LD_PRELOAD /system/lib/libshim_ATFWD.so
     class late_start
     user system
     group system radio wakelock qcom_diag
@@ -620,6 +621,7 @@ on property:dev.bootcomplete=1
 
 # Start suntrold
 service suntrold /system/bin/suntrold
+    setenv LD_PRELOAD /system/lib/libshim_suntrold.so
     class main
     user system
     group system
