@@ -37,23 +37,21 @@
 namespace android {
 // ----------------------------------------------------------------------------
 
-static String16 gPackageName = String16("com.android.camera2");
+#define PACKAGE_NAME "com.android.camera2"
 
-ANDROID_SINGLETON_STATIC_INSTANCE(SensorManager)
+ANDROID_SINGLETON_STATIC_INSTANCE(sensormanager)
 
-SensorManager::SensorManager()
+sensormanager::sensormanager()
     : mSensorList(0)
 {
-    // okay we're not locked here, but it's not needed during construction
-    assertStateLocked();
 }
 
-SensorManager::~SensorManager()
+sensormanager::~sensormanager()
 {
     free(mSensorList);
 }
 
-void SensorManager::sensorManagerDied()
+void sensormanager::sensorManagerDied()
 {
     Mutex::Autolock _l(mLock);
     mSensorServer.clear();
@@ -62,48 +60,39 @@ void SensorManager::sensorManagerDied()
     mSensors.clear();
 }
 
-status_t SensorManager::assertStateLocked() {
+status_t sensormanager::assertStateLocked() const {
     if (mSensorServer == NULL) {
         // try for one second
+        const sp<IServiceManager> sm = defaultServiceManager();
         const String16 name("sensorservice");
-        status_t err = NO_ERROR;
-
-        for (int i = 0; i < 4; i++) {
-            if (i > 0) {
-                // Don't sleep on the first try or after the last failed try
-                usleep(250000);
-            }
-            err = getService(name, &mSensorServer);
-            if (err != NAME_NOT_FOUND) {
+        for (int i=0 ; i<4 ; i++) {
+            mSensorServer = interface_cast<ISensorServer>(sm->checkService(name));
+            if (mSensorServer != NULL) {
                 break;
             }
+            usleep(250000);
         }
-
-        if (err != NO_ERROR) {
-            return err;
+        if (mSensorServer == NULL) {
+            return NAME_NOT_FOUND;
         }
 
         class DeathObserver : public IBinder::DeathRecipient {
-            SensorManager& mSensorManger;
+            sensormanager& mSensorManger;
             virtual void binderDied(const wp<IBinder>& who) {
                 ALOGW("sensorservice died [%p]", who.unsafe_get());
                 mSensorManger.sensorManagerDied();
             }
         public:
-            DeathObserver(SensorManager& mgr) : mSensorManger(mgr) { }
+            DeathObserver(sensormanager& mgr) : mSensorManger(mgr) { }
         };
 
-        LOG_ALWAYS_FATAL_IF(mSensorServer.get() == NULL, "getService(SensorService) NULL");
-
-        mDeathObserver = new DeathObserver(*const_cast<SensorManager *>(this));
+        mDeathObserver = new DeathObserver(*const_cast<sensormanager *>(this));
         IInterface::asBinder(mSensorServer)->linkToDeath(mDeathObserver);
 
-        mSensors = mSensorServer->getSensorList(gPackageName);
+        mSensors = mSensorServer->getSensorList(String16(PACKAGE_NAME));
         size_t count = mSensors.size();
         mSensorList =
                 static_cast<Sensor const**>(malloc(count * sizeof(Sensor*)));
-        LOG_ALWAYS_FATAL_IF(mSensorList == NULL, "mSensorList NULL");
-
         for (size_t i=0 ; i<count ; i++) {
             mSensorList[i] = mSensors.array() + i;
         }
@@ -112,7 +101,7 @@ status_t SensorManager::assertStateLocked() {
     return NO_ERROR;
 }
 
-ssize_t SensorManager::getSensorList(Sensor const* const** list)
+ssize_t sensormanager::getSensorList(Sensor const* const** list) const
 {
     Mutex::Autolock _l(mLock);
     status_t err = assertStateLocked();
@@ -123,7 +112,7 @@ ssize_t SensorManager::getSensorList(Sensor const* const** list)
     return static_cast<ssize_t>(mSensors.size());
 }
 
-Sensor const* SensorManager::getDefaultSensor(int type)
+Sensor const* sensormanager::getDefaultSensor(int type)
 {
     Mutex::Autolock _l(mLock);
     if (assertStateLocked() == NO_ERROR) {
@@ -149,14 +138,14 @@ Sensor const* SensorManager::getDefaultSensor(int type)
     return NULL;
 }
 
-sp<SensorEventQueue> SensorManager::createEventQueue()
+sp<SensorEventQueue> sensormanager::createEventQueue()
 {
     sp<SensorEventQueue> queue;
 
     Mutex::Autolock _l(mLock);
     while (assertStateLocked() == NO_ERROR) {
         sp<ISensorEventConnection> connection =
-                mSensorServer->createSensorEventConnection(String8(""), 0, gPackageName);
+                mSensorServer->createSensorEventConnection(String8(""), 0, String16(PACKAGE_NAME));
         if (connection == NULL) {
             // SensorService just died.
             ALOGE("createEventQueue: connection is NULL. SensorService died.");

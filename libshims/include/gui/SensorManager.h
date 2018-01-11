@@ -43,15 +43,15 @@ class SensorEventQueue;
 
 // ----------------------------------------------------------------------------
 
-class SensorManager :
+class sensormanager :
     public ASensorManager,
-    public Singleton<SensorManager>
+    public Singleton<sensormanager>
 {
 public:
-    SensorManager();
-    ~SensorManager();
+    sensormanager();
+    ~sensormanager();
 
-    ssize_t getSensorList(Sensor const* const** list);
+    ssize_t getSensorList(Sensor const* const** list) const;
     Sensor const* getDefaultSensor(int type);
     sp<SensorEventQueue> createEventQueue();
 
@@ -59,7 +59,7 @@ private:
     // DeathRecipient interface
     void sensorManagerDied();
 
-    status_t assertStateLocked();
+    status_t assertStateLocked() const;
 
 private:
     mutable Mutex mLock;

@@ -133,9 +133,9 @@ private:
  *
  * A looper can be associated with a thread although there is no requirement that it must be.
  */
-class Looper : public RefBase {
+class looper : public RefBase {
 protected:
-    virtual ~Looper();
+    virtual ~looper();
 
 public:
     enum {
@@ -226,7 +226,7 @@ public:
      * registered without associated callbacks.  This assumes that the caller of
      * pollOnce() is prepared to handle callback-less events itself.
      */
-    Looper(bool allowNonCallbacks);
+    looper(bool allowNonCallbacks);
 
     /**
      * Returns whether this looper instance allows the registration of file descriptors
@@ -386,12 +386,11 @@ public:
     void removeMessages(const sp<MessageHandler>& handler, int what);
 
     /**
-     * Returns whether this looper's thread is currently polling for more work to do.
-     * This is a good signal that the loop is still alive rather than being stuck
-     * handling a callback.  Note that this method is intrinsically racy, since the
-     * state of the loop can change before you get the result back.
+     * Return whether this looper's thread is currently idling -- that is, whether it
+     * stopped waiting for more work to do.  Note that this is intrinsically racy, since
+     * its state can change before you get the result back.
      */
-    bool isPolling() const;
+    bool isIdling() const;
 
     /**
      * Prepares a looper associated with the calling thread, and returns it.
@@ -400,7 +399,7 @@ public:
      *
      * The opts may be PREPARE_ALLOW_NON_CALLBACKS or 0.
      */
-    static sp<Looper> prepare(int opts);
+    static sp<looper> prepare(int opts);
 
     /**
      * Sets the given looper to be associated with the calling thread.
@@ -408,13 +407,13 @@ public:
      *
      * If "looper" is NULL, removes the currently associated looper.
      */
-    static void setForThread(const sp<Looper>& looper);
+    static void setForThread(const sp<looper>& lp);
 
     /**
      * Returns the looper associated with the calling thread, or NULL if
      * there is not one.
      */
-    static sp<Looper> getForThread();
+    static sp<looper> getForThread();
 
 private:
     struct Request {
@@ -452,7 +451,7 @@ private:
 
     // Whether we are currently waiting for work.  Not protected by a lock,
     // any use of it is racy anyway.
-    volatile bool mPolling;
+    volatile bool mIdling;
 
     int mEpollFd; // immutable
 

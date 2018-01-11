@@ -36,6 +36,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
     gui/SensorManager.cpp \
+    utils/Looper.cpp \
     utils/VectorImpl.cpp
 
 LOCAL_C_INCLUDES := \

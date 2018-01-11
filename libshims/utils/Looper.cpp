@@ -17,9 +17,13 @@
 #include <utils/Looper.h>
 #include <utils/Timers.h>
 
-#include <unistd.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <inttypes.h>
+#include <string.h>
+#include <sys/eventfd.h>
+#include <unistd.h>
 
 
 namespace android {
@@ -66,7 +70,7 @@ static const int EPOLL_MAX_EVENTS = 16;
 static pthread_once_t gTLSOnce = PTHREAD_ONCE_INIT;
 static pthread_key_t gTLSKey = 0;
 
-Looper::Looper(bool allowNonCallbacks) :
+looper::looper(bool allowNonCallbacks) :
         mAllowNonCallbacks(allowNonCallbacks), mSendingMessage(false),
         mResponseIndex(0), mNextMessageUptime(LLONG_MAX) {
     int wakeFds[2];
@@ -84,7 +88,7 @@ Looper::Looper(bool allowNonCallbacks) :
     LOG_ALWAYS_FATAL_IF(result != 0, "Could not make wake write pipe non-blocking.  errno=%d",
             errno);
 
-    mPolling = false;
+    mIdling = false;
 
     // Allocate the epoll instance and register the wake pipe.
     mEpollFd = epoll_create(EPOLL_SIZE_HINT);
@@ -99,64 +103,64 @@ Looper::Looper(bool allowNonCallbacks) :
             errno);
 }
 
-Looper::~Looper() {
+looper::~looper() {
     close(mWakeReadPipeFd);
     close(mWakeWritePipeFd);
     close(mEpollFd);
 }
 
-void Looper::initTLSKey() {
+void looper::initTLSKey() {
     int result = pthread_key_create(& gTLSKey, threadDestructor);
     LOG_ALWAYS_FATAL_IF(result != 0, "Could not allocate TLS key.");
 }
 
-void Looper::threadDestructor(void *st) {
-    Looper* const self = static_cast<Looper*>(st);
+void looper::threadDestructor(void *st) {
+    looper* const self = static_cast<looper*>(st);
     if (self != NULL) {
         self->decStrong((void*)threadDestructor);
     }
 }
 
-void Looper::setForThread(const sp<Looper>& looper) {
-    sp<Looper> old = getForThread(); // also has side-effect of initializing TLS
+void looper::setForThread(const sp<looper>& lp) {
+    sp<looper> old = getForThread(); // also has side-effect of initializing TLS
 
-    if (looper != NULL) {
-        looper->incStrong((void*)threadDestructor);
+    if (lp != NULL) {
+        lp->incStrong((void*)threadDestructor);
     }
 
-    pthread_setspecific(gTLSKey, looper.get());
+    pthread_setspecific(gTLSKey, lp.get());
 
     if (old != NULL) {
         old->decStrong((void*)threadDestructor);
     }
 }
 
-sp<Looper> Looper::getForThread() {
+sp<looper> looper::getForThread() {
     int result = pthread_once(& gTLSOnce, initTLSKey);
     LOG_ALWAYS_FATAL_IF(result != 0, "pthread_once failed");
 
-    return (Looper*)pthread_getspecific(gTLSKey);
+    return (looper*)pthread_getspecific(gTLSKey);
 }
 
-sp<Looper> Looper::prepare(int opts) {
+sp<looper> looper::prepare(int opts) {
     bool allowNonCallbacks = opts & PREPARE_ALLOW_NON_CALLBACKS;
-    sp<Looper> looper = Looper::getForThread();
-    if (looper == NULL) {
-        looper = new Looper(allowNonCallbacks);
-        Looper::setForThread(looper);
+    sp<looper> lp = looper::getForThread();
+    if (lp == NULL) {
+        lp = new looper(allowNonCallbacks);
+        looper::setForThread(lp);
     }
-    if (looper->getAllowNonCallbacks() != allowNonCallbacks) {
+    if (lp->getAllowNonCallbacks() != allowNonCallbacks) {
         ALOGW("Looper already prepared for this thread with a different value for the "
                 "LOOPER_PREPARE_ALLOW_NON_CALLBACKS option.");
     }
-    return looper;
+    return lp;
 }
 
-bool Looper::getAllowNonCallbacks() const {
+bool looper::getAllowNonCallbacks() const {
     return mAllowNonCallbacks;
 }
 
-int Looper::pollOnce(int timeoutMillis, int* outFd, int* outEvents, void** outData) {
+int looper::pollOnce(int timeoutMillis, int* outFd, int* outEvents, void** outData) {
     int result = 0;
     for (;;) {
         while (mResponseIndex < mResponses.size()) {
@@ -192,7 +196,7 @@ int Looper::pollOnce(int timeoutMillis, int* outFd, int* outEvents, void** outDa
     }
 }
 
-int Looper::pollInner(int timeoutMillis) {
+int looper::pollInner(int timeoutMillis) {
 #if DEBUG_POLL_AND_WAKE
     ALOGD("%p ~ pollOnce - waiting: timeoutMillis=%d", this, timeoutMillis);
 #endif
@@ -217,13 +221,13 @@ int Looper::pollInner(int timeoutMillis) {
     mResponseIndex = 0;
 
     // We are about to idle.
-    mPolling = true;
+    mIdling = true;
 
     struct epoll_event eventItems[EPOLL_MAX_EVENTS];
     int eventCount = epoll_wait(mEpollFd, eventItems, EPOLL_MAX_EVENTS, timeoutMillis);
 
     // No longer idling.
-    mPolling = false;
+    mIdling = false;
 
     // Acquire lock.
     mLock.lock();
@@ -339,7 +343,7 @@ Done: ;
     return result;
 }
 
-int Looper::pollAll(int timeoutMillis, int* outFd, int* outEvents, void** outData) {
+int looper::pollAll(int timeoutMillis, int* outFd, int* outEvents, void** outData) {
     if (timeoutMillis <= 0) {
         int result;
         do {
@@ -365,7 +369,7 @@ int Looper::pollAll(int timeoutMillis, int* outFd, int* outEvents, void** outDat
     }
 }
 
-void Looper::wake() {
+void looper::wake() {
 #if DEBUG_POLL_AND_WAKE
     ALOGD("%p ~ wake", this);
 #endif
@@ -382,7 +386,7 @@ void Looper::wake() {
     }
 }
 
-void Looper::awoken() {
+void looper::awoken() {
 #if DEBUG_POLL_AND_WAKE
     ALOGD("%p ~ awoken", this);
 #endif
@@ -394,18 +398,18 @@ void Looper::awoken() {
     } while ((nRead == -1 && errno == EINTR) || nRead == sizeof(buffer));
 }
 
-void Looper::pushResponse(int events, const Request& request) {
+void looper::pushResponse(int events, const Request& request) {
     Response response;
     response.events = events;
     response.request = request;
     mResponses.push(response);
 }
 
-int Looper::addFd(int fd, int ident, int events, Looper_callbackFunc callback, void* data) {
+int looper::addFd(int fd, int ident, int events, Looper_callbackFunc callback, void* data) {
     return addFd(fd, ident, events, callback ? new SimpleLooperCallback(callback) : NULL, data);
 }
 
-int Looper::addFd(int fd, int ident, int events, const sp<LooperCallback>& callback, void* data) {
+int looper::addFd(int fd, int ident, int events, const sp<LooperCallback>& callback, void* data) {
 #if DEBUG_CALLBACKS
     ALOGD("%p ~ addFd - fd=%d, ident=%d, events=0x%x, callback=%p, data=%p", this, fd, ident,
             events, callback.get(), data);
@@ -463,7 +467,7 @@ int Looper::addFd(int fd, int ident, int events, const sp<LooperCallback>& callb
     return 1;
 }
 
-int Looper::removeFd(int fd) {
+int looper::removeFd(int fd) {
 #if DEBUG_CALLBACKS
     ALOGD("%p ~ removeFd - fd=%d", this, fd);
 #endif
@@ -486,18 +490,18 @@ int Looper::removeFd(int fd) {
     return 1;
 }
 
-void Looper::sendMessage(const sp<MessageHandler>& handler, const Message& message) {
+void looper::sendMessage(const sp<MessageHandler>& handler, const Message& message) {
     nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
     sendMessageAtTime(now, handler, message);
 }
 
-void Looper::sendMessageDelayed(nsecs_t uptimeDelay, const sp<MessageHandler>& handler,
+void looper::sendMessageDelayed(nsecs_t uptimeDelay, const sp<MessageHandler>& handler,
         const Message& message) {
     nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
     sendMessageAtTime(now + uptimeDelay, handler, message);
 }
 
-void Looper::sendMessageAtTime(nsecs_t uptime, const sp<MessageHandler>& handler,
+void looper::sendMessageAtTime(nsecs_t uptime, const sp<MessageHandler>& handler,
         const Message& message) {
 #if DEBUG_CALLBACKS
     ALOGD("%p ~ sendMessageAtTime - uptime=%lld, handler=%p, what=%d",
@@ -531,7 +535,7 @@ void Looper::sendMessageAtTime(nsecs_t uptime, const sp<MessageHandler>& handler
     }
 }
 
-void Looper::removeMessages(const sp<MessageHandler>& handler) {
+void looper::removeMessages(const sp<MessageHandler>& handler) {
 #if DEBUG_CALLBACKS
     ALOGD("%p ~ removeMessages - handler=%p", this, handler.get());
 #endif
@@ -548,7 +552,7 @@ void Looper::removeMessages(const sp<MessageHandler>& handler) {
     } // release lock
 }
 
-void Looper::removeMessages(const sp<MessageHandler>& handler, int what) {
+void looper::removeMessages(const sp<MessageHandler>& handler, int what) {
 #if DEBUG_CALLBACKS
     ALOGD("%p ~ removeMessages - handler=%p, what=%d", this, handler.get(), what);
 #endif
@@ -566,8 +570,9 @@ void Looper::removeMessages(const sp<MessageHandler>& handler, int what) {
     } // release lock
 }
 
-bool Looper::isPolling() const {
-    return mPolling;
+bool looper::isIdling() const {
+    return mIdling;
 }
+
 
 } // namespace android
