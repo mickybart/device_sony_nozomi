@@ -30,6 +30,10 @@ PRODUCT_CHARACTERISTICS := nosdcard
 PRODUCT_PACKAGES += \
     kernel
 
+# Camera
+PRODUCT_PACKAGES += \
+    camera.msm8660
+
 # Light
 PRODUCT_PACKAGES += \
     lights.semc

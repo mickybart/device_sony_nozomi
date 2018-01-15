@@ -24,7 +24,7 @@ LOCAL_STATIC_LIBRARIES := \
     libarect
 
 LOCAL_MODULE_RELATIVE_PATH := hw
-LOCAL_MODULE := camera.qcom
+LOCAL_MODULE := camera.msm8660
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
