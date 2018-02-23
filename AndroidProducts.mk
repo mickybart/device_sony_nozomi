@@ -16,4 +16,5 @@
 
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/aosp_nozomi.mk \
+    $(LOCAL_DIR)/microg_nozomi.mk \
     $(LOCAL_DIR)/full_nozomi.mk

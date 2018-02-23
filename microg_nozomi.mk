@@ -1,5 +1,5 @@
 #
-# Copyright 2008 The Android Open Source Project
+# Copyright 2013 The Android Open-Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+$(call inherit-product, device/sony/nozomi/full_nozomi.mk)
 
-# This file is executed by build/envsetup.sh, and can use anything
-# defined in envsetup.sh.
-#
-# In particular, you can add lunch options with the add_lunch_combo
-# function: add_lunch_combo generic-eng
+PRODUCT_NAME := microg_nozomi
 
-add_lunch_combo aosp_nozomi-userdebug
-add_lunch_combo microg_nozomi-userdebug
+# Gapps alternative
+
+PRODUCT_PACKAGES += \
+    GmsCore \
+    GsfProxy \
+    FakeStore \
+    IchnaeaNlpBackend \
+    NominatimNlpBackend \
+    F-Droid \
+    YalpStore
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.fake-signature=true

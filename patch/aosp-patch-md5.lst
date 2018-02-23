@@ -1,0 +1,7 @@
+d3d28e24b75fb9a567a74c5cf7c486de de003c617a45bec67418ecbc87ad63d7 ./packages/apps/fdroidclient/Android.mk
+e5e7c97fec7c3fd535b0c56fe7ac1c93 b8ca86ef647a44470169615f185be91c ./packages/apps/YalpStore/Android.mk
+98d9992d6d6ccbadca4b51efedc00226 766dbd8c6d89a501374463ca4cafed16 ./packages/microg/FakeStore/Android.mk
+7c1ca6649c586488cb1cabeed126ed4b e1ce74b68917202ff13281a1c4675aca ./packages/microg/GmsCore/Android.mk
+fea61e2461a37347cb0513ceec4e4416 5dc5c92a579b11062aa79677f5e22609 ./packages/microg/GsfProxy/Android.mk
+108a6b38c8f944348948f921eddf4681 68d1ac8e39c06ec7e9c55ccce5cf7890 ./packages/microg/IchnaeaNlpBackend/Android.mk
+918ee8f1a16260c08ab7e631e03d08ac 5a8529316d48f0fc54af293c3b44f9c9 ./packages/microg/NominatimNlpBackend/Android.mk

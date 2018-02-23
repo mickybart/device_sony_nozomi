@@ -42,7 +42,8 @@ ro.layers.noIcon=noIcon
 ro.substratum.verified=true
 
 # Fake signature (Mainly for microg/NoGapps)
-persist.sys.fake-signature=false
+# see (aosp|microg)_nozomi.mk
+# persist.sys.fake-signature=false
 
 # Auto Power Modes (config_enableAutoPowerModes)
 persist.sys.autopower=true
