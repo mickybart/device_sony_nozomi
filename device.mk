@@ -179,7 +179,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/config/init.semc.usb.rc:root/init.semc.usb.rc
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/config/fstab.semc:root/fstab.semc
+    $(LOCAL_PATH)/config/fstab.dynamic.semc:root/fstab.semc
 
 # Recovery: Custom init for twrp
 ifeq ($(TARGET_RECOVERY_TWRP),true)
