@@ -3,6 +3,9 @@
 # system.prop for nozomi
 #
 
+# sdcardfs
+persist.sys.sdcardfs=force_on
+
 # zram, zswap, vnswap, swap and memory
 persist.sys.zram_size=167772160
 persist.sys.zram_enable=true
