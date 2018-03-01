@@ -25,7 +25,7 @@ PRODUCT_PACKAGES += \
     FakeStore \
     IchnaeaNlpBackend \
     NominatimNlpBackend \
-    F-Droid \
+    FDroid \
     YalpStore
 
 PRODUCT_PROPERTY_OVERRIDES += \
