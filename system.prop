@@ -61,6 +61,9 @@ ro.opa.eligible_device=true
 persist.sys.qs_onefinger=true
 persist.sys.jack_broken=false
 
+# miracast
+persist.debug.wfd.enable=1
+
 # Notify the system that the RIL only signals once
 ro.telephony.call_ring.multiple=false
 
